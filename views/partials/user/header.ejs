@@ -107,6 +107,25 @@
 							<li>
 								<a href="contact.html">Contact</a>
 							</li>
+							
+							<%if(locals.user){%>
+								<li>
+									<a href="/userProfile"> <%=locals.user.name%></a>
+									<ul class="sub-menu">
+										<li><a href="/userProfile">profile</a></li>
+										<li><a href="/logout">logout</a></li>
+										
+									</ul>
+								</li>
+							
+								<%}else{%>
+							<li>
+								<a href="/signup">signup</a>
+							</li>
+							<li>
+								<a href="/login">login</a>
+							</li>
+							<%}%>
 						</ul>
 					</div>	
 

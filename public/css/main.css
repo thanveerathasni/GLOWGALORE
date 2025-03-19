@@ -640,6 +640,10 @@ Input, textarea : 14px/1.6 '', Arial, sans-serif;
 .main-menu > li.active-menu > a {
   color: #6c7ae0;
 }
+.main-menu > li.active-menu2 > a {
+  color: #1f1e1e;
+  
+}
 
 
 
