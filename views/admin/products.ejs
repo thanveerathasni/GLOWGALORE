@@ -20,7 +20,6 @@
         <thead>
             <tr>
                 <th scope="col"><b>Product name</b></th>
-                <th scope="col"><b>Brand</b></th>
                 <th scope="col"><b>Category</b></th>
                 <th scope="col"><b>Sale Price</b></th>
                 <th scope="col"><b>Offer Price</b></th>
@@ -35,7 +34,6 @@
             
             <tr>
                 <td><%=data[i].productName%></td>
-                <td><%=data[i].brand%></td>
                 <td><%=data[i].category.name%></td>
                 <td><%=data[i].salePrice%></td>
                 <td>
@@ -60,19 +58,19 @@
                 </td>
                 <td><%=data[i].quantity%></td>
                 <td>
-                
+                <%if(data[i].isBlocked===false){%>
                     <button class="btn btn-danger" style="width: 80px;">
-                        <a href="" class="text-white" style="text-decoration: none;">Block</a>
+                        <a href="/admin/blockProduct?id=<%=data[i]._id%>" class="text-white" style="text-decoration: none;">Block</a>
                     </button>
-                    
+                    <%}else{%>
                     <button class="btn btn-success" style="width: 80px;">
-                        <a href="" class="text-white" style="text-decoration: none;">Unblock</a>
+                        <a href="/admin/unblockProduct?id=<%=data[i]._id%>" class="text-white" style="text-decoration: none;">Unblock</a>
                     </button>
-            
+                    <%}%>
                 </td>
                 <td>
                     <button class="btn btn-info" style="width: 80px;">
-                        <a href="" class="text-white" style="text-decoration: none;">Edit</a>
+                        <a href="/admin/editProducts?id=<%=data[i]._id%>" class="text-white" style="text-decoration: none;">Edit</a>
                     </button>
                 </td>
             </tr>

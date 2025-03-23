@@ -4,7 +4,7 @@ const {Schema} = mongoose;
 const bannerSchema = new Schema({
     imageUrl: {
         type: String,
-        required: true,
+        required: false,
     },
     title: {
         type: String,
@@ -26,7 +26,7 @@ const bannerSchema = new Schema({
     },
     expiredAt:{
         type:Date,
-        required:true
+        //required:true
     }
 });
 

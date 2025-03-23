@@ -10,7 +10,7 @@ const db = require("./config/db")
 db()
 const adminRouter = require("./routes/adminRouter")
 
-
+// Session management configuration
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}))
@@ -24,18 +24,21 @@ app.use(session({
         maxAge:72*60*60*1000
     }
 }))
+// Initialize Passport for handling authentication and session management
+
 
 app.use(passport.initialize())
 app.use(passport.session())
+// Setting up EJS as the template engine for rendering views
 
 app.set("view engine","ejs")
 app.set("views",[path.join(__dirname,"views/user"),path.join(__dirname,"views/admin")])
 app.use(express.static(path.join(__dirname,"public")))
-
+// define route for user and admin
 
 app.use("/",userRouter);
 app.use("/admin",adminRouter)
-
+// server start
 app.listen(process.env.PORT,()=>{
     console.log(" server working",
         "http://localhost:9000"

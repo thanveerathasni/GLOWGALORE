@@ -1,0 +1,231 @@
+<%- include("../../views/partials/user/header") %>
+
+<style>
+  /* Flex container styling */
+  .flex-w {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem; /* Space between elements */
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .m-tb-10 {
+    margin: 10px 0;
+  }
+
+  /* Form styling */
+  #filter-form {
+    padding: 1rem;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(245, 245, 245, 0.9));
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.3s ease;
+  }
+
+  #filter-form:hover {
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Select dropdown styling */
+  #filter-form select {
+    padding: 0.8rem 1.2rem;
+    font-size: 1rem;
+    color: #333;
+    background: #fff;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    min-width: 180px;
+  }
+
+  #filter-form select:hover,
+  #filter-form select:focus {
+    border-color: #e63946;
+    box-shadow: 0 0 8px rgba(230, 57, 70, 0.2);
+  }
+
+  /* Input field styling */
+  #filter-form input[type="text"] {
+    padding: 0.8rem 1.2rem;
+    font-size: 1rem;
+    color: #333;
+    background: #fff;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    width: 200px; /* Adjustable based on your layout */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  #filter-form input[type="text"]::placeholder {
+    color: #999;
+  }
+
+  #filter-form input[type="text"]:hover,
+  #filter-form input[type="text"]:focus {
+    border-color: #e63946;
+    box-shadow: 0 0 8px rgba(230, 57, 70, 0.2);
+  }
+
+  /* Button styling */
+  #filter-form button {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  #filter-form button[type="submit"] {
+    background: linear-gradient(90deg, #ff6b6b, #e63946);
+    color: white;
+  }
+
+  #filter-form button[type="submit"]:hover {
+    background: linear-gradient(90deg, #ff8787, #f05461);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3);
+  }
+
+  #filter-form button[type="reset"] {
+    background: transparent;
+    border: 2px solid #e63946;
+    color: #e63946;
+  }
+
+  #filter-form button[type="reset"]:hover {
+    background: #e63946;
+    color: white;
+    transform: translateY(-2px);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    #filter-form {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    #filter-form select,
+    #filter-form input[type="text"] {
+      width: 100%;
+    }
+
+    #filter-form button {
+      width: 100%;
+    }
+  }
+</style>
+
+<!-- Product Section -->
+<section class="bg0 m-t-23 p-b-140" style="padding-top: 80px;">
+  <div class="container">
+    <div class="flex-w flex-sb-m p-b-52">
+      <!-- Category Filters -->
+      <div class="flex-w flex-l-m filter-tope-group m-tb-10">
+        <% if (categories && categories.length > 0) { %>
+          <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter="*">All Products</button>
+          
+        <% } %>
+      </div>
+
+      <!-- Sort Form -->
+      <form id="filter-form" class="flex-w m-tb-10">
+        <select name="sort" aria-label="Sort products">
+          <option value="">Sort By</option>
+          <option value="lowToHigh" <%= sort === "lowToHigh" ? "selected" : "" %>>Price: Low to High</option>
+          <option value="highToLow" <%= sort === "highToLow" ? "selected" : "" %>>Price: High to Low</option>
+          <option value="" <%= sort === "aToZ" ? "selected" : "" %>>A-Z</option>
+          <option value="" <%= sort === "zToA" ? "selected" : "" %>>Z-A</option>
+        </select>
+        <input type="text" name="search" placeholder="Search Products" value="<%= search || '' %>">
+        <button type="submit" class="hov-btn3 trans-04">Apply</button>
+        <button type="reset" class="hov-btn3 trans-04" onclick="resetFilters()">Clear</button>
+      </form>
+
+      <!-- Filter and Search Buttons -->
+      <div class="flex-w flex-c-m m-tb-10">
+        <!-- <button class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4 js-show-filter" aria-label="Toggle filter">
+          <i class="icon-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-filter-list"></i>
+          <i class="icon-close-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
+          Filter
+        </button> -->
+        <!-- <button class="flex-c-m stext-106 cl6 size-105 bor4 pointer hov-btn3 trans-04 m-tb-4 js-show-search" aria-label="Toggle search">
+          <i class="icon-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-search"></i>
+          <i class="icon-close-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
+          Search
+        </button> -->
+      </div>
+
+      <!-- Search Panel -->
+      <div class="dis-none panel-search w-full p-t-10 p-b-15">
+        <div class="bor8 dis-flex p-l-15">
+          <button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04" aria-label="Search">
+            <i class="zmdi zmdi-search"></i>
+          </button>
+          <input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="search-product" placeholder="Search products" aria-label="Search products">
+        </div>
+      </div>
+
+      <!-- Filter Panel (Example Dynamic Content) -->
+      <!-- <div class="dis-none panel-filter w-full p-t-10">
+        <div class="filter-options">
+          <label><input type="checkbox" name="filter" value="in-stock"> In Stock</label>
+          <label><input type="checkbox" name="filter" value="on-sale"> On Sale</label>
+        </div>
+      </div> -->
+    </div>
+
+    <!-- Product Grid -->
+    <div class="row isotope-grid">
+      <% products.forEach(product => { %>
+        <div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item <%= product.category%>">
+          <div class="block2">
+            <div class="block2-pic hov-img0">
+              <img src="/uploads/product-images/<%= product.productImage[0] %>" alt="<%= product.productName %>" loading="lazy">
+              <a href="/productDetails?id=<%= product._id %>" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
+                Quick View
+              </a>
+            </div>
+            <div class="block2-txt flex-w flex-t p-t-14">
+              <div class="block2-txt-child1 flex-col-l">
+                <a href="/productDetails?id=<%= product._id %>" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+                  <%= product.productName %>
+                </a>
+                <span class="stext-105 cl3">$<%= product.salePrice.toFixed(2) %></span>
+              </div>
+              <div class="block2-txt-child2 flex-r p-t-3">
+                <button class="btn-addwish-b2 dis-block pos-relative js-addwish-b2" aria-label="Add to wishlist">
+                  <img class="icon-heart1 dis-block trans-04" src="/images/icons/icon-heart-01.png" alt="Add to wishlist">
+                  <img class="icon-heart2 dis-block trans-04 ab-t-l" src="/images/icons/icon-heart-02.png" alt="Added to wishlist">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+
+    <!-- Load More -->
+    <div class="flex-c-m flex-w w-full p-t-45">
+      <a href="#" class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04">
+        Load More
+      </a>
+    </div>
+  </div>
+</section>
+
+<%- include("../../views/partials/user/footer") %>
+
+<!-- JavaScript for Reset Filters -->
+<script>
+  function resetFilters() {
+    document.getElementById('filter-form').reset();
+    window.location.href = '/shop'; // Adjust URL as needed
+  }
+</script>

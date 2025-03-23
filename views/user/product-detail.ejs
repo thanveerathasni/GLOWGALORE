@@ -1,0 +1,530 @@
+<%- include('../partials/user/header') %>
+
+<style>
+    :root {
+        --dark-bg: #ff0000;
+        --accent-gold: #000000;
+        --secondary-bg: #ffffff94;
+        --text-primary: #ff008c;
+        --text-secondary: #00ff1a;
+    }
+
+    .product-page {
+        padding: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        margin-top: 50px;
+        box-shadow: 0 0 20px #e4e4e4;
+        padding-bottom: 50px;
+        border-radius: 5px;
+        background: #fff6eb94;
+    }
+
+    .product-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        align-items: center;
+    }
+
+    .product-gallery {
+        text-align: center;
+    }
+
+    .main-image img {
+        width: 100%;
+        border-radius: 8px;
+        border: 2px solid var(--accent-gold);
+    }
+
+    .thumbnails {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        justify-content: center;
+    }
+
+    .thumbnail img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 4px;
+        cursor: pointer;
+        border: 1px solid transparent;
+    }
+
+    .thumbnail.active img {
+        border-color: var(--accent-gold);
+    }
+
+    .product-info {
+        padding: 2rem;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(245, 245, 245, 0.9));
+        border-radius: 12px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .product-info:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: #2c2c2c;
+        margin-bottom: 0.8rem;
+        line-height: 1.2;
+        text-transform: capitalize;
+    }
+
+    .product-info p.product-title {
+        font-size: 1.1rem;
+        color: #666;
+        font-weight: 400;
+        margin-bottom: 1.5rem;
+    }
+
+    .product-information {
+        font-size: 1rem;
+        color: #444;
+        line-height: 1.7;
+        background: rgba(244, 210, 96, 0.1);
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+    }
+
+    .product-information span {
+        font-weight: 600;
+        color: #ff5050;
+    }
+
+    .rating {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin: 1rem 0;
+    }
+
+    .stars i {
+        color: #ffaa00;
+        font-size: 1.2rem;
+        transition: transform 0.2s ease;
+    }
+
+    .stars i:hover {
+        transform: scale(1.2);
+    }
+
+    .rating-value {
+        color: #555;
+        font-size: 0.95rem;
+    }
+
+    .original-price {
+        font-size: 1.1rem;
+        color: #999;
+        text-decoration: line-through;
+        margin: 0.5rem 0;
+    }
+
+    .discounted-price {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #e63946;
+        margin: 0.5rem 0;
+    }
+
+    .highlight {
+        background: rgba(230, 57, 70, 0.1);
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+    }
+
+    .offer {
+        font-size: 1rem;
+        color: #28a745;
+        font-weight: 500;
+        margin-bottom: 1rem;
+    }
+
+    .stock-status {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 1rem 0;
+    }
+
+    .in-stock {
+        color: #28a745;
+    }
+
+    .out-of-stock {
+        color: #dc3545;
+    }
+
+    .buttons {
+        display: flex;
+        gap: 1rem;
+        margin: 1.5rem 0;
+    }
+
+    .add-to-cart {
+        background: linear-gradient(90deg, #ff6b6b, #e63946);
+        color: white;
+        padding: 0.8rem 2rem;
+        font-weight: 600;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .add-to-cart:hover {
+        background: linear-gradient(90deg, #ff8787, #f05461);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3);
+    }
+
+    .wishlist {
+        background: transparent;
+        border: 2px solid #e63946;
+        color: #e63946;
+        padding: 0.8rem 1.5rem;
+        font-weight: 600;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .wishlist:hover {
+        background: #e63946;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .reviews {
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #eee;
+    }
+
+    .reviews h3 {
+        font-size: 1.4rem;
+        color: #2c2c2c;
+        margin-bottom: 1rem;
+    }
+
+    .review {
+        background: #fafafa;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        transition: background 0.3s ease;
+    }
+
+    .review:hover {
+        background: #f5f5f5;
+    }
+
+    .review strong {
+        color: #333;
+        font-weight: 600;
+    }
+
+    .review p {
+        color: #666;
+        margin: 0.5rem 0 0;
+    }
+
+    .main-image {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        border-radius: 8px;
+        border: 2px solid var(--accent-gold);
+    }
+
+    .main-image img {
+        width: 100%;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .main-image:hover img {
+        transform: scale(1.5);
+    }
+</style>
+
+<div class="page-header breadcrumb-wrap mt-30">
+    <div class="container" style="margin-top: 100px;">
+        <div class="breadcrumb">
+            <a href="/" rel="nofollow">Home</a>>
+            <span><a href="/shop" rel="nofollow">shop</a></span> >
+            <span><a href="#" rel="nofollow">product-details</a></span>
+        </div>
+    </div>
+</div>
+
+<div class="product-page">
+    <div class="product-container">
+        <!-- Product Gallery (Left Side - 50%) -->
+        <div class="product-gallery">
+            <div class="main-image">
+                <img id="main-img" src="uploads/product-images/<%= product.productImage[0] %>" alt="<%= product.productName %>">
+            </div>
+            <div class="thumbnails">
+                <% product.productImage.forEach((productImage, index) => { %>
+                    <div class="thumbnail <%= index === 0 ? 'active' : '' %>">
+                        <img src="uploads/product-images/<%= productImage %>" alt="Thumbnail <%= productImage + 1 %>"
+                            onclick="changeImage('<%= productImage %>')">
+                    </div>
+                <% }); %>
+            </div>
+        </div>
+
+        <!-- Product Info (Right Side - 50%) -->
+        <div class="product-info">
+            <h1 class="product-title">
+                <%= product.productName %>
+            </h1>
+           
+            <p class="product-information">
+                <%=product.description %>
+            </p>
+
+            <!-- ⭐ Ratings (Static) -->
+            <div class="rating">
+                <span class="stars">
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star-half-o"></i>
+                </span>
+                <span class="rating-value">(4.5/5, 120 reviews)</span>
+            </div>
+
+            <!-- 💰 Price & Discounts (Dynamic) -->
+            <p class="original-price">Original Price: <del>₹<%= product.regularPrice %></del></p>
+            <p class="discounted-price">Discounted Price: <span class="highlight">₹<%= product.salePrice %></span></p>
+            <p class="offer">Offer Applied: <%= totalOffer %>% OFF</p>
+
+            <!-- 📦 Stock Availability (Dynamic) -->
+            <p class="stock-status">
+                <% if (product.quantity > 0) { %>
+                    <span class="in-stock">In Stock</span> (Only <%= product.quantity %> left!)
+                <% } else { %>
+                    <span class="out-of-stock">Out of Stock</span>
+                <% } %>
+            </p>
+
+            <!-- 🛒 Add to Cart & Wishlist Buttons -->
+            <div class="buttons">
+                <% if (product.quantity > 0) { %>
+                    <button class="add-to-cart" onclick="addToCart('<%= product._id %>')">
+                        <i class="fas fa-shopping-cart"></i> Add to Cart
+                    </button>
+                <% } %>
+                <button class="wishlist" onclick="addToWishlist('<%= product._id %>')">❤ Add to Wishlist</button>
+            </div>
+
+            <!-- 📝 Reviews Section (Static) -->
+            <div class="reviews">
+                <h3>Customer Reviews</h3>
+                <div class="review">
+                    <strong>John Doe</strong>
+                    <p>⭐⭐⭐⭐⭐ - Amazing product! Loved the quality.</p>
+                </div>
+                <div class="review">
+                    <strong>Jane Smith</strong>
+                    <p>⭐⭐⭐⭐ - Great product, but delivery took some time.</p>
+                </div>
+                <div class="review">
+                    <strong>Michael Brown</strong>
+                    <p>⭐⭐⭐⭐⭐ - Worth every penny! Will buy again.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Function to change the main image when clicking a thumbnail
+    function changeImage(newSrc) {
+        const mainImg = document.getElementById('main-img');
+        mainImg.src = `uploads/product-images/${newSrc}`;
+
+        document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+        event.target.parentElement.classList.add('active');
+    }
+
+    // Zoom effect
+    document.getElementById('main-img').addEventListener('mousemove', function (event) {
+        const img = event.target;
+        const { left, top, width, height } = img.getBoundingClientRect();
+        const x = (event.clientX - left) / width * 100;
+        const y = (event.clientY - top) / height * 100;
+        img.style.transformOrigin = `${x}% ${y}%`;
+    });
+
+    // Thumbnail interaction
+    document.querySelectorAll('.thumbnail img').forEach(thumb => {
+        thumb.addEventListener('click', () => {
+            const mainImg = document.querySelector('.main-image img');
+            mainImg.src = thumb.src;
+            document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+            thumb.parentElement.classList.add('active');
+        });
+    });
+
+    function addToWishlist(productId) {
+        if (!productId) {
+            Swal.fire({
+                title: 'Invalid Product',
+                text: 'Invalid product ID. Please try again.',
+                icon: 'error',
+                background: '#1a1a1a',
+                color: '#ffffff',
+                customClass: { popup: 'border-orange' },
+                buttonsStyling: false,
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#ff8c42'
+            });
+            return;
+        }
+
+        $.ajax({
+            url: '/addToWishlist',
+            method: 'patch',
+            contentType: 'application/json',
+            data: JSON.stringify({ productId }),
+            success: (response) => {
+                if (response.status) {
+                    Swal.fire({
+                        title: 'Added to Wishlist',
+                        text: 'The product has been added to your wishlist!',
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        background: '#1a1a1a',
+                        color: '#ffffff',
+                        customClass: { popup: 'border-orange' },
+                        timerProgressBar: true
+                    });
+                } else if (response.status === 401) {
+                    Swal.fire({
+                        title: 'Login Required',
+                        text: 'Please log in to add items to your wishlist.',
+                        icon: 'warning',
+                        confirmButtonText: 'Log In',
+                        background: '#1a1a1a',
+                        color: '#ffffff',
+                        confirmButtonColor: '#ff8c42'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '/login';
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Failed to Add',
+                        text: response.message || 'Please log in to add items to your wishlist.',
+                        icon: 'warning',
+                        background: '#1a1a1a',
+                        color: '#ffffff',
+                        customClass: { popup: 'border-orange' },
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#ff8c42'
+                    });
+                }
+            },
+            error: (xhr, status, error) => {
+                console.error("AJAX Error:", xhr, status, error);
+                const errorMessage = xhr.responseJSON?.message || "There was an error adding the product to your wishlist.";
+                Swal.fire({
+                    title: 'Error',
+                    text: errorMessage,
+                    icon: 'error',
+                    background: '#1a1a1a',
+                    color: '#ffffff',
+                    customClass: { popup: 'border-orange' },
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#ff8c42'
+                });
+            }
+        });
+    }
+
+    function addToCart(productId) {
+        fetch('/add-cart', {
+            method: 'patch',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ productId })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw new Error(data.message || 'Something went wrong');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        title: 'Product added to cart!',
+                        icon: 'success',
+                        showCancelButton: true,
+                        confirmButtonText: 'Go to Cart',
+                        cancelButtonText: 'Continue Shopping'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '/cart';
+                        }
+                    });
+                } else if (data.error === "max_limit") {
+                    Swal.fire({
+                        title: 'Max limit reached!',
+                        text: 'You can only add up to 5 of this item.',
+                        icon: 'warning'
+                    });
+                } else if (data.error === "out_of_stock") {
+                    Swal.fire({
+                        title: 'Out of stock!',
+                        text: 'Not enough stock available.',
+                        icon: 'error'
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Failed to add product to cart.',
+                        icon: 'error'
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error.message);
+                if (error.message === "User not logged in") {
+                    Swal.fire({
+                        title: 'Login Required',
+                        text: 'Please log in to add items to your cart.',
+                        icon: 'warning',
+                        confirmButtonText: 'Log In',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '/login';
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: error.message || 'Something went wrong. Please try again.',
+                        icon: 'error'
+                    });
+                }
+            });
+    }
+</script>
+
+<%- include('../partials/user/footer') %>

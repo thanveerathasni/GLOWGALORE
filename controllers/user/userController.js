@@ -2,6 +2,11 @@ const User = require("../../models/userSchema")
 const nodemailer = require("nodemailer")
 const env = require("dotenv").config()
 const bcrypt = require("bcrypt")
+const Category = require("../../models/categorySchema")
+const Product = require("../../models/productSchema")
+const Banner = require("../../models/bannerSchema");
+
+// Render 404 page when page not found
 
 const pageNotFound = async (req, res) => {
     try {
@@ -11,6 +16,8 @@ const pageNotFound = async (req, res) => {
         res.redirect("/pageNotFound")
     }
 }
+// Log out the user by destroying the session
+
 const logout = async (req,res)=>{
     try {
         req.session.destroy((err)=>{
@@ -27,19 +34,32 @@ const logout = async (req,res)=>{
     }
 }
 
-
-
+// Load homepage with banners and products
 
 const loadHomepage = async (req, res) => {
     try {
+        const today = new Date().toISOString();
+        const findBanner = await Banner.find({
+            startDate:{$lt:new Date(today)},
+            endDate:{$gt:new Date(today)},
+        })
         const user = req.session.user;
+        const categories = await Category.find({isListed:true})
+        let productData = await Product.find({isBlocked:false,category:{$in:categories.map(category=>category._id)},quantity:{$gt:0}})
+        // Sort products by creation date
+
+        productData.sort((a, b) => new Date(b.createdOn) - new Date(a.createdOn))
+        productData= productData.slice(0,4);
+        
         console.log("user:",user)
         if(user){
-            const userData = await User.findById(user)
-            res.render("home",{user:userData})
+             const userData = await User.findById(user)
+            return res.render("home",{user:userData , products:productData, banner: findBanner ||[],})
+            
+
 
         }else{
-            return res.render("home")
+            return res.render("home",{products: productData , banner: findBanner ||[]})
         }
 
 
@@ -50,6 +70,7 @@ const loadHomepage = async (req, res) => {
         res.status(500).send("server error")
     }
 }
+// Render the signup page
 
 const loadSignup = async (req, res) => {
     try {
@@ -59,23 +80,13 @@ const loadSignup = async (req, res) => {
         res.status(500).send("server Error")
     }
 }
-
-const loadShopping = async (req, res) => {
-    try {
-        return res.render('shop');
-    } catch (error) {
-        console.log("shopping page not loading")
-        res.status(500).send("server Error")
-    }
-
-}
+// Generate a random OTP
 
 function genarateOtp() {
     return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-
-
+// Send verification email with OTP
 
 const sendVerificationEmail = async (email, otp) => {
     try {
@@ -113,7 +124,7 @@ const sendVerificationEmail = async (email, otp) => {
     }
 }
 
-
+// Handle user signup process
 
 const signup = async (req, res) => {
     try {
@@ -124,7 +135,6 @@ const signup = async (req, res) => {
 
         const otp = genarateOtp();
         const emailSent = await sendVerificationEmail(email, otp)
-        //console.log("emailSent doneeeee", emailSent)
         if (!emailSent) {
             return res.json("email.error heree the problem")
         }
@@ -141,6 +151,7 @@ const signup = async (req, res) => {
 
     }
 }
+// Hash the password
 
 const securePassword = async (password) => {
     try {
@@ -150,7 +161,7 @@ const securePassword = async (password) => {
 
     }
 }
-
+// Verify OTP entered by user
 
 const verifyOtp = async (req, res) => {
     try {
@@ -199,7 +210,7 @@ const verifyOtp = async (req, res) => {
 
             const savedUser = await saveUserData.save();
 
-            // Update session
+            // Update session with new user data
             req.session.user = savedUser._id;
             req.session.userOtp = null; // Clear OTP after successful verification
             req.session.userData = null; // Clear temporary user data
@@ -223,6 +234,7 @@ const verifyOtp = async (req, res) => {
         });
     }
 };
+// Resend OTP if the user needs it
 
 const resendOtp = async(req,res)=>{
     try{
@@ -248,6 +260,7 @@ const resendOtp = async(req,res)=>{
    
 }
 
+// Load the login page
 
 const loadLogin = async (req,res)=>{
     try {
@@ -263,11 +276,12 @@ const loadLogin = async (req,res)=>{
         
     }
 }
+// Handle user login
 
 const login = async (req,res)=>{
     try {
         const {email,password}= req.body;
-        const findUser = await User.findOne({isAdmin:0,email:email});
+        const findUser = await User.findOne({email:email});
 
         if(!findUser){
             return res.render("login",{message:"User not found"})
@@ -276,7 +290,6 @@ const login = async (req,res)=>{
             return res.render("login",{message:"User is blocked by admin"})
             
         }
-        //console.log("haaai",findUser )
         const passwordMatch = await bcrypt.compare(password,findUser.password);
         if(!passwordMatch){
             return res.render("login",{message:"Incorrect password"})
@@ -289,6 +302,73 @@ const login = async (req,res)=>{
         res.render("login",{message:"login failed .  please try again later"})
     }
 }
+// Load shopping page with filters and sorting
+
+const loadShopping = async (req, res) => {
+    try {
+        const userId = req.session.user;
+        const userData = await User.findById(userId);
+
+        // Fetch categories (only listed ones)
+        const categories = await Category.find({ isListed: true });
+
+        // Get query parameters from frontend
+        const { sort, search } = req.query;
+        
+
+        // Build product query
+        let productQuery = { isBlocked: false };
+
+        // Add search functionality
+        if (search) {
+            productQuery.productName = { $regex: search, $options: 'i' }; 
+        }
+
+        // Sorting logic
+        let sortOption = {};
+    
+
+        switch (sort) {
+            case 'lowToHigh':
+                sortOption = { salePrice: 1 };
+                break;
+            case 'highToLow':
+                sortOption = { salePrice: -1 }; 
+                break;
+            case 'aToZ':
+                sortOption = { productName: 1 };
+            case 'zToA':
+                sortOption = { productName: -1 };
+                break;
+            case 'newArrivals':
+                sortOption = { createdAt: -1 }; 
+                break;
+            default:
+                sortOption = { createdAt: -1 }; 
+        }
+        
+
+        // Fetch products with filtering and sorting
+        const products = await Product.find(productQuery)
+            .sort(sortOption)
+            .populate('category'); // Populate category field for frontend filtering
+
+        // Render the shop page
+        return res.render('shop', {
+            products,
+            userData,
+            categories,
+            sort,
+            search
+        });
+    } catch (error) {
+        console.error('Error loading shopping page:', error);
+        return res.status(500).send('Server Error');
+    }
+};
+
+
+
 
 module.exports = {
     loadHomepage,

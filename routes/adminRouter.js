@@ -6,14 +6,15 @@ const customerController = require("../controllers/admin/customerController")
 const categoryController = require("../controllers/admin/categoryController")
 const brandController = require("../controllers/admin/brandController")
 const productController = require("../controllers/admin/productController")
-const multer = require("multer")
-const storage = require("../helpers/multer")
-const uploads= multer({storage:storage})
-const upload = multer({ dest: 'public/uploads/' });
+const bannerController = require("../controllers/admin/bannerController");
+// const multer = require("multer")
+const uploads = require("../helpers/multer")
+// const uploads= multer({storage:storage})
+// const upload = multer({ dest: 'public/uploads/' });
 
 
 // Attach the uploads middleware to adminAuth
-adminAuth.uploads = multer({ storage: storage });
+// adminAuth.uploads = multer({ storage: storage });
 
 
 router.get ("/pageError",adminController.pageError)
@@ -43,7 +44,7 @@ router.post("/editCategory/:id",adminAuth,categoryController.posteditCategory)
 // brand management
 
 router.get("/brands",adminAuth,brandController.getBrandPage)
-router.post("/addBrand",adminAuth.uploads.single("image"),brandController.addBrand)
+// router.post("/addBrand",adminAuth.uploads.array("image"),brandController.addBrand)
 router.get("/blockBrand",adminAuth,brandController.blockBrand)
 router.get("/unblockBrand",adminAuth,brandController.unblockBrand)
 router.get("/deleteBrand",adminAuth,brandController.deleteBrand)
@@ -55,7 +56,18 @@ router.post("/addProducts",adminAuth,uploads.array("images",4),productController
 router.get("/products",adminAuth,productController.getAllProducts)
 router.post("/addProductOffer",adminAuth,productController.addProductOffer);
 router.post("/removeProductOffer",adminAuth,productController.removeProductOffer);
+router.get("/blockProduct",adminAuth,productController.blockProduct)
+router.get("/unblockProduct",adminAuth,productController.unblockProduct)
+router.get("/editProducts",adminAuth,productController.geteditProduct)
+router.post("/editProducts/:id",adminAuth,uploads.array('imageFile', 8),productController.editProduct)
+router.post("/deleteImage",adminAuth,productController.deleteSingleImage)
 
 
+// banner management 
+
+router.get("/banner",adminAuth,bannerController.getBannerPage)
+router.get("/addBanner",adminAuth,bannerController.getAddBannerPage)
+router.post("/addBanner",adminAuth,uploads.single("images"),bannerController.addBanner)
+router.get("/deleteBanner",adminAuth,bannerController.deleteBanner)
 
 module.exports = router 

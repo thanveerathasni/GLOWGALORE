@@ -1,5 +1,8 @@
 const User = require("../models/userSchema")
 const user = require("../models/userSchema")
+
+// User authentication middleware
+
 const userAuth = (req,res,next)=>{
     if(req.session.user){
         User.findById(req.session.user)
@@ -18,6 +21,9 @@ const userAuth = (req,res,next)=>{
         res.redirect("/login")
     }
 }
+
+// Admin authentication middleware
+
 const adminAuth = (req,res,next)=>{
     User.findOne({isAdmin:true})
     .then(data=>{
