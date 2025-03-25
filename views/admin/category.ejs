@@ -2,6 +2,9 @@
 
   <head>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css" />
+    <!-- Add toastr CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+
     <style>
       .col-md-3 {
         padding: 20px;
@@ -84,7 +87,6 @@
               name="search" />
             <button class="btn" type="submit">Search</button>
             <button type="button" class="btn btn-secondary border-0 rounded-pill" onclick="clearSearch()">Clear</button>
-
           </div>
         </form>
       </header>
@@ -204,11 +206,10 @@
                         <a href="?page=<%= currentPage + 1 %>">Next &raquo;</a>
                         <% } %>
       </div>
-
-
-
-      </div>
     </section>
+
+    <!-- Add toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
@@ -238,6 +239,8 @@
           })
           .then(data => {
             location.reload()
+            // Toastr success notification
+            toastr.success('Category added successfully!');
           })
           .catch(error => {
             if (error.message === "Category already exists") {
@@ -254,8 +257,11 @@
                 text: "An error occured while adding the category"
               })
             }
+            // Toastr error notification
+            toastr.error('An error occurred while adding the category.');
           })
       }
+
       function validateForm() {
         clearErrorMessages();
         const name = document.getElementsByName("name")[0].value.trim();
@@ -273,15 +279,14 @@
         var errorElement = document.getElementById(elementId);
         errorElement.innerText = message;
         errorElement.style.display = "block";
-
       }
+
       function clearErrorMessages() {
         const errorElement = document.getElementsByClassName("error-message")
         Array.from(errorElement).forEach((element) => {
           element.innerText = "";
           element.style.display = "none";
         });
-
       }
 
       async function addOffer(categoryId) {
@@ -312,21 +317,24 @@
                 "success",
               ).then(() => {
                 location.reload()
-              })
+              });
+              // Toastr success notification
+              toastr.success('Offer added successfully!');
             } else {
               Swal.fire("Failed", data.message || "Adding offer failed ", "error")
+              // Toastr error notification
+              toastr.error('Failed to add offer.');
             }
           } catch (error) {
             Swal.fire(
               "Error",
-
               "An error occured while adding the offer",
               "error"
-            )
-            console.log("Error adding offer", error)
-
+            );
+            // Toastr error notification
+            toastr.error('An error occurred while adding the offer.');
+            console.log("Error adding offer", error);
           }
-
         }
       }
 
@@ -334,7 +342,7 @@
         try {
           const response = await fetch("/admin/removeCategoryOffer", {
             method: "POST",
-            headders: {
+            headers: {
               "content-type": "application/json"
             },
             body: JSON.stringify({
@@ -350,8 +358,12 @@
             ).then(() => {
               location.reload()
             });
+            // Toastr success notification
+            toastr.success('Offer removed successfully!');
           } else {
             swal.fire("Failed", data.message || "Removing offer failed", "error")
+            // Toastr error notification
+            toastr.error('Failed to remove offer.');
           }
         } catch (error) {
           Swal.fire(
@@ -359,19 +371,17 @@
             "An error occured while removing the offer",
             "error"
           );
-          console.error("Error removing offer", error)
-
+          // Toastr error notification
+          toastr.error('An error occurred while removing the offer.');
+          console.error("Error removing offer", error);
         }
       }
-
 
       function clearSearch() {
         const searchInput = document.querySelector('input[name="search"]');
         searchInput.value = ''; // Clear the input field
         searchInput.form.submit(); // Submit the form to refresh the page with no search query
       }
-</script>
+    </script>
 
-      <%- include("../../views/partials/admin/footer") %>
-
-  
+  <%- include("../../views/partials/admin/footer") %>

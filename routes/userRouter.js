@@ -52,7 +52,12 @@ router.post("/forgot-email-valid",profileController.forgotEmailValid)
 router.post("/verify-passForgot-otp",profileController.verifyForgotPassOtp);
 router.get("/reset-password",profileController.getResetPassword);
 router.post("/resend-forgot-otp",profileController.resendOtp);
-router.post("/reset-password",profileController.postNewPassword)
+router.post("/reset-password",profileController.postNewPassword);
+router.get("/userProfile", userAuth, profileController.userProfile);
+router.get("/change-email",userAuth,profileController.changeEmail);
+router.post("/change-email",userAuth,profileController.changeEmailValid);
+// router.get("/change-password",userAuth,profileController.changePassword);
+
 
 //product detail
 

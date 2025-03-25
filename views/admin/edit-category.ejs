@@ -1,3 +1,9 @@
+<!-- Toastr CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+
+<!-- SweetAlert CSS (Add this link) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css" />
+
 <%- include("../../views/partials/admin/header") %>
 <div class="container">
     <div class="row justify-content-center">
@@ -20,3 +26,29 @@
     </div>
 </div>
 <%- include("../../views/partials/admin/footer") %>
+
+<!-- Toastr JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<!-- SweetAlert2 JS (Add this script) -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
+
+<script>
+    // Check for a success message
+    document.addEventListener('DOMContentLoaded', function () {
+        const successMessage = '<%= typeof successMessage !== "undefined" ? successMessage : "" %>';
+
+        if (successMessage) {
+            // Trigger Toastr notification
+            toastr.success(successMessage);
+
+            // Trigger SweetAlert popup
+            Swal.fire({
+                title: 'Success!',
+                text: successMessage,
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        }
+    });
+</script>

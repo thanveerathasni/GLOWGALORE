@@ -182,6 +182,55 @@ const postNewPassword = async (req, res) => {
     }
 }
 
+const userProfile = async (req,res) => {
+try {
+    const userId = req.session.user;
+    const userData = await User.findById(userId)
+    res.render("userProfile",{
+        user:userData,
+    })
+} catch (error) {
+   console.log("error while seting profile",error) 
+   res.redirect("/pageNotFound")
+}    
+}
+
+const changeEmail = async (req,res)=>{
+    try {
+        res.render("change-email")
+    } catch (error) {
+        res.redirect("/pageNotFound")
+    }
+}
+
+const changeEmailValid = async(req,res)=>{
+    try {
+        const {email} = req.body;
+        const userExists = await User.findOne({email})
+        if(userExists){
+            const otp = generateOtp();
+            const emailSent = await sendVerificationEmail(email,otp);
+            if (emailSent){
+                req.session.userotp = otp;
+            req.session.userData = req.body
+            req.session.email = email;
+            res.render("change-email-otp")
+            console.log("Email sent:",)
+            console.log("OTP: ", otp);
+            }else {
+            res.json("email-error")
+            }
+            }else{
+                res.render("change-email",{
+                    message:"User with this email not exist"
+                })
+            }
+        }
+     catch (error) {
+        res.redirect("/pageNotFound")
+        
+    }
+}
 
 module.exports = {
     getForgetPassword,
@@ -190,4 +239,8 @@ module.exports = {
     getResetPassword,
     resendOtp,
     postNewPassword,
+    userProfile,
+    changeEmail,
+    changeEmailValid,
+
 };
