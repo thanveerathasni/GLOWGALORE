@@ -1,0 +1,17 @@
+<!-- views/dashboard.ejs -->
+
+<%- include('../partials/side/header') %>
+<%- include('../partials/side/side') %>
+
+
+<div class="card">
+  <div class="card-header">
+    <h5 class="mb-0 text-center">User Profile</h5>
+  </div>
+  <div class="card-body text-center">
+    <h5 class="card-title"><%= user.name %></h5>
+    <p class="card-text"><strong>Email:</strong> <%= user.email %></p>
+    <a href="/change-email" class="btn btn-sm btn-success mx-2">Change Email</a>
+    <a href="/change-password" class="btn btn-sm btn-primary mx-2">Change Password</a>
+  </div>
+</div>

@@ -349,6 +349,7 @@
     </div>
 </div>
 
+<!-- Everything else remains unchanged, only updating the script section -->
 <script>
     // Function to change the main image when clicking a thumbnail
     function changeImage(newSrc) {
@@ -457,8 +458,17 @@
     }
 
     function addToCart(productId) {
-        fetch('/add-cart', {
-            method: 'patch',
+        if (!productId) { // Added validation
+            Swal.fire({
+                title: 'Invalid Product',
+                text: 'Product ID is missing. Please try again.',
+                icon: 'error'
+            });
+            return;
+        }
+
+        fetch('/addToCart', {  
+            method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ productId })
         })
@@ -471,7 +481,7 @@
                 return response.json();
             })
             .then(data => {
-                if (data.success) {
+                if (data.status) { // Updated to match server response
                     Swal.fire({
                         title: 'Product added to cart!',
                         icon: 'success',
@@ -483,13 +493,13 @@
                             window.location.href = '/cart';
                         }
                     });
-                } else if (data.error === "max_limit") {
+                } else if (data.message === "Maximum 5 quantity per user reached") { // Match server message
                     Swal.fire({
                         title: 'Max limit reached!',
                         text: 'You can only add up to 5 of this item.',
                         icon: 'warning'
                     });
-                } else if (data.error === "out_of_stock") {
+                } else if (data.message === "Cannot add more, product is out of stock") { // Match server message
                     Swal.fire({
                         title: 'Out of stock!',
                         text: 'Not enough stock available.',
@@ -498,13 +508,13 @@
                 } else {
                     Swal.fire({
                         title: 'Error',
-                        text: 'Failed to add product to cart.',
+                        text: data.message || 'Failed to add product to cart.',
                         icon: 'error'
                     });
                 }
             })
             .catch(error => {
-                console.error('Error:', error.message);
+                console.error('Client-side Error:', error.message);
                 if (error.message === "User not logged in") {
                     Swal.fire({
                         title: 'Login Required',
