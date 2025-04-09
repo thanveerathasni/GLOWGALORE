@@ -271,12 +271,12 @@
         <!-- Product Gallery (Left Side - 50%) -->
         <div class="product-gallery">
             <div class="main-image">
-                <img id="main-img" src="uploads/product-images/<%= product.productImage[0] %>" alt="<%= product.productName %>">
+                <img id="main-img" src="<%= product.productImage[0] %>" alt="<%= product.productName %>">
             </div>
             <div class="thumbnails">
                 <% product.productImage.forEach((productImage, index) => { %>
                     <div class="thumbnail <%= index === 0 ? 'active' : '' %>">
-                        <img src="uploads/product-images/<%= productImage %>" alt="Thumbnail <%= productImage + 1 %>"
+                        <img src="<%= productImage %>" alt="Thumbnail <%= productImage + 1 %>"
                             onclick="changeImage('<%= productImage %>')">
                     </div>
                 <% }); %>

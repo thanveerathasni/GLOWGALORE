@@ -43,7 +43,7 @@
 
   #filter-form select:hover,
   #filter-form select:focus {
-    border-color: #e63946;
+    border-color: #6739e6;
     box-shadow: 0 0 8px rgba(230, 57, 70, 0.2);
   }
 
@@ -66,7 +66,7 @@
 
   #filter-form input[type="text"]:hover,
   #filter-form input[type="text"]:focus {
-    border-color: #e63946;
+    border-color: #6739e6;
     box-shadow: 0 0 8px rgba(230, 57, 70, 0.2);
   }
 
@@ -82,24 +82,24 @@
   }
 
   #filter-form button[type="submit"] {
-    background: linear-gradient(90deg, #ff6b6b, #e63946);
+    background: linear-gradient(90deg, #6bb8ff, #6739e6);
     color: white;
   }
 
   #filter-form button[type="submit"]:hover {
-    background: linear-gradient(90deg, #ff8787, #f05461);
+    background: linear-gradient(90deg, #6bb8ff, #6739e6);
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3);
   }
 
   #filter-form button[type="reset"] {
     background: transparent;
-    border: 2px solid #e63946;
-    color: #e63946;
+    border: 2px solid #6739e6;
+    color: #6739e6;
   }
 
   #filter-form button[type="reset"]:hover {
-    background: #e63946;
+    background: #6739e6;
     color: white;
     transform: translateY(-2px);
   }
@@ -187,7 +187,7 @@
         <div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item <%= product.category%>">
           <div class="block2">
             <div class="block2-pic hov-img0">
-              <img src="/uploads/product-images/<%= product.productImage[0] %>" alt="<%= product.productName %>" loading="lazy">
+              <img src="<%= product.productImage[0] %>" alt="<%= product.productName %>" loading="lazy">
               <a href="/productDetails?id=<%= product._id %>" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
                 Quick View
               </a>

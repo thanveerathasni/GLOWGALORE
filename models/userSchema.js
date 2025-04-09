@@ -51,10 +51,12 @@ const userSchema = new Schema({
             default: 1
         }
     }],
-    wallet:[{
-        type: Schema.Types.ObjectId,
-        ref:"Wishlist"
-    }],
+
+    wallet: {
+        type: Number,
+        default: 0,  
+        min : 0
+      },
     orderHistory:[{
         type: Schema.Types.ObjectId,
         ref: "Order"

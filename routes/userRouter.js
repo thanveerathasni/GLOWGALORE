@@ -79,12 +79,9 @@ router.get("/deleteAddress",userAuth,profileController.deleteAddress)
 router.post("/addAddress",userAuth,profileController.postAddAddress)
 router.post("/editAddress/:addressId", userAuth, profileController.editAddressById);
 
-//order management
-router.get('/orders', userAuth,orderController.getOrders);
-router.post('/cancelOrder/:orderId', userAuth, orderController.cancelOrder);
-router.post('/returnOrder/:orderId', userAuth, orderController.returnOrder);
-router.get('/invoice/:orderId', userAuth, orderController.downloadInvoice);
-router.get('/order/:orderId', userAuth, orderController.getOrderDetails);
+router.get("/wallet",userAuth,profileController.getwallet)
+
+
 
 
 
@@ -97,4 +94,21 @@ router.get("/productDetails",userAuth,productController.productDetails)
 router.get("/cart",userAuth,cartController.getCartPage)
 router.post("/addToCart", ajaxAuth, cartController.addToCart);
 router.post("/changeQuantity", userAuth, cartController.changeQuantity);
+router.get("/deleteItem", userAuth, cartController.deleteProduct);
+router.post('/placeOrder', userAuth, cartController.placeOrder);  
+router.get('/order-success/:orderId', userAuth, cartController.getOrderSuccess);
+
+router.get('/checkout', userAuth, cartController.getCheckoutPage);
+
+//order management
+router.get('/orders', userAuth,orderController.getOrders);
+
+router.get("/order-details", userAuth, orderController.loadOrderDetails);
+router.post('/cancel-order',orderController.cancelOrder);
+router.get("/download-invoice", userAuth, orderController.generateInvoice);
+router.post("/orders/return", userAuth, upload.array('images', 3), orderController.requestReturn);
+router.post("/orders/cancel-return", userAuth, orderController.cancelReturnRequest);
+
+
+
 module.exports = router

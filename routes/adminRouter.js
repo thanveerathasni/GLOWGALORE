@@ -7,6 +7,8 @@ const categoryController = require("../controllers/admin/categoryController")
 const brandController = require("../controllers/admin/brandController")
 const productController = require("../controllers/admin/productController")
 const bannerController = require("../controllers/admin/bannerController");
+const orderController = require("../controllers/admin/orderController");
+
 // const multer = require("multer")
 const uploads = require("../helpers/multer")
 // const uploads= multer({storage:storage})
@@ -69,5 +71,15 @@ router.get("/banner",adminAuth,bannerController.getBannerPage)
 router.get("/addBanner",adminAuth,bannerController.getAddBannerPage)
 router.post("/addBanner",adminAuth,uploads.single("images"),bannerController.addBanner)
 router.get("/deleteBanner",adminAuth,bannerController.deleteBanner)
+
+//order mnagement
+
+router.get('/orders', adminAuth, orderController.getOrders);
+router.get('/orders/:id', adminAuth, orderController.getOrderDetails);
+router.post('/orders/update-status', adminAuth, orderController.updateOrderStatus);
+router.post('/orders/handle-return', adminAuth, orderController.handleReturnRequest);
+router.post('/orders/update-return-status', adminAuth, orderController.updateReturnStatus);
+router.post('/orders/cancel', adminAuth, orderController.cancelOrder);
+
 
 module.exports = router 

@@ -11,27 +11,28 @@
 
     <style>
         :root {
-            --dark-bg: #2d1b33;
-            --accent-pink: #ff69b4;
-            --secondary-bg: #3e2c47;
-            --text-primary: #ffffff;
-            --text-secondary: #ffd1dc;
-            --shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+            --primary-bg: #ffffff;
+            --secondary-bg: #f8f9fa;
+            --accent-blue: #4d8ed3;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --sidebar-bg: #f8f8f8;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-
+    
         body {
-            background-color: var(--dark-bg);
+            background-color: var(--primary-bg);
             color: var(--text-primary);
             font-family: 'Poppins', sans-serif;
             overflow-x: hidden;
             margin: 0;
             padding: 0;
         }
-
+    
         /* Sidebar */
         .sidebar {
             height: 100vh;
-            background: linear-gradient(180deg, var(--secondary-bg), #2d1b33);
+            background: linear-gradient(180deg, var(--sidebar-bg), var(--primary-bg));
             padding: 2rem 1rem;
             position: fixed;
             top: 0;
@@ -40,19 +41,20 @@
             transition: left 0.3s ease-in-out;
             z-index: 1000;
             box-shadow: var(--shadow);
+            border-right: 1px solid #e0e8ff;
         }
-
+    
         .sidebar.active {
             left: 0;
         }
-
+    
         .sidebar h3 {
-            color: var(--accent-pink);
+            color: var(--accent-blue);
             font-size: 1.8rem;
             font-weight: 600;
             text-align: center;
         }
-
+    
         .sidebar a {
             color: var(--text-primary);
             text-decoration: none;
@@ -66,21 +68,21 @@
             font-size: 1.1rem;
             font-weight: 400;
         }
-
+    
         .sidebar a:hover,
         .sidebar .active {
-            background: rgba(255, 105, 180, 0.2);
-            color: var(--accent-pink);
+            background: rgba(77, 142, 211, 0.2); /* Adjusted to blue hover */
+            color: var(--accent-blue);
             transform: translateX(5px);
         }
-
+    
         /* Toggle Button */
         .sidebar-toggle {
             position: fixed;
             top: 1rem;
             left: 1rem;
             z-index: 1100;
-            background: var(--accent-pink);
+            background: var(--accent-blue);
             border: none;
             padding: 0.5rem;
             border-radius: 50%;
@@ -92,17 +94,16 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-
-        .sidebar.active+.sidebar-toggle {
-            left: 300px;
-            /* Moves button to right of sidebar when open */
+    
+        .sidebar.active + .sidebar-toggle {
+            left: 300px; /* Moves button to right of sidebar when open */
         }
-
+    
         .sidebar-toggle:hover {
-            background: #ff1493;
+            background: #0056b3; /* Darker blue for hover */
             transform: rotate(90deg);
         }
-
+    
         /* Overlay */
         .overlay {
             position: fixed;
@@ -116,115 +117,148 @@
             transition: opacity 0.3s ease;
             z-index: 900;
         }
-
+    
         .overlay.active {
             opacity: 1;
             visibility: visible;
         }
-
+    
         /* Main Content */
         .main-content {
-            background: #f8f1f5;
+            background: var(--primary-bg);
             min-height: 100vh;
             transition: margin-left 0.3s ease-in-out;
             margin-left: 0;
         }
-
-
+    
         .profile-container {
             padding: 2rem;
             background: var(--secondary-bg);
             border-radius: 15px;
             margin: 2rem;
-            border: 2px solid var(--accent-pink);
+            border: 1px solid var(--accent-blue); /* Adjusted border color */
             box-shadow: var(--shadow);
         }
-
+    
         .user-info-card {
-            background: var(--dark-bg);
+            background: var(--primary-bg);
             padding: 2rem;
             border-radius: 12px;
-            border: 2px dashed var(--accent-pink);
+            border: 1px dashed var(--accent-blue);
         }
-
+    
         .user-info-card h2 {
-            color: var(--accent-pink);
+            color: var(--accent-blue);
             font-size: 2rem;
             font-weight: 600;
             margin-bottom: 1.5rem;
         }
-
+    
         .user-info-card p {
             margin: 0.75rem 0;
             font-size: 1.1rem;
             color: var(--text-secondary);
         }
-
+    
         .profile-image-container img {
-            border: 3px solid var(--accent-pink);
+            border: 3px solid var(--accent-blue);
             box-shadow: var(--shadow);
         }
-
+    
         .stats-card {
-            background: var(--dark-bg);
+            background: var(--primary-bg);
             border-radius: 12px;
             padding: 1.5rem;
             text-align: center;
-            border: 1px solid var(--accent-pink);
+            border: 1px solid var(--accent-blue);
             transition: transform 0.3s ease;
         }
-
+    
         .stats-card:hover {
             transform: scale(1.03);
         }
-
+    
         .stats-card h5 {
-            color: var(--accent-pink);
+            color: var(--accent-blue);
             font-size: 2rem;
             margin-bottom: 0.5rem;
         }
-
+    
         .stats-card p {
             color: var(--text-secondary);
             font-size: 1rem;
         }
-
+    
         .col-12-b {
             flex: 1 0 auto;
             width: auto;
         }
+    
+        /* Address Card Styles */
+        .card {
+            background: var(--primary-bg);
+            border: 1px solid var(--accent-blue);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+    
+        .card-header {
+            background: var(--secondary-bg);
+            color: var(--accent-blue);
+            border-bottom: 1px solid var(--accent-blue);
+            border-radius: 10px 10px 0 0;
+        }
+        .btn {
+            background: var(--accent-blue);
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            text-transform: uppercase;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
 
+        .btn:hover {
+            background: #0056b3; /* Darker blue like homepage button hover */
+            color: #ffffff;
+        }
+
+    
+        .card-body {
+            color: var(--text-secondary);
+        }
+    
+        .alert-info {
+            background: var(--secondary-bg);
+            color: var(--text-secondary);
+            border: 1px solid var(--accent-blue);
+        }
+    
         /* Responsive Design */
         @media (min-width: 768px) {
             .sidebar {
                 position: fixed;
                 left: 0;
             }
-
             .sidebar-toggle {
                 display: none;
             }
-
             .overlay {
                 display: none;
             }
-
             .main-content {
                 margin-left: 280px;
             }
-
-            .sidebar.active~.main-content {
-                margin-left: 280px;
-                /* Keeps consistent on desktop */
+            .sidebar.active ~ .main-content {
+                margin-left: 280px; /* Keeps consistent on desktop */
             }
         }
-
+    
         @media (max-width: 767px) {
             .profile-container {
                 padding: 1rem;
                 margin: 1rem;
             }
-
             .main-content {
                 padding-top: 60px;
             }
@@ -241,20 +275,22 @@
 
     <div class="container-fluid p-0">
         <div class="row m-0">
-          <!-- Sidebar -->
-          <nav class="sidebar">
-           
-            <a href="/dashboard"><i class="fas fa-user"></i> Profile</a>
-            <a href="/wishlist"><i class="fas fa-heart"></i> Wishlist</a>
-            <a href="/cart"><i class="fa-solid fa-cart-plus"></i> Cart</a>
-            <a href="/checkout"><i class="fa-solid fa-credit-card"></i> Checkout</a>
-            <a href="/orders"><i class="fas fa-shopping-cart"></i> Orders</a>
-            <a href="/editProfile"><i class="fas fa-cog"></i> Edit profile</a>
-            <a href="/address"  class="active"><i class="fa-solid fa-location-dot"></i> Address</a>
-
-            <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
-        </nav>
-
+            <div class="row m-0">
+                <!-- Sidebar -->
+                <nav class="sidebar">
+                          
+                   <a href="/dashboard" class="active"><i class="fas fa-user"></i> Profile</a>
+                   <a href="/wishlist"><i class="fas fa-heart"></i> Wishlist</a>
+                   <a href="/cart"><i class="fa-solid fa-cart-plus"></i> Cart</a>
+                   <a href="/checkout"><i class="fa-solid fa-credit-card"></i> Checkout</a>
+                   <a href="/orders"><i class="fas fa-shopping-cart"></i> Orders</a>
+                   <a href="/editProfile"><i class="fas fa-cog"></i> Edit profile</a>
+                   <a href="/address"><i class="fa-solid fa-location-dot"></i> Address</a>
+                   <a href="/wallet"><i class="fas fa-wallet"></i> wallet</a>
+               
+               
+                   <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+               </nav>
             <!-- Main Content -->
             <main class="col-12 main-content px-md-4 py-4 col-12-b">
                 <div class="profile-container">
@@ -277,7 +313,7 @@
     <h3 class="mb-3" style="color: var(--accent-pink);">Quick Actions</h3>
     <div class="d-flex gap-3 flex-wrap">
         <a href="/addAddress" class="btn"
-            style="background: var(--accent-pink); color: var(--dark-bg);">Add Address</a>
+            >Add Address</a>
         
         </div>
 </div>
@@ -287,11 +323,11 @@
         <% if (userAddress && userAddress.address && userAddress.address.length > 0) { %>
             <% userAddress.address.forEach((address) => { %>
                 <div class="col-lg-6 mb-4">
-                    <div class="card" style="background: #3e2c47; border: 1px solid #ff69b4; border-radius: 10px; box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);">
-                        <div class="card-header" style="background: #2d1b33; color: #ff69b4; border-bottom: 2px solid #ff69b4; border-radius: 10px 10px 0 0;">
+                    <div class="card" style="background: #efecf0; border: 1px solid #f2eff1; border-radius: 10px; box-shadow: 0 4px 15px rgba(246, 246, 246, 0.3);">
+                        <div class="card-header" style="background: #3c79c8; color: #efecee; border-bottom: 2px solid #6987ff; border-radius: 10px 10px 0 0;">
                             <h5 class="mb-0"><%= address.addressType %></h5>
                         </div>
-                        <div class="card-body" style="color: #ffd1dc;">
+                        <div class="card-body" style="color: #3d3c3d;">
                             <p class="mb-1"><strong>Name:</strong> <%= address.name %></p>
                             <p class="mb-1"><strong>City:</strong> <%= address.city %></p>
                             <p class="mb-1"><strong>Landmark:</strong> <%= address.landMark %></p>
@@ -307,10 +343,10 @@
                        
                         <div class="d-flex gap-3 flex-wrap">
                            
-                            <a href="/editAddress?id=<%=address._id%>" class="btn"
-                                style="background: var(--accent-pink); color: var(--dark-bg);">edit address</a>
+                            <a href="/editAddress?id=<%=address._id%>" class="btn" 
+                               >edit address</a>
                             <a href="/deleteAddress?id=<%=address._id%>" class="btn"
-                                style="background: var(--accent-pink); color: var(--dark-bg);">delete address</a>
+                                >delete address</a>
                             </div>
                     </div>
                 </div>

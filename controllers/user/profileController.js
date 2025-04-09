@@ -494,6 +494,21 @@ const editProfile = async (req, res) => {
 }
 
 
+const getwallet = async (req, res) => {
+    try {
+        const userId = req.session.user
+        const userData = await User.findById(userId)
+        res.render("wallet", {
+            user: userData,
+        })
+        
+    } catch (error) {
+        res.redirect("/pageNotFound")
+        console.log("error while rendering edit page ", error)
+    }
+}
+
+
 const updateProfileImage = async (req, res) => {
     try {
         const userId = req.session.user;
@@ -574,4 +589,5 @@ module.exports = {
     postAddAddress,
     editAddressById,
     deleteAddress,
+    getwallet
 };

@@ -10,16 +10,18 @@
 
     <style>
         :root {
-            --dark-bg: #2d1b33;
-            --accent-pink: #ff69b4;
-            --secondary-bg: #3e2c47;
-            --text-primary: #ffffff;
-            --text-secondary: #ffd1dc;
-            --shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+            --primary-bg: #ffffff; /* Matches homepage white background */
+            --secondary-bg: #f8f9fa; /* Light gray like homepage */
+            --accent-blue: #4d8ed3; /* Matches SHOP NOW button */
+            --text-primary: #333333; /* Dark text like cl2 */
+            --text-secondary: #666666; /* Lighter gray for secondary text */
+            --navbar-bg: #4d8ed3; /* Dark navbar like homepage */
+            --sidebar-bg: #f8f8f8; /* Light sidebar background */
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
         }
 
         body {
-            background-color: var(--dark-bg);
+            background-color: var(--primary-bg);
             color: var(--text-primary);
             font-family: 'Poppins', sans-serif;
             overflow-x: hidden;
@@ -27,18 +29,65 @@
             padding: 0;
         }
 
+        /* Top Navbar */
+        .top-navbar {
+            background: var(--navbar-bg);
+            padding: 1rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1100; /* Above sidebar */
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: center; /* Center align links */
+            align-items: center;
+        }
+
+        .top-navbar .menu-desktop {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .top-navbar .main-menu {
+            display: flex;
+            gap: 2rem; /* Better spacing between links */
+        }
+
+        .top-navbar .main-menu li {
+            position: relative;
+        }
+
+        .top-navbar .main-menu a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase; /* Matches homepage */
+            padding: 0.5rem 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .top-navbar .main-menu a:hover {
+            color: var(--accent-blue); /* Blue hover like homepage */
+        }
+
         /* Sidebar */
         .sidebar {
             height: 100vh;
-            background: linear-gradient(180deg, var(--secondary-bg), #2d1b33);
+            background: linear-gradient(180deg, var(--sidebar-bg), var(--primary-bg));
             padding: 2rem 1rem;
             position: fixed;
-            top: 0;
+            top: 80px; /* Adjust sidebar to fit under navbar */
             left: -280px;
             width: 280px;
             transition: left 0.3s ease-in-out;
             z-index: 1000;
             box-shadow: var(--shadow);
+            border-right: 1px solid #e0e8ff;
         }
 
         .sidebar.active {
@@ -46,10 +95,11 @@
         }
 
         .sidebar h3 {
-            color: var(--accent-pink);
+            color: var(--accent-blue);
             font-size: 1.8rem;
             font-weight: 600;
             text-align: center;
+            text-transform: uppercase; /* Matches homepage headings */
         }
 
         .sidebar a {
@@ -64,12 +114,13 @@
             gap: 1rem;
             font-size: 1.1rem;
             font-weight: 400;
+            text-transform: uppercase; /* Matches homepage nav links */
         }
 
         .sidebar a:hover,
         .sidebar .active {
-            background: rgba(255, 105, 180, 0.2);
-            color: var(--accent-pink);
+            background: rgba(0, 123, 255, 0.1); /* Light blue hover like homepage */
+            color: var(--accent-blue);
             transform: translateX(5px);
         }
 
@@ -79,7 +130,7 @@
             top: 1rem;
             left: 1rem;
             z-index: 1100;
-            background: var(--accent-pink);
+            background: var(--accent-blue);
             border: none;
             padding: 0.5rem;
             border-radius: 50%;
@@ -97,7 +148,7 @@
         }
 
         .sidebar-toggle:hover {
-            background: #ff1493;
+            background: #0056b3; /* Darker blue like homepage button hover */
             transform: rotate(90deg);
         }
 
@@ -108,7 +159,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.2);
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.3s ease;
@@ -122,70 +173,122 @@
 
         /* Main Content */
         .main-content {
-            background: #f8f1f5;
+            background: var(--primary-bg);
             min-height: 100vh;
             transition: margin-left 0.3s ease-in-out;
             margin-left: 0;
+            padding-top: 120px; /* Space for top navbar */
         }
 
-        
         .profile-container {
             padding: 2rem;
             background: var(--secondary-bg);
             border-radius: 15px;
             margin: 2rem;
-            border: 2px solid var(--accent-pink);
+            border: 1px solid #dee2e6; /* Subtle border like homepage */
             box-shadow: var(--shadow);
         }
 
         .user-info-card {
-            background: var(--dark-bg);
+            background: var(--primary-bg);
             padding: 2rem;
             border-radius: 12px;
-            border: 2px dashed var(--accent-pink);
+            border: 1px solid #dee2e6;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .user-info-card:hover {
+            box-shadow: var(--shadow);
         }
 
         .user-info-card h2 {
-            color: var(--accent-pink);
+            color: var(--accent-blue);
             font-size: 2rem;
             font-weight: 600;
             margin-bottom: 1.5rem;
+            text-transform: uppercase; /* Matches homepage headings */
         }
 
         .user-info-card p {
             margin: 0.75rem 0;
             font-size: 1.1rem;
             color: var(--text-secondary);
+            font-weight: 400;
         }
 
         .stats-card {
-            background: var(--dark-bg);
+            background: var(--primary-bg);
             border-radius: 12px;
             padding: 1.5rem;
             text-align: center;
-            border: 1px solid var(--accent-pink);
+            border: 1px solid #dee2e6;
             transition: transform 0.3s ease;
         }
 
         .stats-card:hover {
-            transform: scale(1.03);
+            transform: scale(1.03); /* Matches homepage hover effects */
         }
 
         .stats-card h5 {
-            color: var(--accent-pink);
+            color: var(--accent-blue);
             font-size: 2rem;
             margin-bottom: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase; /* Matches homepage */
         }
 
         .stats-card p {
             color: var(--text-secondary);
             font-size: 1rem;
+            font-weight: 400;
         }
 
         .col-12-b {
-    flex: 1 0 auto;
-    width: auto;
-}
+            flex: 1 0 auto;
+            width: auto;
+        }
+
+        /* Address Card Styling */
+        .card {
+            background: var(--primary-bg) !important;
+            border: 1px solid #dee2e6 !important;
+            border-radius: 10px !important;
+            box-shadow: var(--shadow) !important;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            background: var(--secondary-bg) !important;
+            color: var(--text-primary) !important;
+            border-bottom: 1px solid #dee2e6 !important;
+            border-radius: 10px 10px 0 0 !important;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .card-body {
+            color: #495057 !important;
+        }
+
+        /* Quick Actions Buttons */
+        .btn {
+            background: var(--accent-blue);
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            text-transform: uppercase;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #0056b3; /* Darker blue like homepage button hover */
+            color: #ffffff;
+        }
 
         /* Responsive Design */
         @media (min-width: 768px) {
@@ -213,33 +316,53 @@
                 margin: 1rem;
             }
             .main-content {
-                padding-top: 60px;
+                padding-top: 80px; /* Adjusted for top navbar */
+            }
+            .top-navbar .main-menu {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
             }
         }
     </style>
 </head>
+
 <body>
+    <!-- Top Navigation Bar -->
+    <nav class="top-navbar">
+        <ul class="menu-desktop">
+            <ul class="main-menu">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                <li>
+                    <a href="/shop">Shop</a> <!-- Removed HOT label -->
+                </li>
+            </ul>
+        </ul>
+    </nav>
+
+    <!-- Toggle Button -->
     <button class="sidebar-toggle" aria-label="Toggle sidebar">
-        <i class="fas fa-bars" style="color: var(--dark-bg);"></i>
+        <i class="fas fa-bars" style="color: var(--accent-blue);"></i> <!-- Changed color to match theme -->
     </button>
 
     <div class="overlay"></div>
 
     <div class="container-fluid p-0">
         <div class="row m-0">
- <!-- Sidebar -->
- <nav class="sidebar">
-           
-    <a href="/dashboard" class="active"><i class="fas fa-user"></i> Profile</a>
-    <a href="/wishlist"><i class="fas fa-heart"></i> Wishlist</a>
-    <a href="/cart"><i class="fa-solid fa-cart-plus"></i> Cart</a>
-    <a href="/checkout"><i class="fa-solid fa-credit-card"></i> Checkout</a>
-    <a href="/orders"><i class="fas fa-shopping-cart"></i> Orders</a>
-    <a href="/editProfile"><i class="fas fa-cog"></i> Edit profile</a>
-    <a href="/address"><i class="fa-solid fa-location-dot"></i> Address</a>
-
-    <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
-</nav>
+            <!-- Sidebar -->
+            <nav class="sidebar">
+                <a href="/dashboard" class="active"><i class="fas fa-user"></i> Profile</a>
+                <a href="/wishlist"><i class="fas fa-heart"></i> Wishlist</a>
+                <a href="/cart"><i class="fa-solid fa-cart-plus"></i> Cart</a>
+                <a href="/checkout"><i class="fa-solid fa-credit-card"></i> Checkout</a>
+                <a href="/orders"><i class="fas fa-shopping-cart"></i> Orders</a>
+                <a href="/editProfile"><i class="fas fa-cog"></i> Edit profile</a>
+                <a href="/address"><i class="fa-solid fa-location-dot"></i> Address</a>
+                <a href="/wallet"><i class="fas fa-wallet"></i> Wallet</a>
+                <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </nav>
             <!-- Main Content -->
             <main class="col-12 main-content px-md-4 py-4 col-12-b">
                 <div class="profile-container">
@@ -247,18 +370,51 @@
                     <div class="user-info-card mb-4">
                         <h2>Welcome, <%= user.name %>!</h2>
                         <div class="profile-image-container text-center mb-3">
-                            <img src="<%= user.profileImage || '/path/to/default-profile.jpg' %>" 
+                            <img src="/images/1742360774027-banner-01.jpg" 
                                  alt="Profile Picture" 
                                  class="rounded-circle" 
                                  style="width: 150px; height: 150px; object-fit: cover;">
-                            
                         </div>
                         <p><i class="fas fa-envelope me-2"></i>Email: <%= user.email %></p>
-                        <p><i class="fas fa-phone me-2"></i>Phone: <%= user.phone || 'Not provided' %></p>
+                        <% if (userAddress && userAddress.address && userAddress.address.length > 0) { %>
+                            <% userAddress.address.forEach((address) => { %>
+                                <p><i class="fas fa-phone me-2"></i>Phone: <%= address.phone %></p>
+                            <% }) %>
+                        <% } %>
                     </div>
-
+                    <br>
                     <!-- Stats -->
                     <div class="row g-4 mb-4">
+                        <div class="row">
+                            <% if (userAddress && userAddress.address && userAddress.address.length > 0) { %>
+                                <% userAddress.address.forEach((address) => { %>
+                                    <div class="col-lg-6 mb-4">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5 class="mb-0"><%= address.addressType %></h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="mb-1"><strong>Name:</strong> <%= address.name %></p>
+                                                <p class="mb-1"><strong>City:</strong> <%= address.city %></p>
+                                                <p class="mb-1"><strong>Landmark:</strong> <%= address.landMark %></p>
+                                                <p class="mb-1"><strong>State:</strong> <%= address.state %></p>
+                                                <p class="mb-1"><strong>Pincode:</strong> <%= address.pincode %></p>
+                                                <p class="mb-1"><strong>Phone:</strong> <%= address.phone %></p>
+                                                <% if (address.altPhone) { %>
+                                                    <p class="mb-0"><strong>Alt Phone:</strong> <%= address.altPhone %></p>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <% }) %>
+                            <% } else { %>
+                                <div class="col-12">
+                                    <div class="alert alert-info" style="background: var(--secondary-bg); color: var(--text-secondary);">
+                                        No addresses found. Please add an address.
+                                    </div>
+                                </div>
+                            <% } %>
+                        </div>
                         <div class="col-md-4">
                             <div class="stats-card">
                                 <h5><%= user.ordersCount || 0 %></h5>
@@ -271,22 +427,21 @@
                                 <p>Wishlist Items</p>
                             </div>
                         </div>
-                        <div class="col-md-4 ">
+                        <div class="col-md-4">
                             <div class="stats-card">
                                 <h5>$<%= user.totalSpent || 0 %></h5>
                                 <p>Total Spent</p>
-                        
                             </div>
                         </div>
                     </div>
 
                     <!-- Quick Actions -->
                     <div class="mt-4">
-                        <h3 class="mb-3" style="color: var(--accent-pink);">Quick Actions</h3>
+                        <h3 class="mb-3" style="color: var(--accent-blue);">Quick Actions</h3>
                         <div class="d-flex gap-3 flex-wrap">
-                            <a href="/orders" class="btn" style="background: var(--accent-pink); color: var(--dark-bg);">View Orders</a>
-                            <a href="/wishlist" class="btn" style="background: var(--accent-pink); color: var(--dark-bg);">View Wishlist</a>
-                            <a href="/editProfile" class="btn" style="background: var(--accent-pink); color: var(--dark-bg);">Edit Profile</a>
+                            <a href="/orders" class="btn">View Orders</a>
+                            <a href="/wishlist" class="btn">View Wishlist</a>
+                            <a href="/editProfile" class="btn">Edit Profile</a>
                         </div>
                     </div>
                 </div>
@@ -299,12 +454,11 @@
         const sidebar = document.querySelector('.sidebar');
         const toggleBtn = document.querySelector('.sidebar-toggle');
         const overlay = document.querySelector('.overlay');
-        const mainContent = document.querySelector('.main-content');
+        const body = document.querySelector('body');
 
         toggleBtn.addEventListener('click', () => {
             sidebar.classList.toggle('active');
             overlay.classList.toggle('active');
-            // No need to manually adjust main content margin here as CSS handles it
         });
 
         overlay.addEventListener('click', () => {

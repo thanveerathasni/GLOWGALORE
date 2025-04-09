@@ -59,7 +59,7 @@ const addProducts = async (req, res) => {
             try {
                 const originalImagePath = req.files[i].path;
                 const filename = req.files[i].filename;
-                const resizedFilename = `resized-${Date.now()}-${filename}.jpeg`;
+                const resizedFilename = `/uploads/product-images/resized-${Date.now()}-${filename}.jpeg`;
 
                 const savePath = path.join(uploadDir, resizedFilename);
                 console.log(`Saving image ${i + 1} to: ${savePath}`);
