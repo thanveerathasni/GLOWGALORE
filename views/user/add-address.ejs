@@ -281,8 +281,86 @@
                 padding-top: 60px;
             }
         }
+
+        :root {
+    --primary-bg: #ffffff; /* Matches homepage white background */
+    --secondary-bg: #f8f9fa; /* Light gray like homepage */
+    --accent-blue: #4d8ed3; /* Matches SHOP NOW button */
+    --text-primary: #333333; /* Dark text like cl2 */
+    --text-secondary: #666666; /* Lighter gray for secondary text */
+    --navbar-bg: #4d8ed3; /* Dark navbar like homepage */
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+/* Top Navbar */
+.top-navbar {
+    background: var(--navbar-bg);
+    padding: 1rem;
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    /* z-index: 1100; Above sidebar */
+    box-shadow: var(--shadow);
+    display: flex;
+    justify-content: center; /* Center align links */
+    align-items: center;
+}
+
+.top-navbar .menu-desktop {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    align-items: center;
+}
+
+.top-navbar .main-menu {
+    display: flex;
+    gap: 2rem; /* Better spacing between links */
+}
+
+.top-navbar .main-menu li {
+    position: relative;
+}
+
+.top-navbar .main-menu a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-transform: uppercase; /* Matches homepage */
+    padding: 0.5rem 1rem;
+    transition: color 0.3s ease;
+}
+
+.top-navbar .main-menu a:hover {
+    color: var(--accent-blue); /* Blue hover like homepage */
+}
+
+/* Responsive Design */
+@media (max-width: 767px) {
+    .top-navbar .main-menu {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+}
     </style>
 </head>
+<nav class="top-navbar">
+    <ul class="menu-desktop">
+        <ul class="main-menu">
+            <li>
+                <a href="/">Home</a>
+            </li>
+            <li>
+                <a href="/shop">Shop</a> <!-- Removed HOT label -->
+            </li>
+        </ul>
+    </ul>
+</nav>
+
 <body>
     <button class="sidebar-toggle" aria-label="Toggle sidebar">
         <i class="fas fa-bars" style="color: var(--dark-bg);"></i>
@@ -294,16 +372,15 @@
         <div class="row m-0">
             <!-- Sidebar -->
             <nav class="sidebar">
-           
-                <a href="/dashboard" class="active"><i class="fas fa-user"></i> Profile</a>
-                <a href="/wishlist"><i class="fas fa-heart"></i> Wishlist</a>
+                <a href="/dashboard"><i class="fas fa-user"></i> Profile</a>
                 <a href="/cart"><i class="fa-solid fa-cart-plus"></i> Cart</a>
                 <a href="/checkout"><i class="fa-solid fa-credit-card"></i> Checkout</a>
                 <a href="/orders"><i class="fas fa-shopping-cart"></i> Orders</a>
-                <a href="/editProfile"><i class="fas fa-cog"></i> Edit profile</a>
-                <a href="/address"><i class="fa-solid fa-location-dot"></i> Address</a>
-    
-                <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                <a href="/editProfile"><i class="fas fa-cog"></i> Edit Profile</a>
+                <a href="/address" class="active"><i class="fa-solid fa-location-dot"></i> Address</a>
+                <a href="/wallet"><i class="fas fa-wallet"></i> Wallet</a>
+                <a href="/getCoupons"><i class="fas fa-ticket-alt"></i> My Coupons</a>
+                <a href="/logout" onclick="confirmLogout(event)"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </nav>
             <!-- Main Content -->
             <main class="col-12 main-content px-md-4 py-4 col-12-b">
@@ -311,15 +388,11 @@
                     <!-- User Info -->
                     <div class="user-info-card mb-4">
                         <h2>Welcome, <%= user.name %>!</h2>
-                   
-                        <p> Username: <%= user.name %></p>
-                        <p><i class="fas fa-envelope me-2"></i>Email: <%= user.email %></p>
-                        
                     </div>
 
                     <!-- Quick Actions -->
                     <div class="container mt-4">
-                        <h3 class="mt-3" style="color: #170a90; margin-bottom:70px">Create User Address</h3>
+                        <h3 class="mt-3" style="color: #2661a0; margin-bottom:70px">Create User Address</h3>
                         <form id="addressForm" method="POST" action="/addAddress" class="border-0 p-3">
                             <div class="row mb-50">
                                 <div class="form-group col-md-4">
@@ -361,135 +434,209 @@
                             </div>
                             <button type="submit" id="submitButton" class="btn btn-primary">Submit</button>
                         </form>
-                     </div>
-                  
-                     
-
-                    <!-- //////////////////////// -->
+                    </div>
                 </div>
             </main>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  
+    <script>
+        document.getElementById('addressForm').addEventListener('submit', function(event) {
+            if (!validateForm()) {
+                event.preventDefault();
+            }
+        });
 
+        function validateForm() {
+            let isValid = true;
+            const requiredFields = ["addressType", "name", "city", "landMark", "state", "pincode", "phone", "altPhone"];
+            const namePattern = /^[A-Za-z\s]+$/;
+            const numberPattern = /^[1-9][0-9]*$/;
 
-<script>
-                       
-                       document.getElementById('addressForm').addEventListener('submit', function(event) {
-                           if (!validateForm()) {
-                               event.preventDefault();
-                           }
-                       });
-                    
-                    
-                       function validateForm() {
-                           let isValid = true;
-                           const requiredFields = ["addressType", "name", "city", "landMark", "state", "pincode", "phone", "altPhone"];
-                           requiredFields.forEach(function(field) {
-                               const input = document.getElementById(field);
-                               const inputValue = input.value.trim();
-                               const errorElement = document.getElementById(field + '-error');
-                    
-                    
-                               if (inputValue === "") {
-                                   if (!errorElement) {
-                                       const errorMessage = "This field is required.";
-                                       const errorDiv = document.createElement('div');
-                                       errorDiv.className = "text-danger";
-                                       errorDiv.textContent = errorMessage;
-                                       errorDiv.id = field + '-error';
-                                       input.parentNode.appendChild(errorDiv);
-                                   }
-                                   isValid = false;
-                               } else {
-                                   if (errorElement) {
-                                       errorElement.remove();
-                                   }
-                               }
-                           });
-                    
-                    
-                           const addressType = document.getElementById('addressType').value;
-                           const name = document.getElementById('name').value;
-                           const city = document.getElementById('city').value;
-                           const landMark = document.getElementById('landMark').value;
-                           const state = document.getElementById('state').value;
-                           const pincode = document.getElementById('pincode').value;
-                           const phone = document.getElementById('phone').value;
-                           const altPhone = document.getElementById('altPhone').value;
-                           const namePattern = /^[A-Za-z\s]+$/;
-                           const pincodePattern = /^\d{6}$/;
-                           const phonePattern = /^\d{10}$/;
-                           if (!namePattern.test(name)) {
-                               Swal.fire({
-                                   title: 'Error',
-                                   text: 'Name should contain alphabets only.',
-                                   icon: 'error'
-                               });
-                               isValid = false;
-                           }
-                           if (!namePattern.test(city)) {
-                               Swal.fire({
-                                   title: 'Error',
-                                   text: 'City should contain alphabets only.',
-                                   icon: 'error'
-                               });
-                               isValid = false;
-                           }
-                           if (!namePattern.test(landMark)) {
-                               Swal.fire({
-                                   title: 'Error',
-                                   text: 'Landmark should contain alphabets only.',
-                                   icon: 'error'
-                               });
-                               isValid = false;
-                           }
-                           if (!namePattern.test(state)) {
-                               Swal.fire({
-                                   title: 'Error',
-                                   text: 'State should contain alphabets only.',
-                                   icon: 'error'
-                               });
-                               isValid = false;
-                           }
-                           if (!pincodePattern.test(pincode)) {
-                               Swal.fire({
-                                   title: 'Error',
-                                   text: 'Pincode should be a 6-digit number.',
-                                   icon: 'error'
-                               });
-                               isValid = false;
-                           }
-                           if (!phonePattern.test(phone)) {
-                               Swal.fire({
-                                   title: 'Error',
-                                   text: 'Phone number should be a 10-digit number.',
-                                   icon: 'error'
-                               });
-                               isValid = false;
-                           }
-                           if (!phonePattern.test(altPhone)) {
-                               Swal.fire({
-                                   title: 'Error',
-                                   text: 'Alternate phone number should be a 10-digit number.',
-                                   icon: 'error'
-                               });
-                               isValid = false;
-                           }
-                           if (phone === altPhone) {
-                               Swal.fire({
-                                   title: 'Error',
-                                   text: 'Phone number and alternate phone number should be different.',
-                                   icon: 'error'
-                               });
-                               isValid = false;
-                           }
-                           return isValid;
-                       }
-                  
+            // Check all fields for emptiness and minimum length
+            requiredFields.forEach(function(field) {
+                const input = document.getElementById(field);
+                const inputValue = input.value.trim();
+                const errorElement = document.getElementById(field + '-error');
+
+                if (inputValue === "") {
+                    if (!errorElement) {
+                        const errorMessage = "This field is required.";
+                        const errorDiv = document.createElement('div');
+                        errorDiv.className = "text-danger";
+                        errorDiv.textContent = errorMessage;
+                        errorDiv.id = field + '-error';
+                        input.parentNode.appendChild(errorDiv);
+                    }
+                    isValid = false;
+                } else if (inputValue.length < 4) {
+                    if (!errorElement) {
+                        const errorMessage = `${field.charAt(0).toUpperCase() + field.slice(1)} must be at least 4 characters long.`;
+                        const errorDiv = document.createElement('div');
+                        errorDiv.className = "text-danger";
+                        errorDiv.textContent = errorMessage;
+                        errorDiv.id = field + '-error';
+                        input.parentNode.appendChild(errorDiv);
+                    }
+                    isValid = false;
+                } else if (errorElement) {
+                    errorElement.remove();
+                }
+            });
+
+            // Get field values
+            const addressType = document.getElementById('addressType').value.trim();
+            const name = document.getElementById('name').value.trim();
+            const city = document.getElementById('city').value.trim();
+            const landMark = document.getElementById('landMark').value.trim();
+            const state = document.getElementById('state').value.trim();
+            const pincode = document.getElementById('pincode').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const altPhone = document.getElementById('altPhone').value.trim();
+
+            // Validate alphabetic fields
+            if (addressType && !namePattern.test(addressType)) {
+                const errorElement = document.getElementById('addressType-error');
+                if (!errorElement) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = "text-danger";
+                    errorDiv.textContent = 'Address Type should contain alphabets only.';
+                    errorDiv.id = 'addressType-error';
+                    document.getElementById('addressType').parentNode.appendChild(errorDiv);
+                }
+                isValid = false;
+            }
+            if (name && !namePattern.test(name)) {
+                const errorElement = document.getElementById('name-error');
+                if (!errorElement) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = "text-danger";
+                    errorDiv.textContent = 'Name should contain alphabets only.';
+                    errorDiv.id = 'name-error';
+                    document.getElementById('name').parentNode.appendChild(errorDiv);
+                }
+                isValid = false;
+            }
+            if (city && !namePattern.test(city)) {
+                const errorElement = document.getElementById('city-error');
+                if (!errorElement) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = "text-danger";
+                    errorDiv.textContent = 'City should contain alphabets only.';
+                    errorDiv.id = 'city-error';
+                    document.getElementById('city').parentNode.appendChild(errorDiv);
+                }
+                isValid = false;
+            }
+            if (landMark && !namePattern.test(landMark)) {
+                const errorElement = document.getElementById('landMark-error');
+                if (!errorElement) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = "text-danger";
+                    errorDiv.textContent = 'Landmark should contain alphabets only.';
+                    errorDiv.id = 'landMark-error';
+                    document.getElementById('landMark').parentNode.appendChild(errorDiv);
+                }
+                isValid = false;
+            }
+            if (state && !namePattern.test(state)) {
+                const errorElement = document.getElementById('state-error');
+                if (!errorElement) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = "text-danger";
+                    errorDiv.textContent = 'State should contain alphabets only.';
+                    errorDiv.id = 'state-error';
+                    document.getElementById('state').parentNode.appendChild(errorDiv);
+                }
+                isValid = false;
+            }
+
+            // Validate pincode
+            if (pincode && pincode.length !== 6) {
+                const errorElement = document.getElementById('pincode-error');
+                if (!errorElement) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = "text-danger";
+                    errorDiv.textContent = 'Pincode must be exactly 6 digits.';
+                    errorDiv.id = 'pincode-error';
+                    document.getElementById('pincode').parentNode.appendChild(errorDiv);
+                }
+                isValid = false;
+            } else if (pincode && !numberPattern.test(pincode)) {
+                const errorElement = document.getElementById('pincode-error');
+                if (!errorElement) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = "text-danger";
+                    errorDiv.textContent = 'Pincode must be a number and cannot start with 0.';
+                    errorDiv.id = 'pincode-error';
+                    document.getElementById('pincode').parentNode.appendChild(errorDiv);
+                }
+                isValid = false;
+            }
+
+            // Validate phone
+            if (phone && phone.length !== 10) {
+                const errorElement = document.getElementById('phone-error');
+                if (!errorElement) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = "text-danger";
+                    errorDiv.textContent = 'Phone number must be exactly 10 digits.';
+                    errorDiv.id = 'phone-error';
+                    document.getElementById('phone').parentNode.appendChild(errorDiv);
+                }
+                isValid = false;
+            } else if (phone && !numberPattern.test(phone)) {
+                const errorElement = document.getElementById('phone-error');
+                if (!errorElement) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = "text-danger";
+                    errorDiv.textContent = 'Phone number must be a number and cannot start with 0.';
+                    errorDiv.id = 'phone-error';
+                    document.getElementById('phone').parentNode.appendChild(errorDiv);
+                }
+                isValid = false;
+            }
+
+            // Validate alternate phone
+            if (altPhone && altPhone.length !== 10) {
+                const errorElement = document.getElementById('altPhone-error');
+                if (!errorElement) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = "text-danger";
+                    errorDiv.textContent = 'Alternate phone number must be exactly 10 digits.';
+                    errorDiv.id = 'altPhone-error';
+                    document.getElementById('altPhone').parentNode.appendChild(errorDiv);
+                }
+                isValid = false;
+            } else if (altPhone && !numberPattern.test(altPhone)) {
+                const errorElement = document.getElementById('altPhone-error');
+                if (!errorElement) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = "text-danger";
+                    errorDiv.textContent = 'Alternate phone number must be a number and cannot start with 0.';
+                    errorDiv.id = 'altPhone-error';
+                    document.getElementById('altPhone').parentNode.appendChild(errorDiv);
+                }
+                isValid = false;
+            }
+
+            // Check if phone and altPhone are different
+            if (phone && altPhone && phone === altPhone) {
+                const errorElement = document.getElementById('altPhone-error');
+                if (!errorElement) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = "text-danger";
+                    errorDiv.textContent = 'Phone number and alternate phone number should be different.';
+                    errorDiv.id = 'altPhone-error';
+                    document.getElementById('altPhone').parentNode.appendChild(errorDiv);
+                }
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
         const sidebar = document.querySelector('.sidebar');
         const toggleBtn = document.querySelector('.sidebar-toggle');
         const overlay = document.querySelector('.overlay');
@@ -506,71 +653,88 @@
             overlay.classList.remove('active');
         });
 
-const profileImageUpload = document.getElementById('profileImageUpload');
-const profileImage = document.querySelector('.profile-image-container img');
+        const profileImageUpload = document.getElementById('profileImageUpload');
+        const profileImage = document.querySelector('.profile-image-container img');
 
-profileImageUpload.addEventListener('change', async function(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const formData = new FormData();
-        formData.append('profileImage', file);
+        if (profileImageUpload) {
+            profileImageUpload.addEventListener('change', async function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const formData = new FormData();
+                    formData.append('profileImage', file);
 
-        try {
-            const response = await fetch('/update-profile-image', {
-                method: 'POST',
-                body: formData
+                    try {
+                        const response = await fetch('/update-profile-image', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            // Update image source with new path
+                            profileImage.src = result.imagePath;
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Profile Image Updated',
+                                text: 'Your profile image has been successfully uploaded!',
+                                confirmButtonColor: 'var(--accent-pink)'
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Upload Failed',
+                                text: result.message || 'Failed to upload image',
+                                confirmButtonColor: 'var(--accent-pink)'
+                            });
+                        }
+                    } catch (error) {
+                        console.error('Image upload error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'An error occurred while uploading the image',
+                            confirmButtonColor: 'var(--accent-pink)'
+                        });
+                    }
+                }
             });
-
-            const result = await response.json();
-
-            if (result.success) {
-                // Update image source with new path
-                profileImage.src = result.imagePath;
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Profile Image Updated',
-                    text: 'Your profile image has been successfully uploaded!',
-                    confirmButtonColor: 'var(--accent-pink)'
-                });
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Upload Failed',
-                    text: result.message || 'Failed to upload image',
-                    confirmButtonColor: 'var(--accent-pink)'
-                });
-            }
-        } catch (error) {
-            console.error('Image upload error:', error);
+        }
+        function confirmLogout(event) {
+            event.preventDefault();
             Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'An error occurred while uploading the image',
-                confirmButtonColor: 'var(--accent-pink)'
+                title: "Are you sure?",
+                text: "You will be logged out!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, Logout"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "/logout";
+                }
             });
         }
-    }
-});
 
-// Save Changes Button Sweet Alert
-document.querySelector('a[href="/editProfile"]').addEventListener('click', function(e) {
-    e.preventDefault();
-    Swal.fire({
-        title: 'Save Changes?',
-        text: 'Do you want to save the changes to your profile?',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: 'var(--accent-pink)',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, save changes!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // Redirect to edit profile or submit form
-            window.location.href = '/editProfile';
-        }
-    });
-});
-
+        // Save Changes Button Sweet Alert
+        document.querySelector('a[href="/editProfile"]').addEventListener('click', function(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Save Changes?',
+                text: 'Do you want to save the changes to your profile?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: 'var(--accent-pink)',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, save changes!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Redirect to edit profile or submit form
+                    window.location.href = '/editProfile';
+                }
+            });
+        });
     </script>
 </body>
 </html>

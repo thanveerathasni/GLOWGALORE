@@ -1,5 +1,7 @@
 const User = require("../../models/userSchema")
 const Address = require("../../models/addressSchema")
+const Coupon = require("../../models/couponSchema")
+
 const nodemailer = require("nodemailer")
 const bcrypt = require("bcrypt")
 const env = require("dotenv").config()
@@ -166,7 +168,6 @@ const postNewPassword = async (req, res) => {
         if (email) {
             if (newPass1 === newPass2) {
                 const passwordHashy = await securePassword(newPass1);
-                console.log("passwordHashy:", passwordHashy)
                 await User.updateOne({ email: email }, { $set: { password: passwordHashy } })
                 res.redirect("/login")
             } else {
@@ -174,7 +175,8 @@ const postNewPassword = async (req, res) => {
             }
         }
         else {
-            res.send('hlo...')
+            res.redirect("/pageNotFound")
+
         }
 
     } catch (error) {
@@ -339,7 +341,6 @@ const addAddress = async (req, res) => {
 
 const postAddAddress = async (req, res) => {
     try {
-        console.log("req.body:", req.body);
         const userId = req.session.user;
         const userData = await User.findOne({ _id: userId });
         const { addressType, name, city, landMark, state, pincode, phone, altPhone } = req.body;
@@ -367,7 +368,6 @@ const myAddress = async (req, res) => {
         const userId = req.session.user;
         const userData = await User.findById(userId)
         const addressData = await Address.findOne({ userId: userId })
-        console.log('address:',addressData)
         
         res.render("address", {
             user: userData,
@@ -386,7 +386,6 @@ const editAddress = async (req, res) => {
         const userId = req.session.user;
         const userData = await User.findById(userId)
         const addressData = await Address.findOne({ userId: userId })
-        console.log('address:',addressData)
         
         res.render("edit-address", {
             user: userData,
@@ -408,8 +407,7 @@ const editAddressById = async (req, res) => {
         const addressId = req.params.addressId; // Get the address ID from the URL
         const data = req.body; // Get the data from the form
         const userId = req.session.user; // Get the user ID from the session
-        console.log("Editing address with ID:", req.params.addressId);
-        console.log("Request body:", req.body);
+
         // Find the user's address document
         const userAddress = await Address.findOne({ userId: userId });
         if (!userAddress) {
@@ -565,6 +563,51 @@ const updateProfileImage = async (req, res) => {
 };
 
 
+//  const getCoupons = async (req, res) => {
+//     try {
+//         const user = await User.findById(req.session.user).populate('usedCoupons').populate('availableCoupons');
+//         if (!user) {
+//             return res.redirect('/login');
+//         }
+//         const allCoupons = [...user.usedCoupons, ...user.availableCoupons];
+//         res.render('coupon', { user, coupons: allCoupons });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).render('page-404', { message: 'Server Error' });
+//     }
+// };
+const getCoupons = async (req, res) => {
+    try {
+        const userId = req.session.user;
+        if (!userId) {
+            return res.redirect('/login');
+        }
+
+        // Fetch all active coupons, similar to getMyCouponsPage
+        const coupons = await Coupon.find({
+            isList: true,
+            expireOn: { $gte: new Date() }
+        }).lean();
+
+        // Fetch the user to get usedCoupons for status
+        const user = await User.findById(userId).lean();
+        const usedCoupons = user.usedCoupons || [];
+
+        // Add usage status for each coupon, matching getMyCouponsPage behavior
+        coupons.forEach(coupon => {
+            const isUsed = usedCoupons.some(u => u.toString() === coupon._id.toString());
+            coupon.isUsed = isUsed;
+            coupon.usageMessage = isUsed ? "Coupon Used" : "Available";
+        });
+
+        // Render with all active coupons and user context
+        res.render('coupon', { user, coupons });
+    } catch (error) {
+        console.error("Error in getCoupons:", error);
+        res.status(500).render('page-404', { message: 'Server Error' });
+    }
+};
+
 
 module.exports = {
     getForgetPassword,
@@ -589,5 +632,6 @@ module.exports = {
     postAddAddress,
     editAddressById,
     deleteAddress,
-    getwallet
+    getwallet,
+    getCoupons,
 };

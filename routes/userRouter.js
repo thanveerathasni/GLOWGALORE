@@ -3,8 +3,12 @@ const router = express.Router()
 const userController = require("../controllers/user/userController");
 const productController = require("../controllers/user/productController")
 const passport = require("passport");
+
+const couponController = require('../controllers/user/couponController'); 
 const orderController = require('../controllers/user/orderController'); 
 const profileController = require("../controllers/user/profileController");
+const wishlistController = require('../controllers/user/wishlistController');
+
 const cartController = require("../controllers/user/cartController");
 const { userAuth } = require("../middlewares/auth");
 const { ajaxAuth } = require("../middlewares/auth");
@@ -22,7 +26,7 @@ router.post("/signup",userController.signup)
 
 // Shopping page route (authentication required)
 
-router.get("/shop",userController.loadShopping)
+router.get("/shop",userAuth,userController.loadShopping)
 router.post("/resend-otp",userController.resendOtp)
 router.post("/verify-otp",userController.verifyOtp)
 
@@ -45,7 +49,7 @@ router.get("/login",userController.loadLogin)
 router.post("/login",userController.login)
 
 // Home page route
-router.get("/",userController.loadHomepage)
+router.get("/",userAuth,userController.loadHomepage)
 router.get("/logout",userController.logout)
 router.get("/shop",userAuth,userController.loadShopping)
 
@@ -66,6 +70,7 @@ router.get("/editProfile",userAuth,profileController.editProfile)
 router.get("/change-password",userAuth,profileController.changePassword);
 router.post("/change-password",userAuth,profileController.changePasswordValid);
 router.post("/verify-changepassword-otp", userAuth, profileController.verifyChangePassOtp)
+router.get("/getCoupons",userAuth,profileController.getCoupons)
 
 //img
 router.post("/update-profile-image",userAuth, upload.single('profileImage'), profileController.updateProfileImage);
@@ -87,17 +92,28 @@ router.get("/wallet",userAuth,profileController.getwallet)
 
 //product detail
 
-router.get("/productDetails",userAuth,productController.productDetails)
+router.get("/productDetails",productController.productDetails)
+
+
+
+// Wishlist management
+router.get('/wishlist', userAuth, wishlistController.getWishlistPage);
+router.post('/wishlist/add', ajaxAuth, wishlistController.addToWishlist);
+router.post('/cart/add-from-wishlist', ajaxAuth, wishlistController.addToCartFromWishlist);
+router.post('/wishlist/remove', ajaxAuth, wishlistController.removeFromWishlist);
 
 // cart management 
 
 router.get("/cart",userAuth,cartController.getCartPage)
 router.post("/addToCart", ajaxAuth, cartController.addToCart);
 router.post("/changeQuantity", userAuth, cartController.changeQuantity);
-router.get("/deleteItem", userAuth, cartController.deleteProduct);
+router.get("/deleteProduct", userAuth, cartController.deleteProduct);
 router.post('/placeOrder', userAuth, cartController.placeOrder);  
 router.get('/order-success/:orderId', userAuth, cartController.getOrderSuccess);
-
+router.post('/placeOrder', userAuth, cartController.placeOrder);
+router.post('/applyCoupon', cartController.applyCoupon);
+router.post('/removeCoupon', cartController.removeCoupon);
+router.get('/mycoupons', couponController.getMyCouponsPage);
 router.get('/checkout', userAuth, cartController.getCheckoutPage);
 
 //order management
@@ -108,6 +124,16 @@ router.post('/cancel-order',orderController.cancelOrder);
 router.get("/download-invoice", userAuth, orderController.generateInvoice);
 router.post("/orders/return", userAuth, upload.array('images', 3), orderController.requestReturn);
 router.post("/orders/cancel-return", userAuth, orderController.cancelReturnRequest);
+
+
+// offer management
+
+
+
+router.post("/razorpay/create-order", orderController.createRazorpay)
+router.post("/create-subscription",orderController.Razorpaysubscription)
+router.get("/orderFailure",orderController.loadFailure)
+
 
 
 

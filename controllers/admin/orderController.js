@@ -1,6 +1,11 @@
 const Order = require("../../models/orderSchema");
 const User = require("../../models/userSchema");
 const Product = require("../../models/productSchema");
+const Razorpay = require("razorpay");
+const Wallet = require("../../models/walletSchema");
+const { v4: uuidv4 } = require("uuid");
+
+
 
 const getOrders = async (req, res) => {
   try {
@@ -26,8 +31,7 @@ const getOrders = async (req, res) => {
       totalPages: Math.ceil(totalOrders / limit),
       limit,
     });
-    console.log("orders:", orders);
-  
+
   } catch (error) {
     console.error("Error fetching orders:", error);
     res.status(500).send("Internal Server Error");
@@ -40,7 +44,6 @@ const getOrderDetails = async (req, res) => {
     const order = await Order.findById(orderId);
 
     if (!order) {
-      console.log("no orders");
       return res.status(404).send("order not found");
     }
     res.render("admin-order-details", { order });
@@ -80,6 +83,27 @@ const updateOrderStatus = async (req, res) => {
   }
 };
 
+
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID || rzp_test_TvZQJb8vKDsWxJ,
+  key_secret: process.env.RAZORPAY_KEY_SECRET || qctXsWfZ8XuE10RIn63F6wKW,
+});
+
+// Enhanced processRefund function for Razorpay
+const processRefund = async (userId, order) => {
+  try {
+    const user = await User.findById(userId);
+    if (!user) return false;
+
+    user.wallet += order.finalAmount;
+    await user.save();
+    return true;
+  } catch (error) {
+    console.error("Error in processRefund:", error);
+    return false;
+  }
+};
+
 const cancelOrder = async (req, res) => {
   try {
     const { orderId } = req.body;
@@ -99,7 +123,7 @@ const cancelOrder = async (req, res) => {
         $inc: { quantity: order.orderedItems[0].quantity },
       });
 
-      if (order.paymentMethod === "online" || order.paymentMethod === "wallet") {
+      if (order.paymentMethod === "razorpay" || order.paymentMethod === "wallet") {
         const refundSuccess = await processRefund(order.userId, order);
         if (!refundSuccess) {
           return res.status(500).json({
@@ -107,158 +131,217 @@ const cancelOrder = async (req, res) => {
             message: "Failed to process refund",
           });
         }
-        const user = order.userId;
-        user.wallet.push(order.finalAmount); // Push refund amount to wallet array
-        await user.save();
-      } else if (order.paymentMethod === "cod") {
-        const user = order.userId;
-        user.wallet.push(order.finalAmount); // Push refund amount to wallet array for COD
-        await user.save();
       }
-
       await order.save();
-      res.json({ success: true, message: "Order Cancelled and refund processed successfully" });
-      console.log(wallet)
-    } else {
-      res.status(400).json({ success: false, message: "Order cannot be Cancelled" });
+      return res.json({
+        success: true,
+        message: "Order Cancelled successfully"
+      });
+
     }
   } catch (error) {
     console.error("Error cancelling order:", error);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
-};
-
-const handleReturnRequest = async (req, res) => {
-  try {
-    const { orderId, action, message, category } = req.body;
-
-
-    if (!orderId || !action) {
-      return res.status(400).json({
-        success: false,
-        message: "Order ID and action are required",
-      });
-    }
+}
 
 
 
-    const order = await Order.findById(orderId).populate('userId')
-    const user = await User.findById(order.userId)
-    const product = await Product.findById(order.userId)
 
-    if (!order) {
-      return res.status(404).json({
-        success: false,
-        message: "Order not found",
-      });
-    }
 
-    if (order.status !== "Return Request" || !["Pending"].includes(order.requestStatus)) {
-      return res.status(400).json({
-        success: false,
-        message: "Order is not in a return request state or already processed",
-      });
-    }
+  // const cancelOrder = async (req, res) => {
+  //   try {
+  //     const { orderId } = req.body;
+  //     const order = await Order.findById(orderId).populate("userId");
 
-    if (action === "approve") {
-      order.status = "Returned";
-      user.wallet += order.finalAmount
-      order.requestStatus = "approved";
-    } else if (action === "reject") {
-      if (!message || !category) {
+  //     if (!order) {
+  //       return res.status(404).json({ success: false, message: "Order not found" });
+  //     }
+
+  //     if (order.status !== "Cancelled" && order.status !== "Delivered") {
+  //       order.status = "Cancelled";
+  //       order.orderedItems[0].status = "Cancelled";
+
+  //       order.updatedOn = new Date();
+
+  //       await Product.findByIdAndUpdate(order.orderedItems[0].product, {
+  //         $inc: { quantity: order.orderedItems[0].quantity },
+  //       });
+
+  //       if (order.paymentMethod === "razorpay" || order.paymentMethod === "wallet") {
+  //         const refundSuccess = await processRefund(order.userId, order);
+  //         if (!refundSuccess) {
+  //           return res.status(500).json({
+  //             success: false,
+  //             message: "Failed to process refund",
+  //           });
+  //         }
+  //         const user = order.userId;
+  //               user.wallet += Math.round(order.finalAmount)
+  ; // Add refund amount to wallet balance
+  //         await user.save();
+  //       } else if (order.paymentMethod === "cod") {
+  //         const user = order.userId;
+  //               user.wallet += Math.round(order.finalAmount)
+  ; // Add refund amount to wallet balance for COD
+  //         await user.save();
+  //       }
+
+  //       await order.save();
+  //       res.json({ success: true, message: "Order Cancelled and refund processed successfully" });
+  //     } else {
+  //       res.status(400).json({ success: false, message: "Order cannot be Cancelled" });
+  //     }
+  //   } catch (error) {
+  //     console.error("Error cancelling order:", error);
+  //     res.status(500).json({ success: false, message: "Internal server error" });
+  //   }
+  // };
+
+  const handleReturnRequest = async (req, res) => {
+    try {
+      const { orderId, action, message, category } = req.body;
+
+
+      if (!orderId || !action) {
         return res.status(400).json({
           success: false,
-          message: "Rejection reason and category are required",
+          message: "Order ID and action are required",
         });
       }
-      order.status = "Delivered";
-      order.requestStatus = "rejected";
-      order.returnReason = category;
-      order.returnDescription = message;
-    } else {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid action. Use 'approve' or 'reject'",
-      });
-    }
-
-    order.updatedOn = new Date();
-    await order.save();
-    await user.save();
 
 
-    res.json({
-      success: true,
-      message: `Return request ${action}d successfully`,
-    });
-  } catch (error) {
-    console.error("Error handling return request:", error);
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-    });
-  }
-};
 
-const updateReturnStatus = async (req, res) => {
-  try {
-    const { orderId, status } = req.body;
-    const order = await Order.findById(orderId).populate("userId");
+      const order = await Order.findById(orderId).populate('userId')
+      const user = await User.findById(order.userId)
+      const product = order?.orderedItems?.[0]?.product; // Safely access first product
+      const retquantity = order?.orderedItems?.[0]?.quantity;
 
-    if (!order) {
-      return res.status(404).json({
-        success: false,
-        message: "Order not found",
-      });
-    }
 
-    if (order.status !== "returning" && status === "Returned") {
-      return res.status(400).json({
-        success: false,
-        message: "Order must be in returning status first",
-      });
-    }
 
-    order.status = status;
-    order.updatedOn = new Date();
+      if (!order) {
+        return res.status(404).json({
+          success: false,
+          message: "Order not found",
+        });
+      }
 
-    if (status === "Returned") {
-      if (order.paymentMethod === "online" || order.paymentMethod === "wallet") {
-        const refundSuccess = await processRefund(order.userId, order);
-        if (!refundSuccess) {
-          return res.status(500).json({
+      if (order.status !== "Return Request" || !["Pending"].includes(order.requestStatus)) {
+        return res.status(400).json({
+          success: false,
+          message: "Order is not in a return request state or already processed",
+        });
+      }
+
+      if (action === "approve") {
+        order.status = "Returned";
+        user.wallet += Math.round(order.finalAmount)
+        order.requestStatus = "approved";
+
+        await Product.findByIdAndUpdate(
+          product,
+          { $inc: { quantity: retquantity } },
+
+        );
+
+
+      } else if (action === "reject") {
+        if (!message || !category) {
+          return res.status(400).json({
             success: false,
-            message: "Failed to process refund",
+            message: "Rejection reason and category are required",
           });
         }
-        const user = order.userId;
-        user.wallet.push(order.finalAmount); // Push refund amount to wallet array
-        await user.save();
-      } else if (order.paymentMethod === "cod") {
-        const user = order.userId;
-        user.wallet.push(order.finalAmount); // Push refund amount to wallet array for COD
-        await user.save().catch(err => console.error("Failed to save user:", err));      }
+        order.status = "Delivered";
+        order.requestStatus = "rejected";
+        order.returnReason = category;
+        order.returnDescription = message;
+      } else {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid action. Use 'approve' or 'reject'",
+        });
+      }
+
+
+      order.updatedOn = new Date();
+      await order.save();
+      await user.save();
+
+
+      res.json({
+        success: true,
+        message: `Return request ${action}d successfully`,
+      });
+    } catch (error) {
+      console.error("Error handling return request:", error);
+      res.status(500).json({
+        success: false,
+        message: "Internal server error",
+      });
     }
+  };
 
-    await order.save();
-    res.json({
-      success: true,
-      message: "Return status updated successfully",
-    });
-  } catch (error) {
-    console.error("Error updating return status:", error);
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-    });
-  }
-};
+  const updateReturnStatus = async (req, res) => {
+    try {
+      const { orderId, status } = req.body;
+      const order = await Order.findById(orderId).populate("userId");
 
-module.exports = {
-  getOrders,
-  getOrderDetails,
-  updateOrderStatus,
-  cancelOrder,
-  updateReturnStatus,
-  handleReturnRequest,
-};
+      if (!order) {
+        return res.status(404).json({
+          success: false,
+          message: "Order not found",
+        });
+      }
+
+      if (order.status !== "returning" && status === "Returned") {
+        return res.status(400).json({
+          success: false,
+          message: "Order must be in returning status first",
+        });
+      }
+
+      order.status = status;
+      order.updatedOn = new Date();
+
+      if (status === "Returned") {
+        if (order.paymentMethod === "razorpay" || order.paymentMethod === "wallet") {
+          const refundSuccess = await processRefund(order.userId, order);
+          if (!refundSuccess) {
+            return res.status(500).json({
+              success: false,
+              message: "Failed to process refund",
+            });
+          }
+          const user = order.userId;
+          user.wallet.push(order.finalAmount); // Push refund amount to wallet array
+          await user.save();
+        } else if (order.paymentMethod === "cod") {
+          const user = order.userId;
+          user.wallet.push(order.finalAmount); // Push refund amount to wallet array for COD
+          await user.save().catch(err => console.error("Failed to save user:", err));
+        }
+      }
+
+      await order.save();
+      res.json({
+        success: true,
+        message: "Return status updated successfully",
+      });
+    } catch (error) {
+      console.error("Error updating return status:", error);
+      res.status(500).json({
+        success: false,
+        message: "Internal server error",
+      });
+    }
+  };
+
+  module.exports = {
+    getOrders,
+    getOrderDetails,
+    updateOrderStatus,
+    cancelOrder,
+    updateReturnStatus,
+    handleReturnRequest,
+  };

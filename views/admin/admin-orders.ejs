@@ -166,7 +166,7 @@
                         </td>
                         <td>₹<%= Math.round(order.finalAmount) %></td>
                         
-                        <td>₹<%= order.user ? order.user.wallet : 0 %></td> <!-- Display wallet -->
+                        <td>₹<%= order.user ?  Math.round(order.user.wallet): 0 %></td> <!-- Display wallet -->
                         <td>
                           <div>
                             <span class="status-badge <%= 

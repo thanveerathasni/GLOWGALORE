@@ -4,6 +4,10 @@ const user = require("../models/userSchema")
 // User authentication middleware
 
 const userAuth = (req,res,next)=>{
+     // Prevent browser caching
+     res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, private");
+     res.setHeader("Pragma", "no-cache");
+     res.setHeader("Expires", "0");
     if(req.session.user){
         User.findById(req.session.user)
         .then(data=>{

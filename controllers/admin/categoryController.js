@@ -4,10 +4,8 @@ const Product = require("../../models/productSchema");
 // Function to fetch and display category information with pagination and search functionality
 const categoryInfo = async (req, res) => {
     try {
-        //  trim ,Build query to search categories 
-
+        // trim, Build query to search categories 
         let search = req.query.search ? req.query.search.trim() : '';
-        console.log('search:', req.query.search);
 
         const query = {
             name: { $regex: ".*" + search + ".*", $options: 'i' }
@@ -24,7 +22,6 @@ const categoryInfo = async (req, res) => {
             .skip(skip)
             .limit(limit);
 
-        console.log("categoryData:", categoryData);
 
         // Calculate the total number of categories matching the query
         const totalCategories = await Category.countDocuments(query);
@@ -48,8 +45,8 @@ const addCategory = async (req, res) => {
     const { name, description } = req.body;
 
     try {
-        // Check if a category with the same name already exists
-        const existingCategory = await Category.findOne({ name: name });
+        // Check if a category with the same name already exists (case-insensitive)
+        const existingCategory = await Category.findOne({ name: { $regex: '^' + name + '$', $options: 'i' } });
         if (existingCategory) {
             return res.status(400).json({ error: "Category already exists" });
         }
@@ -77,7 +74,6 @@ const addCategoryOffer = async (req, res) => {
 
         // Find the category by ID
         const category = await Category.findById(categoryId);
-
         if (!category) {
             return res.status(404).json({ status: false, message: "Category not found" });
         }
@@ -85,25 +81,22 @@ const addCategoryOffer = async (req, res) => {
         // Find products in the category
         const products = await Product.find({ category: category._id });
 
-        // Check if any products already have a higher offer percentage
-        const hasProductOffer = products.some((product) => product.productOffer > percentage);
-
-        if (hasProductOffer) {
-            return res.json({ status: false, message: "Products within this category already have product offers" });
-        }
-
-        // Set the category offer and reset product offers
-        await Category.updateOne({ _id: categoryId }, { $set: { categoryOffer: percentage } });
-
-        // Reset product offers to 0 and adjust the sale price
+        // Apply the category offer to all products in the category
         for (const product of products) {
-            product.productOffer = 0;
-            product.salePrice = product.regularPrice;
+            // Calculate maxOffer considering the new category offer and existing product offer
+            const maxOffer = Math.max(product.productOffer || 0, percentage);
+            // Update salePrice based on maxOffer
+            product.salePrice = product.regularPrice - Math.floor(product.regularPrice * (maxOffer / 100));
             await product.save();
         }
 
+        // Set the category offer
+        category.categoryOffer = percentage;
+        await category.save();
+
         res.json({ status: true });
     } catch (error) {
+        console.error(error);
         res.status(500).json({ status: false, message: "Internal server error" });
     }
 };
@@ -127,10 +120,10 @@ const removeCategoryOffer = async (req, res) => {
         const products = await Product.find({ category: category._id });
 
         if (products.length > 0) {
-            // Reset sale price and product offers for each product
+            // Recalculate sale price for each product based on remaining productOffer
             for (const product of products) {
-                product.salePrice += Math.floor(product.regularPrice * (percentage / 100));
-                product.productOffer = 0;
+                const maxOffer = product.productOffer || 0; // Use productOffer after removing categoryOffer
+                product.salePrice = product.regularPrice - Math.floor(product.regularPrice * (maxOffer / 100));
                 await product.save();
             }
         }
@@ -187,12 +180,13 @@ const editCategory = async (req, res) => {
 const posteditCategory = async (req, res) => {
     try {
         const id = req.params.id;
-
         const { categoryName, description } = req.body;
 
-        // Check if the updated category name already exists
-        const existingCategory = await Category.findOne({ name: categoryName });
-
+        // Check if the updated category name already exists (case-insensitive, excluding current category)
+        const existingCategory = await Category.findOne({ 
+            name: { $regex: '^' + categoryName + '$', $options: 'i' },
+            _id: { $ne: id }
+        });
         if (existingCategory) {
             return res.status(400).json({ error: "Category exists, please choose another name" });
         }
@@ -223,3 +217,5 @@ module.exports = {
     editCategory,
     posteditCategory,
 };
+
+

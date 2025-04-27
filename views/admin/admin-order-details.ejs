@@ -162,7 +162,7 @@
                 </div>
                 <div class="card-body">
                   <!-- Status Timeline -->
-                  <div class="status-timeline">
+                  <!-- <div class="status-timeline">
                     <div class="status-line"></div>
                     <% const statuses = ['Pending', 'Cancelled', 'Shipped', 'delivered']; %>
                     <% statuses.forEach(status => { %>
@@ -171,7 +171,7 @@
                         <small><%= status.toUpperCase() %></small>
                       </div>
                     <% }); %>
-                  </div>
+                  </div> -->
 
                   <% if (order.status === 'return_requested') { %>
                     <div class="card mb-4">
@@ -202,13 +202,16 @@
                           </div>
                         <% } %>
                         
-                        <div class="mt-4">
-                          <button onclick="handleReturn('approve', '<%= order._id %>')" class="btn btn-success me-2">
+                        <div class="btn-group mt-2">
+                          <button onclick="handleReturn('approve', '<%= order._id %>')" 
+                                  class="btn btn-success btn-sm">
                             Approve Return
                           </button>
-                          <button onclick="handleReturn('reject', '<%= order._id %>')" class="btn btn-danger">
-                            Reject Return
+                          <button onclick="handleReturn('reject', '<%= order._id %>')" 
+                                  class="btn btn-danger btn-sm">
+                            Reject
                           </button>
+                        </div>
                         </div>
                       </div>
                     </div>
@@ -259,7 +262,7 @@
                       <h5 class="mb-0">Order Actions</h5>
                     </div>
                     <div class="card-body">
-                      <% if (order.status === 'return_requested' && order.requestStatus === 'Pending') { %>
+                      <% if (order.status === 'Return Request' && order.requestStatus === 'Pending') { %>
                         <div class="mb-4">
                           <h6>Return Request Actions</h6>
                           <button onclick="handleReturn('approve', '<%= order._id %>')" class="btn btn-success me-2">
@@ -276,7 +279,7 @@
                             Update Return Status
                           </button>
                         </div>
-                      <% } else if (!['Cancelled', 'returned', 'return_requested', 'returning', 'delivered'].includes(order.status)) { %>
+                      <% } else if (!['Cancelled', 'Returned', 'Return Request', 'returning', 'Delivered'].includes(order.status)) { %>
                         <div class="mb-4">
                           <h6>Order Status Actions</h6>
                           <button onclick="updateStatus('<%= order._id %>')" class="btn btn-primary me-2">
@@ -356,16 +359,16 @@
                     <p class="mb-1"><strong>Order Date:</strong> <%= new Date(order.createdOn).toLocaleString() %></p>
                     <p class="mb-0"><strong>Order Status:</strong> <%= order.status.toUpperCase() %></p>
                     <% if (order.status === 'Cancelled') { %>
-                      <p class="mb-0"><strong>Cancelled On:</strong> <%= new Date(order.updatedOn).toLocaleDateString() %></p>
+                      <p class="mb-0"><strong>Cancelled On:</strong> <%= new Date(order.updateOn).toLocaleDateString() %></p>
                     <% } %>
                     <% if (order.status === 'Shipping') { %>
-                      <p class="mb-0"><strong>Shipped On:</strong> <%= new Date(order.updatedOn).toLocaleDateString() %></p>
+                      <p class="mb-0"><strong>Shipped On:</strong> <%= new Date(order.updateOn).toLocaleDateString() %></p>
                     <% } %>
                     <% if (order.status === 'Delivered') { %>
                       <p class="mb-0"><strong>Delivered On:</strong> <%= new Date(order.deliveredOn).toLocaleDateString() %></p>
                     <% } %>
                     <% if (order.status === 'Returned') { %>
-                      <p class="mb-0"><strong>Returned On:</strong> <%= new Date(order.updatedOn).toLocaleDateString() %></p>
+                      <p class="mb-0"><strong>Returned On:</strong> <%= new Date(order.updateOn).toLocaleDateString() %></p>
                     <% } %>
                   </div>
                 </div>

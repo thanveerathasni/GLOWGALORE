@@ -1,0 +1,392 @@
+<%- include("../partials/admin/header") %>
+
+
+<style>
+/* Coupon Page Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #ffffff;
+}
+.content-main {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.content-header {
+    margin-bottom: 20px;
+}
+.content-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #333;
+}
+.table {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.table th,
+.table td {
+    padding: 10px;
+    text-align: left;
+}
+.table th {
+    background-color: #3c3c3f;
+    color: #fff;
+    font-weight: 600;
+}
+.table-striped tbody tr:nth-child(odd) {
+    background-color: #f8f9fa;
+}
+.badge {
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+}
+.alert-success {
+    background-color: #28a745;
+    color: #fff;
+}
+.alert-danger {
+    background-color: #dc3545;
+    color: #fff;
+}
+.form-group {
+    margin-bottom: 15px;
+}
+.form-label {
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: #3c3c3f;
+}
+.form-control {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 0.95rem;
+}
+.form-control:focus {
+    border-color: #3c3c3f;
+    outline: none;
+    box-shadow: 0 0 5px rgba(233, 30, 99, 0.3);
+}
+.error-message {
+    color: #dc3545;
+    font-size: 0.85rem;
+    margin-top: 5px;
+}
+.btn-primary {
+    background-color: #3c3c3f;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 0.95rem;
+}
+.btn-primary:hover {
+    background-color: #3c3c3f;
+}
+.btn-secondary {
+    background-color: #6c757d;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 0.95rem;
+}
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+@media (max-width: 768px) {
+    .table {
+        font-size: 0.85rem;
+    }
+    .table th,
+    .table td {
+        padding: 8px;
+    }
+}
+
+/* Offer Page Styles */
+.offer-form {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin: 10px;
+    background: #fce4ec;
+}
+.d-grid {
+    margin-top: 20px;
+}
+.input-group {
+    max-width: 500px;
+    margin: 0 auto;
+}
+.input-group .form-control {
+    border: 0;
+    border-radius: 50px;
+    margin-top: 12px;
+}
+.input-group .btn {
+    border-radius: 50px;
+}
+.pagination-container {
+    text-align: center;
+}
+.pagination {
+    display: inline-block;
+}
+.pagination a,
+.pagination .current-page {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 0 2px;
+    border: 1px solid #ddd;
+    text-decoration: none;
+    color: #3c3c3f;
+}
+.pagination a:hover {
+    background-color: #fce4ec;
+}
+
+
+</style>
+
+
+
+
+
+
+<body>
+    <section class="content-main">
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title">Offers</h2>
+            </div>
+        </div>
+        <header class="card-header text-center mb-20">
+            <form action="/admin/offers" method="get" class="d-inline">
+                <div class="input-group input-group-sm border border-1 border-grey rounded-pill">
+                    <input type="text" class="form-control border-0 rounded-pill mt-3" placeholder="Search by product or category" name="search" value="<%= search || '' %>" />
+                    <button class="btn" type="submit">Search</button>
+                    <button type="button" class="btn btn-secondary border-0 rounded-pill" onclick="clearSearch()">Clear</button>
+                </div>
+            </form>
+        </header>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    
+                    <div class="col-md-8">
+                        <div class="table-responsive">
+                            <h3>Product Offers</h3>
+                            <table class="table table-hover table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Discount (%)</th>
+                                        <th>Product</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% productOffers.forEach(offer => { %>
+                                        <tr>
+                                            <td><%= offer.title %></td>
+                                            <td><%= new Date(offer.startDate).toLocaleDateString('en-IN') %></td>
+                                            <td><%= new Date(offer.endDate).toLocaleDateString('en-IN') %></td>
+                                            <td><%= offer.discount %></td>
+                                            <td><%= offer.product ? offer.product.name : 'N/A' %></td>
+                                            <td>
+                                                <span class="badge rounded-pill <%= offer.isActive ? 'alert-success' : 'alert-danger' %>">
+                                                    <%= offer.isActive ? 'Active' : 'Inactive' %>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    <% }) %>
+                                    <% if (productOffers.length === 0) { %>
+                                        <tr>
+                                            <td colspan="6">No product offers found.</td>
+                                        </tr>
+                                    <% } %>
+                                </tbody>
+                            </table>
+                            <div class="pagination-container">
+                                <% if (productCurrentPage > 1) { %>
+                                    <a href="?page=<%= productCurrentPage - 1 %>&search=<%= search || '' %>">« Previous</a>
+                                <% } %>
+                                <% for (let i = 1; i <= productTotalPages; i++) { %>
+                                    <% if (i === productCurrentPage) { %>
+                                        <span class="current-page"><%= i %></span>
+                                    <% } else { %>
+                                        <a href="?page=<%= i %>&search=<%= search || '' %>"><%= i %></a>
+                                    <% } %>
+                                <% } %>
+                                <% if (productCurrentPage < productTotalPages) { %>
+                                    <a href="?page=<%= productCurrentPage + 1 %>&search=<%= search || '' %>">Next »</a>
+                                <% } %>
+                            </div>
+                            <h3 class="mt-4">Category Offers</h3>
+                            <table class="table table-hover table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Discount (%)</th>
+                                        <th>Category</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% categoryOffers.forEach(offer => { %>
+                                        <tr>
+                                            <td><%= offer.title %></td>
+                                            <td><%= new Date(offer.startDate).toLocaleDateString('en-IN') %></td>
+                                            <td><%= new Date(offer.endDate).toLocaleDateString('en-IN') %></td>
+                                            <td><%= offer.discount %></td>
+                                            <td><%= offer.category ? offer.category.name : 'N/A' %></td>
+                                            <td>
+                                                <span class="badge rounded-pill <%= offer.isActive ? 'alert-success' : 'alert-danger' %>">
+                                                    <%= offer.isActive ? 'Active' : 'Inactive' %>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    <% }) %>
+                                    <% if (categoryOffers.length === 0) { %>
+                                        <tr>
+                                            <td colspan="6">No category offers found.</td>
+                                        </tr>
+                                    <% } %>
+                                </tbody>
+                            </table>
+                            <div class="pagination-container">
+                                <% if (categoryCurrentPage > 1) { %>
+                                    <a href="?page=<%= categoryCurrentPage - 1 %>&search=<%= search || '' %>">« Previous</a>
+                                <% } %>
+                                <% for (let i = 1; i <= categoryTotalPages; i++) { %>
+                                    <% if (i === categoryCurrentPage) { %>
+                                        <span class="current-page"><%= i %></span>
+                                    <% } else { %>
+                                        <a href="?page=<%= i %>&search=<%= search || '' %>"><%= i %></a>
+                                    <% } %>
+                                <% } %>
+                                <% if (categoryCurrentPage < categoryTotalPages) { %>
+                                    <a href="?page=<%= categoryCurrentPage + 1 %>&search=<%= search || '' %>">Next »</a>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            if (!validateForm()) return;
+
+            const title = document.getElementById('title').value.trim();
+            const description = document.getElementById('description').value.trim();
+            const discount = document.getElementById('discount').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const offerType = document.getElementById('offerType').value;
+            const product = offerType === 'product' ? document.getElementById('product').value : null;
+            const category = offerType === 'category' ? document.getElementById('category').value : null;
+
+            fetch('/admin/offers/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, description, discount, startDate, endDate, offerType, product, category })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw new Error(err.error); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                toastr.success('Offer added successfully!');
+                location.reload();
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops',
+                    text: error.message || 'An error occurred while adding the offer'
+                });
+                toastr.error('Failed to add offer.');
+            });
+        }
+
+        function validateForm() {
+            clearErrorMessages();
+            let isValid = true;
+
+            const title = document.getElementById('title').value.trim();
+            const description = document.getElementById('description').value.trim();
+            const discount = document.getElementById('discount').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const offerType = document.getElementById('offerType').value;
+
+            if (!title) {
+                displayErrorMessage('title-error', 'Please enter a title');
+                isValid = false;
+            }
+            if (!description) {
+                displayErrorMessage('description-error', 'Please enter a description');
+                isValid = false;
+            }
+            if (!discount || discount <= 0 || discount > 100) {
+                displayErrorMessage('discount-error', 'Please enter a valid discount (1-100)');
+                isValid = false;
+            }
+            const sDate = new Date(startDate);
+            const eDate = new Date(endDate);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            if (!startDate || sDate < today) {
+                displayErrorMessage('startDate-error', 'Start date must be today or later');
+                isValid = false;
+            }
+            if (!endDate || eDate < sDate) {
+                displayErrorMessage('endDate-error', 'End date must be after start date');
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        function toggleOfferFields() {
+            const offerType = document.getElementById('offerType').value;
+            document.getElementById('productField').style.display = offerType === 'product' ? 'block' : 'none';
+            document.getElementById('categoryField').style.display = offerType === 'category' ? 'block' : 'none';
+        }
+
+        function displayErrorMessage(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.innerText = message;
+            errorElement.style.display = 'block';
+        }
+
+        function clearErrorMessages() {
+            const errorElements = document.getElementsByClassName('error-message');
+            Array.from(errorElements).forEach(element => {
+                element.innerText = '';
+                element.style.display = 'none';
+            });
+        }
+
+        function clearSearch() {
+            const searchInput = document.querySelector('input[name="search"]');
+            searchInput.value = '';
+            searchInput.form.submit();
+        }
+    </script>
+<%- include("../partials/admin/footer") %>
+</body>
+</html>

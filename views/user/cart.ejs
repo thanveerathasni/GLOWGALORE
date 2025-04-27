@@ -7,8 +7,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-
-    <style>
+<style>
         :root {
             --primary-bg: #ffffff; /* Matches homepage white background */
             --secondary-bg: #f8f9fa; /* Light gray like homepage */
@@ -367,19 +366,15 @@
         .card-title a:hover {
             color: var(--accent-blue);
         }
-    </style>
+       </style>
 </head>
 <body>
     <!-- Top Navigation Bar -->
     <nav class="top-navbar">
         <ul class="menu-desktop">
             <ul class="main-menu">
-                <li>
-                    <a href="/">Home</a>
-                </li>
-                <li>
-                    <a href="/shop">Shop</a>
-                </li>
+                <li><a href="/">Home</a></li>
+                <li><a href="/shop">Shop</a></li>
             </ul>
         </ul>
     </nav>
@@ -395,19 +390,19 @@
         <div class="row m-0">
             <!-- Sidebar -->
             <nav class="sidebar">
-                <a href="/dashboard" class="active"><i class="fas fa-user"></i> Profile</a>
-                <a href="/wishlist"><i class="fas fa-heart"></i> Wishlist</a>
-                <a href="/cart"><i class="fa-solid fa-cart-plus"></i> Cart</a>
+                <a href="/dashboard"><i class="fas fa-user"></i> Profile</a>
+                <a href="/cart" class="active"><i class="fa-solid fa-cart-plus"></i> Cart</a>
                 <a href="/checkout"><i class="fa-solid fa-credit-card"></i> Checkout</a>
                 <a href="/orders"><i class="fas fa-shopping-cart"></i> Orders</a>
-                <a href="/editProfile"><i class="fas fa-cog"></i> Edit profile</a>
+                <a href="/editProfile"><i class="fas fa-cog"></i> Edit Profile</a>
                 <a href="/address"><i class="fa-solid fa-location-dot"></i> Address</a>
                 <a href="/wallet"><i class="fas fa-wallet"></i> Wallet</a>
-                <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                <a href="/getCoupons"><i class="fas fa-ticket-alt"></i> My Coupons</a>
+                <a href="/logout" onclick="confirmLogout(event)"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </nav>
 
             <!-- Main Content -->
-             <p><br></p>
+            <p><br></p>
             <main class="col-12 main-content px-md-4 py-4 col-12-b">
                 <div class="profile-container">
                     <div class="container mt-4">
@@ -441,7 +436,7 @@
                                                     <div class="col-md-3 col-6 mt-3 mt-md-0">
                                                         <div class="input-group input-group-sm w-75 mx-auto">
                                                             <button class="btn btn-outline-secondary decrement-button" 
-                                                                    onclick="changeQuantity('<%= item.product._id %>', 'decrease', <%= item.product.stock %>)">
+                                                                    onclick="changeQuantity('<%= item.product._id %>', 'decrease', <%= item.product.quantity %>)">
                                                                 <i class="fas fa-minus"></i>
                                                             </button>
                                                             <input type="number" 
@@ -449,10 +444,10 @@
                                                                    class="form-control text-center" 
                                                                    value="<%= item.quantity %>"
                                                                    min="1" 
-                                                                   max="<%= item.product.stock %>"
+                                                                   max="<%= item.product.quantity %>"
                                                                    readonly>
                                                             <button class="btn btn-outline-secondary increment-button" 
-                                                                    onclick="changeQuantity('<%= item.product._id %>', 'increase', <%= item.product.stock %>)">
+                                                                    onclick="changeQuantity('<%= item.product._id %>', 'increase', <%= item.product.quantity %>)">
                                                                 <i class="fas fa-plus"></i>
                                                             </button>
                                                         </div>
@@ -485,7 +480,6 @@
                                 <% } %>
                             </div>
                             <% if (Array.isArray(cartItems) && cartItems.length > 0) { %>
-
                             <div class="col-lg-4 col-12">
                                 <div class="card" style="position: sticky; top: 20px;">
                                     <div class="card-body p-4">
@@ -549,7 +543,7 @@
 
             if (action === 'increase') {
                 if (currentQuantity >= 5) {
-                    Swal.fire('information', 'Maximum 5 quantity per user', 'info');
+                    Swal.fire('Information', 'Maximum 5 quantity per user', 'info');
                     return;
                 }
                 if (currentQuantity >= maxStock) {
@@ -577,27 +571,31 @@
                 data: JSON.stringify({ productId: productId, action: action }),
                 success: (response) => {
                     if (response.status) {
-                        quantityElement.value = currentQuantity;
-                        const pricePerItem = parseFloat(document.getElementById(`price${productId}`).innerText);
-                        const newSubtotal = pricePerItem * currentQuantity;
-                        document.getElementById(`subTotal${productId}`).innerText = newSubtotal.toFixed(2);
+                        if (response.message === "Product removed from cart") {
+                            const itemElement = document.getElementById(`cartProductQuantity${productId}`).closest('.card');
+                            if (itemElement) itemElement.remove();
+                            Swal.fire('Removed!', 'Product removed from cart', 'success');
+                        } else {
+                            quantityElement.value = response.quantity || currentQuantity;
+                            const pricePerItem = parseFloat(document.getElementById(`price${productId}`).innerText);
+                            const newSubtotal = pricePerItem * (response.quantity || currentQuantity);
+                            document.getElementById(`subTotal${productId}`).innerText = newSubtotal.toFixed(2);
+                        }
                         updateCartSummary(response.grandTotal);
                     } else {
                         Swal.fire('Error', response.message, 'error');
-                        quantityElement.value = action === 'increase' ? currentQuantity - 1 : currentQuantity + 1;
                     }
                 },
                 error: (error) => {
                     console.error("AJAX Error:", error);
                     Swal.fire('Error', 'An error occurred while updating the cart', 'error');
-                    quantityElement.value = action === 'increase' ? currentQuantity - 1 : currentQuantity + 1;
                 },
                 complete: () => {
                     if (incrementButton) incrementButton.disabled = false;
                     if (decrementButton) decrementButton.disabled = false;
                 }
             });
-聖
+        }
 
         function updateCartSummary(newGrandTotal) {
             const subtotalElement = document.querySelector('.d-flex.mb-3 span:nth-child(2)');
@@ -609,6 +607,10 @@
             const totalElement = document.querySelector('.d-flex.mb-4 h5:nth-child(2)');
             if (totalElement) {
                 totalElement.innerText = `₹ ${(newGrandTotal + shipping).toFixed(2)}`;
+            }
+
+            if (newGrandTotal === 0) {
+                location.reload(); // Reload to show empty cart message
             }
         }
 
@@ -624,7 +626,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: `/deleteItem?id=${productId}`,
+                        url: `/deleteProduct?id=${productId}`, // Changed from /deleteItem to match controller
                         method: 'GET',
                         success: (response) => {
                             if (response.status) {
@@ -635,7 +637,7 @@
                                 updateCartSummary(response.grandTotal);
                                 
                                 if (!document.querySelector('.cart-items-container .card')) {
-                                    const container = document.querySelector('.cart-items-container');
+                                    const container = document.querySelector('.cart-items-container c');
                                     container.innerHTML = `
                                         <div class="text-center py-5">
                                             <i class="fas fa-shopping-cart fa-3x" style="color: var(--accent-blue); opacity: 0.3;"></i>
@@ -665,6 +667,22 @@
                 text: 'Shipping charge is ₹ 50.00 For All Orders',
                 icon: 'info',
                 confirmButtonText: 'OK'
+            });
+        }
+        function confirmLogout(event) {
+            event.preventDefault();
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You will be logged out!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, Logout"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "/logout";
+                }
             });
         }
     </script>

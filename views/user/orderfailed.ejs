@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Failure</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #ffffff;
+            color: #1a1a1a;
+        }
+
+        .failure-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+            text-align: center;
+            background: #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .failure-icon {
+            font-size: 120px;
+            color: #e63946;
+            margin-bottom: 1.5rem;
+            animation: subtle-pulse 2s ease-in-out infinite;
+        }
+
+        .failure-statement {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+        }
+
+        .failure-message {
+            font-size: 1.1rem;
+            color: #6b7280;
+            max-width: 500px;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+
+        .failure-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn-failure {
+            padding: 0.75rem 1.75rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-retry {
+            background: #3b82f6;
+            color: #ffffff;
+        }
+
+        .btn-retry:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-details {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .btn-details:hover {
+            background: #e5e7eb;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        @keyframes subtle-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @media (max-width: 600px) {
+            .failure-container {
+                padding: 1.5rem;
+            }
+
+            .failure-statement {
+                font-size: 1.5rem;
+            }
+
+            .failure-message {
+                font-size: 1rem;
+            }
+
+            .failure-icon {
+                font-size: 80px;
+            }
+
+            .btn-failure {
+                padding: 0.65rem 1.5rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="failure-container">
+        <i class="fas fa-exclamation-triangle failure-icon" aria-hidden="true"></i>
+        <h2 class="failure-statement">Payment Failed!</h2>
+        <p class="failure-message">
+            <% if (error) { %>
+                <%= error %>
+            <% } else { %>
+                Something went wrong during the payment process. Please try again or contact support.
+            <% } %>
+        </p>
+        <div class="failure-actions">
+            <button class="btn-failure btn-retry" onclick="retryPayment()">
+                <i class="fas fa-redo"></i> Retry Payment
+            </button>
+           
+        </div>
+    </div>
+
+    <script>
+        function retryPayment() {
+            window.location.href = "/checkout";
+        }
+
+        function showDetails() {
+            alert("More details about the error can be found in your account settings or by contacting support.");
+        }
+    </script>
+</body>
+</html>

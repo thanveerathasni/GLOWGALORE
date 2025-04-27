@@ -38,6 +38,8 @@ app.use(express.static(path.join(__dirname,"public")))
 
 app.use("/",userRouter);
 app.use("/admin",adminRouter)
+
+
 // server start
 app.listen(process.env.PORT,()=>{
     console.log(" server working",

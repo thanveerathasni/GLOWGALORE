@@ -1,25 +1,27 @@
 <!-- Toastr CSS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
 
-<!-- SweetAlert CSS (Add this link) -->
+<!-- SweetAlert CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css" />
 
 <%- include("../../views/partials/admin/header") %>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-6 mt-60">
-            <form method="post" action="/admin/editCategory/<%=category._id%>">
+            <form id="editCategoryForm" method="post" action="/admin/editCategory/<%=category._id%>">
                 <div class="d-grid text-end mt-30 col-md-5">
-                    <button class="btn btn-primary" type="submit">Update category</button>
+                    <button id="submitButton" class="btn btn-primary" type="submit">Update category</button>
                 </div>
                 <div class="mb-4 mt-30">
                     <label for="product_name" class="form-label">Name</label>
                     <input type="text" name="categoryName" value="<%=category.name%>" class="form-control border" />
+                    <div id="categoryName-error" class="error-message"></div>
                 </div>
                 
                 <div class="mb-4">
                     <label class="form-label">Description</label>
                     <textarea name="description" class="form-control border"><%=category.description%></textarea>
+                    <div id="description-error" class="error-message"></div>
                 </div>
             </form>
         </div>
@@ -30,25 +32,118 @@
 <!-- Toastr JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-<!-- SweetAlert2 JS (Add this script) -->
+<!-- SweetAlert2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
 
+<style>
+    .error-message {
+        color: red;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+</style>
+
 <script>
-    // Check for a success message
-    document.addEventListener('DOMContentLoaded', function () {
-        const successMessage = '<%= typeof successMessage !== "undefined" ? successMessage : "" %>';
+// Original success message handling
+document.addEventListener('DOMContentLoaded', function () {
+    const successMessage = '<%= typeof successMessage !== "undefined" ? successMessage : "" %>';
+    const errorMessage = '<%= typeof errorMessage !== "undefined" ? errorMessage : "" %>';
 
-        if (successMessage) {
-            // Trigger Toastr notification
-            toastr.success(successMessage);
+    if (successMessage) {
+        // Trigger Toastr notification
+        toastr.success(successMessage);
 
-            // Trigger SweetAlert popup
-            Swal.fire({
-                title: 'Success!',
-                text: successMessage,
-                icon: 'success',
-                confirmButtonText: 'OK'
-            });
-        }
+        // Trigger SweetAlert popup
+        Swal.fire({
+            title: 'Success!',
+            text: successMessage,
+            icon: 'success',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#3085d6'
+        });
+    }
+
+    if (errorMessage) {
+        Swal.fire({
+            title: 'Error',
+            text: decodeURIComponent(errorMessage),
+            icon: 'error',
+            confirmButtonColor: '#d33'
+        });
+    }
+});
+
+// Validation
+function validateForm() {
+    clearErrorMessages();
+    const categoryName = document.querySelector('[name="categoryName"]').value.trim();
+    const description = document.querySelector('[name="description"]').value.trim();
+    
+    let isValid = true;
+    let errorMessages = [];
+
+    // Category Name: 3-50 characters, alphanumeric with spaces
+    if (!categoryName) {
+        displayErrorMessage('categoryName-error', 'Please enter a category name');
+        errorMessages.push('Please enter a category name');
+        isValid = false;
+    } else if (categoryName.length < 3 || categoryName.length > 50) {
+        displayErrorMessage('categoryName-error', 'Category name must be 3-50 characters long');
+        errorMessages.push('Category name must be 3-50 characters long');
+        isValid = false;
+    } else if (!/^[a-zA-Z0-9\s]+$/.test(categoryName)) {
+        displayErrorMessage('categoryName-error', 'Category name can only contain letters, numbers, and spaces');
+        errorMessages.push('Category name can only contain letters, numbers, and spaces');
+        isValid = false;
+    }
+
+    // Description: 10-250 characters
+    if (!description) {
+        displayErrorMessage('description-error', 'Please enter a description');
+        errorMessages.push('Please enter a description');
+        isValid = false;
+    } else if (description.length < 10 || description.length > 250) {
+        displayErrorMessage('description-error', 'Description must be 10-250 characters long');
+        errorMessages.push('Description must be 10-250 characters long');
+        isValid = false;
+    }
+
+    if (!isValid && errorMessages.length > 0) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Validation Error',
+            text: errorMessages.join(' '),
+            confirmButtonColor: '#d33'
+        });
+    }
+
+    return isValid;
+}
+
+function displayErrorMessage(elementId, message) {
+    const errorElement = document.getElementById(elementId);
+    if (errorElement) {
+        errorElement.textContent = message;
+        element.style.display = 'block';
+    }
+}
+
+function clearErrorMessages() {
+    const errorElements = document.getElementsByClassName('error-message');
+    Array.from(errorElements).forEach(element => {
+        element.textContent = '';
+        element.style.display = 'none';
     });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('editCategoryForm');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            if (!validateForm()) {
+                e.preventDefault();
+            }
+        });
+    }
+});
 </script>

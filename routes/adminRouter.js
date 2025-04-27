@@ -4,6 +4,11 @@ const adminController = require("../controllers/admin/adminController")
 const {userAuth,adminAuth} = require("../middlewares/auth")
 const customerController = require("../controllers/admin/customerController")
 const categoryController = require("../controllers/admin/categoryController")
+const couponController = require("../controllers/admin/couponController")
+const offerController = require('../controllers/admin/offerController');
+const salesController = require("../controllers/admin/salesController")
+
+
 const brandController = require("../controllers/admin/brandController")
 const productController = require("../controllers/admin/productController")
 const bannerController = require("../controllers/admin/bannerController");
@@ -20,7 +25,9 @@ const uploads = require("../helpers/multer")
 
 
 router.get ("/pageError",adminController.pageError)
+
 // login management
+
 router.get("/login",adminController.loadLogin)
 router.post("/login",adminController.login);
 router.get("/",adminAuth,adminController.loadDashboard)
@@ -28,6 +35,7 @@ router.post ("/pageError",adminController.pageError)
 router.get("/logout",adminController.logout)
 
 //customer management
+
 router.get("/users",adminAuth,customerController.customerInfo);
 router.get("/blockCustomer",adminAuth,customerController.customerBlocked);
 router.get("/unblockCustomer",adminAuth,customerController.customerunBlocked);
@@ -80,6 +88,26 @@ router.post('/orders/update-status', adminAuth, orderController.updateOrderStatu
 router.post('/orders/handle-return', adminAuth, orderController.handleReturnRequest);
 router.post('/orders/update-return-status', adminAuth, orderController.updateReturnStatus);
 router.post('/orders/cancel', adminAuth, orderController.cancelOrder);
+
+
+//coupon management
+
+router.get("/coupon",adminAuth,couponController.loadCoupon)
+router.post('/createCoupon', adminAuth, couponController.createCoupon);
+router.get("/editCoupon",adminAuth,couponController.editCoupon)
+router.post("/updateCoupon",adminAuth,couponController.updateCoupon)
+router.get("/deletecoupon",adminAuth,couponController.deleteCoupon)
+
+
+// offer management
+
+router.get('/offers', adminAuth, offerController.getAllOffers);
+router.post('/offers/add', adminAuth, offerController.addOffer);
+
+//sales management
+
+router.get('/sales', adminAuth, salesController.loadSalesPage);
+router.get('/sales/report', adminAuth, salesController.loadSalesPage);
 
 
 module.exports = router 

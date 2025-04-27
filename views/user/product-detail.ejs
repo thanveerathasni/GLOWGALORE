@@ -1,5 +1,16 @@
 <%- include('../partials/user/header') %>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Detail - Glow Galore</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
 <style>
     :root {
         --dark-bg: #ff0000;
@@ -171,7 +182,7 @@
     }
 
     .add-to-cart {
-        background: linear-gradient(90deg, #ff6b6b, #e63946);
+        background: linear-gradient(90deg, #5aa7ee, #5628d5);
         color: white;
         padding: 0.8rem 2rem;
         font-weight: 600;
@@ -182,9 +193,9 @@
     }
 
     .add-to-cart:hover {
-        background: linear-gradient(90deg, #ff8787, #f05461);
+        background: linear-gradient(90deg, #5aa7ee, #5628d5);
         transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3);
+        box-shadow: 0 4px 15px rgba(57, 74, 230, 0.3);
     }
 
     .wishlist {
@@ -243,298 +254,378 @@
         overflow: hidden;
         width: 100%;
         border-radius: 8px;
-        border: 2px solid var(--accent-gold);
+        border: 1px solid var(--accent-gold);
     }
 
     .main-image img {
         width: 100%;
         transition: transform 0.3s ease-in-out;
+        border: 1px solid var(--accent-gold);
     }
 
     .main-image:hover img {
         transform: scale(1.5);
     }
+
+    /* Related Products Styles */
+    .related-products {
+        margin-top: 3rem;
+        padding: 2rem;
+        background: #fff6eb94;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .related-products h3 {
+        font-size: 1.8rem;
+        color: #2c2c2c;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .related-product-card {
+        text-align: center;
+        padding: 1rem;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease;
+    }
+
+    .related-product-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .related-product-card img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+    }
+
+    .related-product-card h4 {
+        font-size: 1.2rem;
+        color: #2c2c2c;
+        margin-bottom: 0.5rem;
+        text-transform: capitalize;
+    }
+
+    .related-product-card .original-price {
+        font-size: 0.9rem;
+        color: #999;
+        text-decoration: line-through;
+    }
+
+    .related-product-card .discounted-price {
+        font-size: 1.2rem;
+        color: #e63946;
+        font-weight: 600;
+    }
+
+    .related-product-card .offer {
+        font-size: 0.9rem;
+        color: #28a745;
+        margin-bottom: 0.5rem;
+    }
+
+    .related-product-card .buttons {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .related-product-card .add-to-cart {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .related-product-card .view-details {
+        background: transparent;
+        border: 2px solid #5aa7ee;
+        color: #5aa7ee;
+        padding: 0.5rem 1rem;
+        font-weight: 600;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        font-size: 0.9rem;
+    }
+
+    .related-product-card .view-details:hover {
+        background: #5aa7ee;
+        color: white;
+    }
 </style>
 
-<div class="page-header breadcrumb-wrap mt-30">
-    <div class="container" style="margin-top: 100px;">
-        <div class="breadcrumb">
-            <a href="/" rel="nofollow">Home</a>>
-            <span><a href="/shop" rel="nofollow">shop</a></span> >
-            <span><a href="#" rel="nofollow">product-details</a></span>
+<body>
+    <div class="page-header breadcrumb-wrap mt-30">
+        <div class="container" style="margin-top: 100px;">
+            <div class="breadcrumb">
+                <a href="/" rel="nofollow">Home</a> >
+                <span><a href="/shop" rel="nofollow">Shop</a></span> >
+                <span><a href="#" rel="nofollow">Product Details</a></span>
+            </div>
         </div>
     </div>
-</div>
-
-<div class="product-page">
-    <div class="product-container">
-        <!-- Product Gallery (Left Side - 50%) -->
-        <div class="product-gallery">
-            <div class="main-image">
-                <img id="main-img" src="<%= product.productImage[0] %>" alt="<%= product.productName %>">
+    <div class="product-page">
+        <div class="product-container">
+            <div class="product-gallery">
+                <div class="main-image">
+                    <img id="main-img" src="<%= product.productImage[0] %>" alt="<%= product.productName %>">
+                </div>
+                <div class="thumbnails">
+                    <% product.productImage.forEach((productImage, index) => { %>
+                        <div class="thumbnail <%= index === 0 ? 'active' : '' %>">
+                            <img src="<%= productImage %>" alt="Thumbnail <%= index + 1 %>"
+                                onclick="changeImage('<%= productImage %>')">
+                        </div>
+                    <% }) %>
+                </div>
             </div>
-            <div class="thumbnails">
-                <% product.productImage.forEach((productImage, index) => { %>
-                    <div class="thumbnail <%= index === 0 ? 'active' : '' %>">
-                        <img src="<%= productImage %>" alt="Thumbnail <%= productImage + 1 %>"
-                            onclick="changeImage('<%= productImage %>')">
-                    </div>
-                <% }); %>
-            </div>
-        </div>
-
-        <!-- Product Info (Right Side - 50%) -->
-        <div class="product-info">
-            <h1 class="product-title">
-                <%= product.productName %>
-            </h1>
-           
-            <p class="product-information">
-                <%=product.description %>
-            </p>
-
-            <!-- ⭐ Ratings (Static) -->
-            <div class="rating">
-                <span class="stars">
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star-half-o"></i>
-                </span>
-                <span class="rating-value">(4.5/5, 120 reviews)</span>
-            </div>
-
-            <!-- 💰 Price & Discounts (Dynamic) -->
-            <p class="original-price">Original Price: <del>₹<%= product.regularPrice %></del></p>
-            <p class="discounted-price">Discounted Price: <span class="highlight">₹<%= product.salePrice %></span></p>
-            <p class="offer">Offer Applied: <%= totalOffer %>% OFF</p>
-
-            <!-- 📦 Stock Availability (Dynamic) -->
-            <p class="stock-status">
-                <% if (product.quantity > 0) { %>
-                    <span class="in-stock">In Stock</span> (Only <%= product.quantity %> left!)
-                <% } else { %>
-                    <span class="out-of-stock">Out of Stock</span>
+            <div class="product-info">
+                <h1 class="product-title"><%= product.productName %></h1>
+                <p class="product-information"><%= product.description %></p>
+                <!-- CHANGE: Display max offer -->
+                <% if (product.maxOffer > 0) { %>
+                    <p class="offer-badge" style="color: #28a745;">
+                        <%= product.maxOffer %>% <%= product.productOffer > product.categoryOffer ? 'Offer' : 'OFF' %>
+                    </p>
                 <% } %>
-            </p>
-
-            <!-- 🛒 Add to Cart & Wishlist Buttons -->
-            <div class="buttons">
-                <% if (product.quantity > 0) { %>
-                    <button class="add-to-cart" onclick="addToCart('<%= product._id %>')">
-                        <i class="fas fa-shopping-cart"></i> Add to Cart
+                <div class="rating">
+                    <span class="stars">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star-half-o"></i>
+                    </span>
+                    <span class="rating-value">(4.5/5, 120 reviews)</span>
+                </div>
+                <p class="original-price">Original Price: <del>₹<%= product.regularPrice %></del></p>
+                <!-- CHANGE: Use calculated salePrice -->
+                <p class="discounted-price">Discounted Price: <span class="highlight">₹<%= product.salePrice.toFixed(2) %> </span></p>
+                <p class="stock-status">
+                    <% if (product.quantity > 0) { %>
+                        <span class="in-stock">In Stock</span> (Only <%= product.quantity %> left!)
+                    <% } else { %>
+                        <span class="out-of-stock">Out of Stock</span>
+                    <% } %>
+                </p>
+                <div class="buttons">
+                    <% if (product.quantity > 0) { %>
+                        <button class="add-to-cart" onclick="addToCart('<%= product._id %>')">
+                            <i class="fas fa-shopping-cart"></i> Add to Cart
+                        </button>
+                    <% } %>
+                    <button class="wishlist" onclick="addToWishlist('<%= product._id %>')">
+                        <i class="fas fa-heart"></i> Add to Wishlist
                     </button>
-                <% } %>
-                <button class="wishlist" onclick="addToWishlist('<%= product._id %>')">❤ Add to Wishlist</button>
-            </div>
-
-            <!-- 📝 Reviews Section (Static) -->
-            <div class="reviews">
-                <h3>Customer Reviews</h3>
-                <div class="review">
-                    <strong>John Doe</strong>
-                    <p>⭐⭐⭐⭐⭐ - Amazing product! Loved the quality.</p>
                 </div>
-                <div class="review">
-                    <strong>Jane Smith</strong>
-                    <p>⭐⭐⭐⭐ - Great product, but delivery took some time.</p>
-                </div>
-                <div class="review">
-                    <strong>Michael Brown</strong>
-                    <p>⭐⭐⭐⭐⭐ - Worth every penny! Will buy again.</p>
+                <div class="reviews">
+                    <h3>Customer Reviews</h3>
+                    <div class="review">
+                        <strong>John Doe</strong>
+                        <p>⭐⭐⭐⭐⭐ - Amazing product! Loved the quality.</p>
+                    </div>
+                    <div class="review">
+                        <strong>Jane Smith</strong>
+                        <p>⭐⭐⭐⭐ - Great product, but delivery took some time.</p>
+                    </div>
+                    <div class="review">
+                        <strong>Michael Brown</strong>
+                        <p>⭐⭐⭐⭐⭐ - Worth every penny! Will buy again.</p>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- Related Products Section -->
+        <% if (relatedProducts && relatedProducts.length > 0) { %>
+            <div class="related-products">
+                <h3>Related Products</h3>
+                <div class="row">
+                    <% relatedProducts.forEach(relatedProduct => { %>
+                        <div class="col-md-3 col-sm-6">
+                            <div class="related-product-card">
+                                <img src="<%= relatedProduct.productImage[0] %>" alt="<%= relatedProduct.productName %>">
+                                <h4><%= relatedProduct.productName %></h4>
+                                <% if (relatedProduct.maxOffer > 0) { %>
+                                    <p class="offer"><%= relatedProduct.maxOffer %>% OFF</p>
+                                <% } %>
+                                <p class="original-price">₹<%= relatedProduct.regularPrice %></p>
+                                <p class="discounted-price">₹<%= relatedProduct.salePrice.toFixed(2) %></p>
+                                <div class="buttons">
+                                    <% if (relatedProduct.quantity > 0) { %>
+                                        <button class="add-to-cart" onclick="addToCart('<%= relatedProduct._id %>')">
+                                            <i class="fas fa-shopping-cart"></i>
+                                        </button>
+                                    <% } %>
+                                    <a href="/productDetails?id=<%= relatedProduct._id %>" class="view-details">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            </div>
+        <% } %>
     </div>
-</div>
-
-<!-- Everything else remains unchanged, only updating the script section -->
-<script>
-    // Function to change the main image when clicking a thumbnail
-    function changeImage(newSrc) {
-        const mainImg = document.getElementById('main-img');
-        mainImg.src = `uploads/product-images/${newSrc}`;
-
-        document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
-        event.target.parentElement.classList.add('active');
-    }
-
-    // Zoom effect
-    document.getElementById('main-img').addEventListener('mousemove', function (event) {
-        const img = event.target;
-        const { left, top, width, height } = img.getBoundingClientRect();
-        const x = (event.clientX - left) / width * 100;
-        const y = (event.clientY - top) / height * 100;
-        img.style.transformOrigin = `${x}% ${y}%`;
-    });
-
-    // Thumbnail interaction
-    document.querySelectorAll('.thumbnail img').forEach(thumb => {
-        thumb.addEventListener('click', () => {
-            const mainImg = document.querySelector('.main-image img');
-            mainImg.src = thumb.src;
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function changeImage(newSrc) {
+            const mainImg = document.getElementById('main-img');
+            mainImg.src = newSrc;
             document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
-            thumb.parentElement.classList.add('active');
-        });
-    });
-
-    function addToWishlist(productId) {
-        if (!productId) {
-            Swal.fire({
-                title: 'Invalid Product',
-                text: 'Invalid product ID. Please try again.',
-                icon: 'error',
-                background: '#1a1a1a',
-                color: '#ffffff',
-                customClass: { popup: 'border-orange' },
-                buttonsStyling: false,
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#ff8c42'
-            });
-            return;
+            event.target.parentElement.classList.add('active');
         }
-
-        $.ajax({
-            url: '/addToWishlist',
-            method: 'patch',
-            contentType: 'application/json',
-            data: JSON.stringify({ productId }),
-            success: (response) => {
-                if (response.status) {
-                    Swal.fire({
-                        title: 'Added to Wishlist',
-                        text: 'The product has been added to your wishlist!',
-                        icon: 'success',
-                        timer: 2000,
-                        showConfirmButton: false,
-                        background: '#1a1a1a',
-                        color: '#ffffff',
-                        customClass: { popup: 'border-orange' },
-                        timerProgressBar: true
-                    });
-                } else if (response.status === 401) {
-                    Swal.fire({
-                        title: 'Login Required',
-                        text: 'Please log in to add items to your wishlist.',
-                        icon: 'warning',
-                        confirmButtonText: 'Log In',
-                        background: '#1a1a1a',
-                        color: '#ffffff',
-                        confirmButtonColor: '#ff8c42'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = '/login';
-                        }
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'Failed to Add',
-                        text: response.message || 'Please log in to add items to your wishlist.',
-                        icon: 'warning',
-                        background: '#1a1a1a',
-                        color: '#ffffff',
-                        customClass: { popup: 'border-orange' },
-                        confirmButtonText: 'OK',
-                        confirmButtonColor: '#ff8c42'
-                    });
-                }
-            },
-            error: (xhr, status, error) => {
-                console.error("AJAX Error:", xhr, status, error);
-                const errorMessage = xhr.responseJSON?.message || "There was an error adding the product to your wishlist.";
+        document.getElementById('main-img').addEventListener('mousemove', function (event) {
+            const img = event.target;
+            const { left, top, width, height } = img.getBoundingClientRect();
+            const x = (event.clientX - left) / width * 100;
+            const y = (event.clientY - top) / height * 100;
+            img.style.transformOrigin = `${x}% ${y}%`;
+        });
+        document.querySelectorAll('.thumbnail img').forEach(thumb => {
+            thumb.addEventListener('click', () => {
+                const mainImg = document.querySelector('.main-image img');
+                mainImg.src = thumb.src;
+                document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+                thumb.parentElement.classList.add('active');
+            });
+        });
+        function addToCart(productId) {
+            if (!productId) {
                 Swal.fire({
-                    title: 'Error',
-                    text: errorMessage,
-                    icon: 'error',
-                    background: '#1a1a1a',
-                    color: '#ffffff',
-                    customClass: { popup: 'border-orange' },
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#ff8c42'
+                    title: 'Invalid Product',
+                    text: 'Product ID is missing. Please try again.',
+                    icon: 'error'
                 });
+                return;
             }
-        });
-    }
-
-    function addToCart(productId) {
-        if (!productId) { // Added validation
-            Swal.fire({
-                title: 'Invalid Product',
-                text: 'Product ID is missing. Please try again.',
-                icon: 'error'
-            });
-            return;
+            fetch('/addToCart', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ productId })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(data => {
+                            throw new Error(data.message || 'Something went wrong');
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.status) {
+                        Swal.fire({
+                            title: 'Product added to cart!',
+                            icon: 'success',
+                            showCancelButton: true,
+                            confirmButtonText: 'Go to Cart',
+                            cancelButtonText: 'Continue Shopping'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '/cart';
+                            }
+                        });
+                    } else if (data.message === "Maximum 5 quantity per user reached") {
+                        Swal.fire({
+                            title: 'Max limit reached!',
+                            text: 'You can only add up to 5 of this item.',
+                            icon: 'warning'
+                        });
+                    } else if (data.message === "Cannot add more, product is out of stock") {
+                        Swal.fire({
+                            title: 'Out of stock!',
+                            text: 'Not enough stock available.',
+                            icon: 'error'
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.message || 'Failed to add product to cart.',
+                            icon: 'error'
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Client-side Error:', error.message);
+                    if (error.message === "User not logged in") {
+                        Swal.fire({
+                            title: 'Login Required',
+                            text: 'Please log in to add items to your cart.',
+                            icon: 'warning',
+                            confirmButtonText: 'Log In',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '/login';
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: error.message || 'Something went wrong. Please try again.',
+                            icon: 'error'
+                        });
+                    }
+                });
         }
-
-        fetch('/addToCart', {  
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ productId })
-        })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(data => {
-                        throw new Error(data.message || 'Something went wrong');
-                    });
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.status) { // Updated to match server response
-                    Swal.fire({
-                        title: 'Product added to cart!',
-                        icon: 'success',
-                        showCancelButton: true,
-                        confirmButtonText: 'Go to Cart',
-                        cancelButtonText: 'Continue Shopping'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = '/cart';
-                        }
-                    });
-                } else if (data.message === "Maximum 5 quantity per user reached") { // Match server message
-                    Swal.fire({
-                        title: 'Max limit reached!',
-                        text: 'You can only add up to 5 of this item.',
-                        icon: 'warning'
-                    });
-                } else if (data.message === "Cannot add more, product is out of stock") { // Match server message
-                    Swal.fire({
-                        title: 'Out of stock!',
-                        text: 'Not enough stock available.',
-                        icon: 'error'
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'Error',
-                        text: data.message || 'Failed to add product to cart.',
-                        icon: 'error'
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('Client-side Error:', error.message);
-                if (error.message === "User not logged in") {
-                    Swal.fire({
-                        title: 'Login Required',
-                        text: 'Please log in to add items to your cart.',
-                        icon: 'warning',
-                        confirmButtonText: 'Log In',
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = '/login';
-                        }
-                    });
-                } else {
+        function addToWishlist(productId) {
+            if (!productId) {
+                Swal.fire({
+                    title: 'Invalid Product',
+                    text: 'Invalid product ID. Please try again.',
+                    icon: 'error'
+                });
+                return;
+            }
+            $.ajax({
+                url: '/wishlist/add',
+                method: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify({ productId }),
+                success: (response) => {
+                    if (response.status) {
+                        Swal.fire({
+                            title: 'Added to Wishlist',
+                            text: 'The product has been added to your wishlist!',
+                            icon: 'success',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    } else if (response.status === 401) {
+                        Swal.fire({
+                            title: 'Login Required',
+                            text: 'Please log in to add items to your wishlist.',
+                            icon: 'warning',
+                            confirmButtonText: 'Log In'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '/login';
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Failed to Add',
+                            text: response.message || 'Please log in to add items to your wishlist.',
+                            icon: 'warning'
+                        });
+                    }
+                },
+                error: (xhr, status, error) => {
+                    console.error("AJAX Error:", xhr, status, error);
+                    const errorMessage = xhr.responseJSON?.message || "There was an error adding the product to your wishlist.";
                     Swal.fire({
                         title: 'Error',
-                        text: error.message || 'Something went wrong. Please try again.',
+                        text: errorMessage,
                         icon: 'error'
                     });
                 }
             });
-    }
-</script>
+        }
+    </script>
+</body>
+</html>
 
 <%- include('../partials/user/footer') %>

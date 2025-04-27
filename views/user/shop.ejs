@@ -1,231 +1,583 @@
-<%- include("../../views/partials/user/header") %>
+
+
+
 
 <style>
-  /* Flex container styling */
+  /* Original styles from shop.ejs, with modifications */
+  body {
+    overflow-x: hidden;
+  }
+  .container {
+    max-width: 1300px;
+    padding: 0 15px;
+    margin: 0 auto;
+  }
+  .block2-txt-child2 {
+    width: 400px;
+    padding-bottom: 30px;
+    size: 30px;
+  }
+  .block2-txt-child1 {
+    width: calc(100% - 30px);
+    padding-left: 10px;
+  }
   .flex-w {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem; /* Space between elements */
+    gap: 1.5rem;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
+    width: 100%;
   }
-
   .m-tb-10 {
     margin: 10px 0;
   }
-
-  /* Form styling */
+  a.stext-104 {
+    font-family: Poppins-Regular;
+    font-size: 17px;
+    line-height: 1.466667;
+  }
+  a.cl4 {
+    color: #555151;
+  }
   #filter-form {
     padding: 1rem;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(245, 245, 245, 0.9));
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-    transition: box-shadow 0.3s ease;
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 1rem;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
   }
-
   #filter-form:hover {
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
   }
-
-  /* Select dropdown styling */
   #filter-form select {
-    padding: 0.8rem 1.2rem;
-    font-size: 1rem;
-    color: #333;
+    padding: 0.5rem 1rem; /* Smaller padding */
+    font-size: 0.9rem; /* Smaller text */
+    color: #444;
     background: #fff;
-    border: 2px solid #ddd;
-    border-radius: 8px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
     outline: none;
     cursor: pointer;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    min-width: 180px;
+    min-width: 140px; /* Smaller width */
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.03);
   }
-
   #filter-form select:hover,
   #filter-form select:focus {
     border-color: #6739e6;
-    box-shadow: 0 0 8px rgba(230, 57, 70, 0.2);
+    box-shadow: 0 0 10px rgba(103, 57, 230, 0.2);
   }
-
-  /* Input field styling */
-  #filter-form input[type="text"] {
-    padding: 0.8rem 1.2rem;
-    font-size: 1rem;
-    color: #333;
+  #filter-form input[type="text"],
+  #filter-form input[type="number"] {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.95rem;
+    color: #444;
     background: #fff;
-    border: 2px solid #ddd;
-    border-radius: 8px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
     outline: none;
-    width: 200px; /* Adjustable based on your layout */
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.03);
   }
-
-  #filter-form input[type="text"]::placeholder {
-    color: #999;
+  #filter-form input[type="text"] {
+    width: 250px; /* Adjusted search bar width */
   }
-
+  #filter-form input[type="number"] {
+    width: 120px; /* Smaller width for price inputs */
+  }
+  #filter-form input[type="text"]::placeholder,
+  #filter-form input[type="number"]::placeholder {
+    color: #bbb;
+    font-style: italic;
+  }
   #filter-form input[type="text"]:hover,
-  #filter-form input[type="text"]:focus {
+  #filter-form input[type="text"]:focus,
+  #filter-form input[type="number"]:hover,
+  #filter-form input[type="number"]:focus {
     border-color: #6739e6;
-    box-shadow: 0 0 8px rgba(230, 57, 70, 0.2);
+    box-shadow: 0 0 10px rgba(103, 57, 230, 0.2);
   }
-
-  /* Button styling */
   #filter-form button {
-    padding: 0.8rem 1.5rem;
-    font-size: 1rem;
+    padding: 0.5rem 1rem; /* Smaller buttons */
+    font-size: 0.85rem; /* Smaller text */
     font-weight: 600;
     border-radius: 50px;
     border: none;
     cursor: pointer;
     transition: all 0.3s ease;
   }
-
   #filter-form button[type="submit"] {
     background: linear-gradient(90deg, #6bb8ff, #6739e6);
     color: white;
   }
-
   #filter-form button[type="submit"]:hover {
-    background: linear-gradient(90deg, #6bb8ff, #6739e6);
+    background: linear-gradient(90deg, #5aa7ee, #5828d5);
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3);
+    box-shadow: 0 6px 20px rgba(103, 57, 230, 0.3);
   }
-
   #filter-form button[type="reset"] {
     background: transparent;
     border: 2px solid #6739e6;
     color: #6739e6;
   }
-
   #filter-form button[type="reset"]:hover {
     background: #6739e6;
     color: white;
     transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(103, 57, 230, 0.3);
   }
-
+  .panel-search {
+    width: 100%;
+    max-width: 2400px;
+    margin: 0 auto;
+    padding: 20px 25px;
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  .panel-search.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .panel-search .bor8 {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border: 2px solid #e6e6e6;
+    border-radius: 12px;
+    padding: 0.6rem 1.2rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .panel-search .bor8:hover,
+  .panel-search .bor8:focus-within {
+    border-color: #6739e6;
+    box-shadow: 0 0 12px rgba(103, 57, 230, 0.2);
+  }
+  .panel-search button {
+    width: 50px;
+    height: 50px;
+    background: transparent;
+    border: none;
+    font-size: 1.4rem;
+    color: #6739e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.2s ease;
+  }
+  .panel-search button:hover {
+    color: #5828d5;
+    transform: scale(1.15);
+  }
+  .panel-search input[type="text"] {
+    flex: 1;
+    padding: 0.9rem 1.2rem;
+    font-size: 1.1rem;
+    color: #333;
+    border: none;
+    background: transparent;
+    outline: none;
+    width: 100%;
+  }
+  .panel-search input[type="text"]::placeholder {
+    color: #bbb;
+    font-style: italic;
+    font-weight: 300;
+  }
+  .bg0 {
+    background: #f5f6f8;
+  }
+  .isotope-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+  }
+  .isotope-item {
+    flex: 0 0 calc(25% - 1.5rem);
+    max-width: calc(25% - 1.5rem);
+  }
+  .block2 {
+    background: #fff;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .block2:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+  .block2-pic img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+  }
+  .block2-btn {
+    background: linear-gradient(90deg, #6bb8ff, #6739e6);
+    color: #fff;
+    font-weight: 600;
+    padding: 0.8rem 1.5rem;
+    border-radius: 50px;
+  }
+  .block2-btn:hover {
+    background: linear-gradient(90deg, #5aa7ee, #5828d5);
+  }
+  .flex-c-m.flex-w {
+    justify-content: center;
+  }
+  .flex-c-m.stext-101 {
+    background: linear-gradient(90deg, #6bb8ff, #6739e6);
+    color: #fff;
+    padding: 1rem 2.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+  .flex-c-m.stext-101:hover {
+    background: linear-gradient(90deg, #5aa7ee, #5828d5);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(103, 57, 230, 0.3);
+  }
+  /* Offer badge styles */
+  .offer-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: linear-gradient(90deg, #ff6b6b, #ff3e3e);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
   /* Responsive adjustments */
+  @media (max-width: 992px) {
+    .isotope-item {
+      flex: 0 0 calc(33.33% - 1.5rem);
+      max-width: calc(33.33% - 1.5rem);
+    }
+  }
   @media (max-width: 768px) {
     #filter-form {
       flex-direction: column;
       align-items: stretch;
+      padding: 0.8rem;
     }
-
     #filter-form select,
-    #filter-form input[type="text"] {
+    #filter-form input[type="text"],
+    #filter-form input[type="number"] {
       width: 100%;
+      margin-right: 0;
     }
-
     #filter-form button {
       width: 100%;
+    }
+    .panel-search {
+      padding: 15px 20px; 
+      max-width: 100%;
+      margin: 0 10px;
+    }
+    .panel-search .bor8 {
+      padding: 0.5rem 1rem;
+    }
+    .panel-search button {
+      width: 50px;
+      height: 45px;
+      font-size: 1.3rem;
+    }
+    .isotope-item {
+      flex: 0 0 calc(50% - 1.5rem);
+      max-width: calc(50% - 1.5rem);
+    }
+  }
+  @media (max-width: 576px) {
+    .isotope-item {
+      flex: 0 0 calc(100% - 1.5rem);
+      max-width: calc(100% - 1.5rem);
+    }
+    .block2-pic img {
+      height: 200px;
     }
   }
 </style>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Shop - Glow Galore</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="images/icons/favicon.png"/>
+<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="fonts/iconic/css/material-design-iconic-font.min.css">
+<link rel="stylesheet" type="text/css" href="fonts/linearicons-v1.0.0/icon-font.min.css">
+<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
+<link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
+<link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
+<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+<link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
+<link rel="stylesheet" type="text/css" href="vendor/slick/slick.css">
+<link rel="stylesheet" type="text/css" href="vendor/MagnificPopup/magnific-popup.css">
+<link rel="stylesheet" type="text/css" href="vendor/perfect-scrollbar/perfect-scrollbar.css">
+<link rel="stylesheet" type="text/css" href="css/util.css">
+<link rel="stylesheet" type="text/css" href="css/main.css">
+<link rel="stylesheet" href="./user-assets/css/maind134.css">
+</head>
+<body class="animsition">
+
+<!-- Header -->
+<header>
+  <div class="container-menu-desktop">
+    <div class="top-bar">
+      <div class="content-topbar flex-sb-m h-full container">
+        <div class="left-top-bar">
+          Free shipping for standard order over $100
+        </div>
+      </div>
+    </div>
+    <div class="wrap-menu-desktop">
+      <nav class="limiter-menu-desktop container">
+        <div class="menu-desktop">
+          <ul class="main-menu">
+            <li><a href="/">Home</a></li>
+            <li class="label1" data-label1="hot"><a href="/shop">Shop</a></li>
+            <li><a href="/cart">Cart</a></li>
+            <li><a href="/dashboard">Profile</a></li>
+            <li><a href="/logout">Logout</a></li>
+          </ul>
+        </div>
+        <div class="wrap-icon-header flex-w flex-r-m">
+          <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart">
+            <a href="/cart"><i class="zmdi zmdi-shopping-cart"></i></a>
+          </div>
+          <a href="/wishlist" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti">
+            <i class="zmdi zmdi-favorite-outline"></i>
+          </a>
+          <div class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 js-show-modal-search">
+            <i class="zmdi zmdi-search"></i>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+  <div class="wrap-header-mobile">
+    <div class="logo-mobile">
+      <a href="/"><img src="images/icons/logo-01.png" alt="IMG-LOGO"></a>
+    </div>
+    <div class="wrap-icon-header flex-w flex-r-m m-r-15">
+      <div class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 js-show-modal-search">
+        <i class="zmdi zmdi-search"></i>
+      </div>
+      <div class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10">
+        <a href="/cart"><i class="zmdi zmdi-shopping-cart"></i></a>
+      </div>
+      <a href="/wishlist" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti">
+        <i class="zmdi zmdi-favorite-outline"></i>
+      </a>
+    </div>
+    <div class="btn-show-menu-mobile hamburger hamburger--squeeze">
+      <span class="hamburger-box">
+        <span class="hamburger-inner"></span>
+      </span>
+    </div>
+  </div>
+  <div class="menu-mobile">
+    <ul class="topbar-mobile">
+      <li>
+        <div class="left-top-bar">
+          Free shipping for standard order over ₹100
+        </div>
+      </li>
+    </ul>
+    <ul class="main-menu-m">
+      <li><a href="/">Home</a></li>
+      <li><a href="/shop">Shop</a></li>
+      <li><a href="/cart">Cart</a></li>
+      <li><a href="/dashboard">Profile</a></li>
+      <li><a href="/logout">Logout</a></li>
+    </ul>
+  </div>
+  <div class="modal-search-header flex-c-m trans-04 js-hide-modal-search">
+    <div class="container-search-header">
+      <button class="flex-c-m btn-hide-modal-search trans-04 js-hide-modal-search">
+        <img src="images/icons/icon-close2.png" alt="CLOSE">
+      </button>
+      <form class="wrap-search-header flex-w p-l-15">
+        <button class="flex-c-m trans-04">
+          <i class="zmdi zmdi-search"></i>
+        </button>
+        <input class="plh3" type="text" name="search" placeholder="Search...">
+      </form>
+    </div>
+  </div>
+</header>
+
 <!-- Product Section -->
 <section class="bg0 m-t-23 p-b-140" style="padding-top: 80px;">
   <div class="container">
-    <div class="flex-w flex-sb-m p-b-52">
-      <!-- Category Filters -->
-      <div class="flex-w flex-l-m filter-tope-group m-tb-10">
-        <% if (categories && categories.length > 0) { %>
-          <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter="*">All Products</button>
-          
-        <% } %>
-      </div>
-
-      <!-- Sort Form -->
-      <form id="filter-form" class="flex-w m-tb-10">
-        <select name="sort" aria-label="Sort products">
-          <option value="">Sort By</option>
-          <option value="lowToHigh" <%= sort === "lowToHigh" ? "selected" : "" %>>Price: Low to High</option>
-          <option value="highToLow" <%= sort === "highToLow" ? "selected" : "" %>>Price: High to Low</option>
-          <option value="" <%= sort === "aToZ" ? "selected" : "" %>>A-Z</option>
-          <option value="" <%= sort === "zToA" ? "selected" : "" %>>Z-A</option>
-        </select>
-        <input type="text" name="search" placeholder="Search Products" value="<%= search || '' %>">
-        <button type="submit" class="hov-btn3 trans-04">Apply</button>
-        <button type="reset" class="hov-btn3 trans-04" onclick="resetFilters()">Clear</button>
-      </form>
-
-      <!-- Filter and Search Buttons -->
-      <div class="flex-w flex-c-m m-tb-10">
-        <!-- <button class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4 js-show-filter" aria-label="Toggle filter">
-          <i class="icon-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-filter-list"></i>
-          <i class="icon-close-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
-          Filter
-        </button> -->
-        <!-- <button class="flex-c-m stext-106 cl6 size-105 bor4 pointer hov-btn3 trans-04 m-tb-4 js-show-search" aria-label="Toggle search">
-          <i class="icon-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-search"></i>
-          <i class="icon-close-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
-          Search
-        </button> -->
+      <div class="flex-w flex-sb-m p-b-52">
+          <!-- Filter Form -->
+          <form id="filter-form" class="flex-w m-tb-10">
+              <select name="sort" aria-label="Sort products">
+                  <option value="">Sort By</option>
+                  <option value="lowToHigh" <%= sort === "lowToHigh" ? "selected" : "" %>>Price: Low to High</option>
+                  <option value="highToLow" <%= sort === "highToLow" ? "selected" : "" %>>Price: High to Low</option>
+                  <option value="aToZ" <%= sort === "aToZ" ? "selected" : "" %>>A-Z</option>
+                  <option value="zToA" <%= sort === "zToA" ? "selected" : "" %>>Z-A</option>
+                  <option value="newArrivals" <%= sort === "newArrivals" ? "selected" : "" %>>New Arrivals</option>
+              </select>
+              <select name="category" aria-label="Filter by category">
+                  <option value="">All Categories</option>
+                  <% categories.forEach(cat => { %>
+                      <option value="<%= cat._id %>" <%= category === cat._id.toString() ? "selected" : "" %>>
+                          <%= cat.name %>
+                      </option>
+                  <% }); %>
+              </select>
+              <input type="text" name="search" placeholder="Search Products" value="<%= search || '' %>">
+              <input type="number" name="minPrice" placeholder="Min Price" min="0" value="<%= minPrice || '' %>">
+              <input type="number" name="maxPrice" placeholder="Max Price" min="0" value="<%= maxPrice || '' %>">
+              <button type="submit" class="hov-btn3 trans-04">Apply</button>
+              <button type="reset" class="hov-btn3 trans-04" onclick="resetFilters()">Clear</button>
+          </form>
       </div>
 
       <!-- Search Panel -->
       <div class="dis-none panel-search w-full p-t-10 p-b-15">
-        <div class="bor8 dis-flex p-l-15">
-          <button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04" aria-label="Search">
-            <i class="zmdi zmdi-search"></i>
-          </button>
-          <input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="search-product" placeholder="Search products" aria-label="Search products">
-        </div>
+          <div class="bor8 dis-flex p-l-15">
+              <button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04" aria-label="Search">
+                  <i class="zmdi zmdi-search"></i>
+              </button>
+              <input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="search-product" placeholder="Search products" aria-label="Search products">
+          </div>
       </div>
 
-      <!-- Filter Panel (Example Dynamic Content) -->
-      <!-- <div class="dis-none panel-filter w-full p-t-10">
-        <div class="filter-options">
-          <label><input type="checkbox" name="filter" value="in-stock"> In Stock</label>
-          <label><input type="checkbox" name="filter" value="on-sale"> On Sale</label>
-        </div>
-      </div> -->
-    </div>
+      <!-- Product Grid -->
+      <div class="row isotope-grid">
+          <% if (products.length > 0) { %>
+              <% products.forEach(product => { %>
+                  <div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item <%= product.category ? product.category.name : '' %>">
+                      <div class="block2 <%= product.maxOffer > 0 ? 'offer-highlight' : '' %>">
+                          <div class="block2-pic hov-img0">
+                              <!-- CHANGE: Use maxOffer for offer badge -->
+                              <% if (product.maxOffer > 0) { %>
+                                  <span class="offer-badge"><%= product.maxOffer %>% Off</span>
+                              <% } %>
+                              <img src="<%= product.productImage[0] %>" alt="<%= product.productName %>" loading="lazy">
+                              <a href="/productDetails?id=<%= product._id %>" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
+                                  Quick View
+                              </a>
+                          </div>
+                          <div class="block2-txt flex-w flex-t p-t-14">
+                              <div class="block2-txt-child1 flex-col-l">
+                                  <a href="/productDetails?id=<%= product._id %>" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+                                      <%= product.productName %>
+                                  </a>
+                                  <!-- CHANGE: Show regularPrice (struck) and salePrice -->
+                                  <span class="stext-105 cl3">
+                                      <% if (product) { %>
+                                          <del>₹<%= product.regularPrice.toFixed(2) %></del>
+                                      <% } %>
+                                      ₹<%= product.salePrice.toFixed(2) %>
+                                  </span>
+                              </div>
+                              <div class="block2-txt-child2 flex-r p-t-3">
+                                  <button class="btn-addwish-b2 dis-block pos-relative js-addwish-b2" onclick="addToWishlist('<%= product._id %>')" aria-label="Add to wishlist">
+                                      <img class="icon-heart1 dis-block trans-04" src="/images/icons/icon-heart-01.png" alt="Add to wishlist">
+                                      <img class="icon-heart2 dis-block trans-04 ab-t-l" src="/images/icons/icon-heart-02.png" alt="Added to wishlist">
+                                  </button>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              <% }); %>
+          <% } else { %>
+              <div class="col-12 text-center p-b-35">
+                  <p class="stext-107 cl6">No products found.</p>
+              </div>
+          <% } %>
+      </div>
 
-    <!-- Product Grid -->
-    <div class="row isotope-grid">
-      <% products.forEach(product => { %>
-        <div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item <%= product.category%>">
-          <div class="block2">
-            <div class="block2-pic hov-img0">
-              <img src="<%= product.productImage[0] %>" alt="<%= product.productName %>" loading="lazy">
-              <a href="/productDetails?id=<%= product._id %>" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
-                Quick View
+      <!-- Load More -->
+      <% if (hasMore) { %>
+          <div class="flex-c-m flex-w w-full p-t-45">
+              <a href="/shop?sort=<%= sort %>&search=<%= search %>&category=<%= category %>&minPrice=<%= minPrice || '' %>&maxPrice=<%= maxPrice || '' %>&skip=<%= skip + 12 %>" 
+                 class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04">
+                  Load More
               </a>
-            </div>
-            <div class="block2-txt flex-w flex-t p-t-14">
-              <div class="block2-txt-child1 flex-col-l">
-                <a href="/productDetails?id=<%= product._id %>" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
-                  <%= product.productName %>
-                </a>
-                <span class="stext-105 cl3">$<%= product.salePrice.toFixed(2) %></span>
-              </div>
-              <div class="block2-txt-child2 flex-r p-t-3">
-                <button class="btn-addwish-b2 dis-block pos-relative js-addwish-b2" aria-label="Add to wishlist">
-                  <img class="icon-heart1 dis-block trans-04" src="/images/icons/icon-heart-01.png" alt="Add to wishlist">
-                  <img class="icon-heart2 dis-block trans-04 ab-t-l" src="/images/icons/icon-heart-02.png" alt="Added to wishlist">
-                </button>
-              </div>
-            </div>
           </div>
-        </div>
-      <% }) %>
-    </div>
-
-    <!-- Load More -->
-    <div class="flex-c-m flex-w w-full p-t-45">
-      <a href="#" class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04">
-        Load More
-      </a>
-    </div>
+      <% } %>
   </div>
 </section>
 
 <%- include("../../views/partials/user/footer") %>
 
-<!-- JavaScript for Reset Filters -->
+<!-- JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-  function resetFilters() {
-    document.getElementById('filter-form').reset();
-    window.location.href = '/shop'; // Adjust URL as needed
+// Form submission
+document.getElementById('filter-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const formData = new FormData(this);
+  const params = new URLSearchParams(formData);
+  window.location.href = `/shop?${params.toString()}`;
+});
+
+// Reset filters
+function resetFilters() {
+  window.location.href = '/shop';
+}
+
+// Add to wishlist
+async function addToWishlist(productId) {
+  try {
+    const response = await fetch('/wishlist/add', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ productId })
+    });
+    const result = await response.json();
+    if (result.status) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Added to Wishlist',
+        text: 'Product has been added to your wishlist!',
+        confirmButtonColor: '#6739e6'
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: result.message || 'Failed to add to wishlist',
+        confirmButtonColor: '#6739e6'
+      });
+    }
+  } catch (error) {
+    console.error('Error adding to wishlist:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'An error occurred while adding to wishlist',
+      confirmButtonColor: '#6739e6'
+    });
   }
+}
 </script>
+</body>
+</html>

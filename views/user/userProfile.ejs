@@ -30,7 +30,7 @@
         }
 
         /* Top Navbar */
-        .top-navbar {
+.top-navbar {
             background: var(--navbar-bg);
             padding: 1rem;
             position: fixed;
@@ -73,7 +73,7 @@
 
         .top-navbar .main-menu a:hover {
             color: var(--accent-blue); /* Blue hover like homepage */
-        }
+        }        
 
         /* Sidebar */
         .sidebar {
@@ -177,11 +177,11 @@
             min-height: 100vh;
             transition: margin-left 0.3s ease-in-out;
             margin-left: 0;
-            padding-top: 120px; /* Space for top navbar */
+            padding-top: 130px; /* Space for top navbar */
         }
 
         .profile-container {
-            padding: 2rem;
+            padding: 3rem;
             background: var(--secondary-bg);
             border-radius: 15px;
             margin: 2rem;
@@ -354,13 +354,13 @@
             <!-- Sidebar -->
             <nav class="sidebar">
                 <a href="/dashboard" class="active"><i class="fas fa-user"></i> Profile</a>
-                <a href="/wishlist"><i class="fas fa-heart"></i> Wishlist</a>
                 <a href="/cart"><i class="fa-solid fa-cart-plus"></i> Cart</a>
                 <a href="/checkout"><i class="fa-solid fa-credit-card"></i> Checkout</a>
                 <a href="/orders"><i class="fas fa-shopping-cart"></i> Orders</a>
-                <a href="/editProfile"><i class="fas fa-cog"></i> Edit profile</a>
+                <a href="/editProfile"><i class="fas fa-cog"></i> Edit Profile</a>
                 <a href="/address"><i class="fa-solid fa-location-dot"></i> Address</a>
                 <a href="/wallet"><i class="fas fa-wallet"></i> Wallet</a>
+                <a href="/getCoupons" ><i class="fas fa-ticket-alt"></i> My Coupons</a>
                 <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </nav>
             <!-- Main Content -->
@@ -415,24 +415,24 @@
                                 </div>
                             <% } %>
                         </div>
-                        <div class="col-md-4">
+                        <!-- <div class="col-md-4">
                             <div class="stats-card">
                                 <h5><%= user.ordersCount || 0 %></h5>
                                 <p>Total Orders</p>
                             </div>
-                        </div>
-                        <div class="col-md-4">
+                        </div> -->
+                        <!-- <div class="col-md-4">
                             <div class="stats-card">
                                 <h5><%= user.wishlistCount || 0 %></h5>
                                 <p>Wishlist Items</p>
                             </div>
-                        </div>
-                        <div class="col-md-4">
+                        </div> -->
+                        <!-- <div class="col-md-4">
                             <div class="stats-card">
                                 <h5>$<%= user.totalSpent || 0 %></h5>
                                 <p>Total Spent</p>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
 
                     <!-- Quick Actions -->
@@ -442,6 +442,7 @@
                             <a href="/orders" class="btn">View Orders</a>
                             <a href="/wishlist" class="btn">View Wishlist</a>
                             <a href="/editProfile" class="btn">Edit Profile</a>
+                            <a href="/getCoupons" class="btn">Refer</a>
                         </div>
                     </div>
                 </div>
