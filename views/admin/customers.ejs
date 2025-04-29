@@ -1,4 +1,4 @@
-<style>
+<!-- <style>
     /* Custom pagination style */
     .pagination {
         display: flex;
@@ -50,8 +50,399 @@
         padding: 10px;
         background-color: #fff;
     }
-</style>
 
+
+    /* Grey theme variables for consistency */
+    :root {
+        --grey-bg: #f1f3f5;
+        --grey-text: #343a40;
+        --grey-hover: #495057;
+    }
+
+    /* Custom pagination style */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        flex-wrap: wrap; /* Allow wrapping on small screens */
+    }
+
+    .pagination .page-item {
+        margin: 0 5px;
+        border-radius: 50px;
+    }
+
+    .pagination .page-link {
+        border-radius: 50px;
+        background-color: #f8f9fa;
+        color: #007bff;
+        padding: 10px 20px;
+        font-size: 14px;
+        text-decoration: none;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: var(--grey-hover);
+        color: #fff;
+        border-color: var(--grey-hover);
+    }
+
+    .pagination .page-link:hover {
+        background-color: var(--grey-hover);
+        color: #fff;
+        border-color: var(--grey-hover);
+    }
+
+    .pagination .page-item.disabled .page-link {
+        background-color: #e9ecef;
+        color: #6c757d;
+        border-color: #e9ecef;
+        pointer-events: none;
+    }
+
+    /* Modified container size */
+    .container.mt-3 {
+        max-width: 500px; /* Compact container width */
+        margin: 0 auto;
+        box-shadow: 0 2px 10px rgba(52, 51, 51, 0.1);
+        border-radius: 8px;
+        padding: 6px; /* Slightly increased padding */
+        background-color: #cdcdcd50;
+    }
+    .aside-mini .main-wrap {
+    margin-left: 100px;
+    margin-right: 50px;
+    border-radius: 8px;
+}
+    /* Table responsiveness */
+    .table-responsive {
+        overflow-x: auto; /* Horizontal scroll on mobile */
+        width: 92%;
+        max-width: 100%;
+        margin-left: 40px;
+    }
+
+    .table.table-striped {
+        min-width: 600px; /* Ensure table doesn’t collapse too much */
+        font-size: 16px;
+    }
+
+    .table th, .table td {
+        padding: 12px;
+        vertical-align: middle;
+        min-width: 120px; /* Prevent columns from becoming too narrow */
+    }
+
+    .table .btn {
+        width: 80px; /* Keep button width consistent */
+        font-size: 14px;
+    }
+
+    /* Search bar responsiveness */
+    .input-group {
+        width: 100% !important; /* Override inline style */
+        max-width: 500px; /* Match original width on desktop */
+        margin: 0 auto !important; /* Center on all screens */
+    }
+
+    .input-group .form-control {
+        font-size: 14px;
+    }
+
+    .input-group .btn {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+
+    /* Content header */
+    .content-header {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 20px;
+    }
+
+    .content-header .content-title {
+        font-size: 24px;
+        color: var(--grey-text);
+        margin-bottom: 15px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 767px) {
+        .table.table-striped {
+            font-size: 14px; /* Smaller text on mobile */
+        }
+
+        .table th, .table td {
+            padding: 8px; /* Reduced padding */
+            min-width: 100px;
+        }
+
+        .table .btn {
+            font-size: 12px;
+            padding: 6px 12px;
+        }
+
+        .input-group {
+            max-width: 100%; /* Full width on mobile */
+        }
+
+        .input-group .form-control {
+            font-size: 13px;
+        }
+
+        .input-group .btn {
+            font-size: 13px;
+            padding: 6px 12px;
+        }
+
+        .pagination .page-link {
+            padding: 8px 16px; /* Smaller buttons */
+            font-size: 13px;
+        }
+
+        .pagination .page-item {
+            margin: 0 3px; /* Tighter spacing */
+        }
+
+        .container.mt-3 {
+            padding: 10px; /* Adjust padding for mobile */
+        }
+
+        .content-header .content-title {
+            font-size: 20px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .table th, .table td {
+            min-width: 80px; /* Even smaller columns */
+        }
+
+        .table .btn {
+            width: 70px;
+            font-size: 11px;
+        }
+
+        .input-group .form-control,
+        .input-group .btn {
+            font-size: 12px;
+        }
+
+        .pagination .page-link {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+    }
+</style> -->
+
+<style>
+    /* Grey theme variables for consistency */
+    :root {
+        --grey-bg: #f1f3f5;
+        --grey-text: #343a40;
+        --grey-hover: #495057;
+    }
+
+    /* Table styles (from coupon.ejs, adapted to grey theme) */
+    .table {
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .table th,
+    .table td {
+        padding: 10px;
+        text-align: left;
+        vertical-align: middle;
+    }
+    .table th {
+        background-color: var(--grey-hover); /* Replace #007bff with grey */
+        color: #fff;
+        font-weight: 600;
+    }
+    .table-striped tbody tr:nth-child(odd) {
+        background-color: #f8f9fa;
+    }
+    .table-responsive {
+        overflow-x: auto;
+        width: 92%;
+        max-width: 100%;
+        margin-left: 40px;
+    }
+    .table.table-striped {
+        min-width: 600px;
+        font-size: 16px;
+    }
+    .table .btn {
+        width: 80px;
+        font-size: 14px;
+    }
+    /* Button styles to match coupon.ejs badge colors */
+    .btn-success {
+        background-color: #28a745; /* Match alert-success */
+        color: #fff;
+        padding: 6px 12px;
+        font-size: 0.85rem;
+        border: none;
+    }
+    .btn-success:hover {
+        background-color: #218838; /* Darker green */
+    }
+    .btn-danger {
+        background-color: #dc3545; /* Match alert-danger */
+        color: #fff;
+        padding: 6px 12px;
+        font-size: 0.85rem;
+        border: none;
+    }
+    .btn-danger:hover {
+        background-color: #c82333; /* Match coupon.ejs btn-danger hover */
+    }
+
+    /* Custom pagination style */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        flex-wrap: wrap;
+    }
+    .pagination .page-item {
+        margin: 0 5px;
+        border-radius: 50px;
+    }
+    .pagination .page-link {
+        border-radius: 50px;
+        background-color: #f8f9fa;
+        color: var(--grey-text);
+        padding: 10px 20px;
+        font-size: 14px;
+        text-decoration: none;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .pagination .page-item.active .page-link {
+        background-color: var(--grey-hover);
+        color: #fff;
+        border-color: var(--grey-hover);
+    }
+    .pagination .page-link:hover {
+        background-color: var(--grey-hover);
+        color: #fff;
+        border-color: var(--grey-hover);
+    }
+    .pagination .page-item.disabled .page-link {
+        background-color: #e9ecef;
+        color: #6c757d;
+        border-color: #e9ecef;
+        pointer-events: none;
+    }
+
+    /* Modified container size */
+    .container.mt-3 {
+        max-width: 500px;
+        margin: 0 auto;
+        box-shadow: 0 2px 10px rgba(52, 51, 51, 0.1);
+        border-radius: 8px;
+        padding: 6px;
+        background-color: #cdcdcd50;
+    }
+    .aside-mini .main-wrap {
+        margin-left: 100px;
+        margin-right: 50px;
+        border-radius: 8px;
+    }
+
+    /* Search bar responsiveness */
+    .input-group {
+        width: 100% !important;
+        max-width: 500px;
+        margin: 0 auto !important;
+    }
+    .input-group .form-control {
+        font-size: 14px;
+    }
+    .input-group .btn {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+
+    /* Content header */
+    .content-header {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 20px;
+    }
+    .content-header .content-title {
+        font-size: 24px;
+        color: var(--grey-text);
+        margin-bottom: 15px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 767px) {
+        .table {
+            font-size: 0.85rem; /* From coupon.ejs */
+        }
+        .table th,
+        .table td {
+            padding: 8px; /* From coupon.ejs */
+            min-width: 100px;
+        }
+        .table.table-striped {
+            font-size: 14px;
+        }
+        .table .btn {
+            font-size: 12px;
+            padding: 6px 12px;
+        }
+        .input-group {
+            max-width: 100%;
+        }
+        .input-group .form-control {
+            font-size: 13px;
+        }
+        .input-group .btn {
+            font-size: 13px;
+            padding: 6px 12px;
+        }
+        .pagination .page-link {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+        .pagination .page-item {
+            margin: 0 3px;
+        }
+        .container.mt-3 {
+            padding: 10px;
+        }
+        .content-header .content-title {
+            font-size: 20px;
+        }
+    }
+    @media (max-width: 576px) {
+        .table th,
+        .table td {
+            min-width: 80px;
+        }
+        .table .btn {
+            width: 70px;
+            font-size: 11px;
+        }
+        .input-group .form-control,
+        .input-group .btn {
+            font-size: 12px;
+        }
+        .pagination .page-link {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+    }
+    .clr{
+     background-color: #24b4ed;
+      color: white;
+    }
+</style>
 <%- include("../../views/partials/admin/header") %>
 
 <!-- SweetAlert CSS -->
@@ -74,35 +465,38 @@
     </form>
 </header>
 
+
 <div class="right mt-5">
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col"><b>Name</b></th>
-                <th scope="col"><b>Email</b></th>
-                <th scope="col"><b>Action</b></th>
-            </tr>
-        </thead>
-        <tbody>
-            <% for (let i = 0; i < data.length; i++) { %>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead class="clr" color: #1e70c2;">
                 <tr>
-                    <td><%= data[i].name %></td>
-                    <td><%= data[i].email %></td>
-                    <td> 
-                        <% if (data[i].isBlocked === false) { %>
-                            <button class="btn btn-danger" style="width: 80px;" onclick="confirmAction('/admin/blockCustomer?id=<%= data[i]._id %>', 'block')">
-                                Block
-                            </button>
-                        <% } else { %>
-                            <button class="btn btn-success" style="width: 80px;" onclick="confirmAction('/admin/unblockCustomer?id=<%= data[i]._id %>', 'unblock')">
-                                Unblock
-                            </button>
-                        <% } %>
-                    </td>
+                    <th scope="col"><b>Name</b></th>
+                    <th scope="col"><b>Email</b></th>
+                    <th scope="col"><b>Action</b></th>
                 </tr>
-            <% } %>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <% for (let i = 0; i < data.length; i++) { %>
+                    <tr>
+                        <td><%= data[i].name %></td>
+                        <td><%= data[i].email %></td>
+                        <td> 
+                            <% if (data[i].isBlocked === false) { %>
+                                <button class="btn btn-danger" style="width: 80px;" onclick="confirmAction('/admin/blockCustomer?id=<%= data[i]._id %>', 'block')">
+                                    Block
+                                </button>
+                            <% } else { %>
+                                <button class="btn btn-success" style="width: 80px;" onclick="confirmAction('/admin/unblockCustomer?id=<%= data[i]._id %>', 'unblock')">
+                                    Unblock
+                                </button>
+                            <% } %>
+                        </td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <div class="container mt-3">
@@ -150,3 +544,4 @@
 </script>
 
 <%- include("../../views/partials/admin/footer") %>
+```

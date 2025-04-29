@@ -26,7 +26,7 @@ router.post("/signup",userController.signup)
 
 // Shopping page route (authentication required)
 
-router.get("/shop",userAuth,userController.loadShopping)
+router.get("/shop",userController.loadShopping)
 router.post("/resend-otp",userController.resendOtp)
 router.post("/verify-otp",userController.verifyOtp)
 
@@ -51,7 +51,7 @@ router.post("/login",userController.login)
 // Home page route
 router.get("/",userAuth,userController.loadHomepage)
 router.get("/logout",userController.logout)
-router.get("/shop",userAuth,userController.loadShopping)
+router.get("/shop",userController.loadShopping)
 
 // profile management
 
@@ -94,6 +94,10 @@ router.get("/wallet",userAuth,profileController.getwallet)
 
 router.get("/productDetails",productController.productDetails)
 
+// Review submission route
+router.post('/orders/review', orderController.submitReview);
+// router.post('/fad', orderController.submitReview);
+
 
 
 // Wishlist management
@@ -124,7 +128,7 @@ router.post('/cancel-order',orderController.cancelOrder);
 router.get("/download-invoice", userAuth, orderController.generateInvoice);
 router.post("/orders/return", userAuth, upload.array('images', 3), orderController.requestReturn);
 router.post("/orders/cancel-return", userAuth, orderController.cancelReturnRequest);
-
+router.post('/orders/review', userAuth,orderController.submitReview);
 
 // offer management
 

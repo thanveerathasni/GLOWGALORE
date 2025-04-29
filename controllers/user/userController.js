@@ -331,6 +331,7 @@ const login = async (req, res) => {
 
 const loadShopping = async (req, res) => {
     try {
+        
         const userId = req.session.user;
         const userData = userId ? await User.findById(userId) : null;
         const categories = await Category.find({ isListed: true });
@@ -388,11 +389,7 @@ const loadShopping = async (req, res) => {
         }
 
         const limit = 12;
-        // const products = await Product.find(productQuery)
-        //     .populate('category')
-        //     .sort(sortOption)
-        //     .skip(parseInt(skip))
-        //     .limit(limit);
+       
         const products = await Product.find(productQuery)
         .populate('category')
         .sort(sortOption)
@@ -422,7 +419,6 @@ const loadShopping = async (req, res) => {
 
         const totalProducts = await Product.countDocuments(productQuery);
         const hasMore = parseInt(skip) + limit < totalProducts;
-        console.log("its abbout product:",products)
 
         return res.render('shop', {
             products: productsWithOffers,

@@ -23,6 +23,15 @@ const walletSchema = new Schema({
                 type: String,
                 enum: ["credit", "debit"],
             },
+            orderId: {
+                type: String,
+                required: true,
+            },
+            reason: {
+                type: String,
+                enum: ["Cancelled", "Returned"],
+                required: true,
+            },
         },
     ],
 });

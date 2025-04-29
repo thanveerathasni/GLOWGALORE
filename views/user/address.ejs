@@ -35,7 +35,7 @@
             background: linear-gradient(180deg, var(--sidebar-bg), var(--primary-bg));
             padding: 2rem 1rem;
             position: fixed;
-            top: 0;
+            top: 80px;
             left: -280px;
             width: 280px;
             transition: left 0.3s ease-in-out;
@@ -217,7 +217,80 @@
             font-weight: 600;
             transition: background 0.3s ease;
         }
+           /*  */
+           body,
+        ul,
+        li {
+            margin: -1px;
+            padding: -4px;
+            list-style: none;
+        }
 
+        /* Main Navbar Styles */
+        .top-navbar {
+            background-color: #2c3e50;
+            /* Dark background for contrast */
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            /* Soft shadow for depth */
+
+
+            padding: 1rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1100;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+        }
+
+        .menu-desktop {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .main-menu {
+            display: flex;
+            gap: 25px;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Styling the Links */
+        .main-menu li a {
+            color: #ecf0f1; /* Light text color for contrast */
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease; /* Smooth transition for hover effect */
+            text-transform: uppercase; /* Making the text uppercase for a modern look */
+            padding: 8px 15px;
+        }
+
+        /* Hover Effect */
+        .main-menu li a:hover {
+            background-color: #e74c3c; /* Red background on hover */
+            color: #fff; /* White text when hovering */
+            border-radius: 5px; /* Smooth rounded corners */
+            transform: scale(1.05); /* Slightly enlarge the item on hover */
+        }
+
+        /* Media Query for Mobile */
+        @media (max-width: 768px) {
+            .main-menu {
+                flex-direction: column; /* Stack the menu items vertically on smaller screens */
+                gap: 15px;
+            }
+
+            .main-menu li a {
+                font-size: 18px;
+            }
+        }
+        /*  */
         .btn:hover {
             background: #0056b3; /* Darker blue like homepage button hover */
             color: #ffffff;
@@ -273,51 +346,7 @@
     --shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
-/* Top Navbar */
-.top-navbar {
-    background: var(--navbar-bg);
-    padding: 1rem;
-    position: relative;
-    top: 0;
-    left: 0;
-    width: 100%;
-    /* z-index: 1100; Above sidebar */
-    box-shadow: var(--shadow);
-    display: flex;
-    justify-content: center; /* Center align links */
-    align-items: center;
-}
 
-.top-navbar .menu-desktop {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: flex;
-    align-items: center;
-}
-
-.top-navbar .main-menu {
-    display: flex;
-    gap: 2rem; /* Better spacing between links */
-}
-
-.top-navbar .main-menu li {
-    position: relative;
-}
-
-.top-navbar .main-menu a {
-    color: #ffffff;
-    text-decoration: none;
-    font-size: 1.1rem;
-    font-weight: 600;
-    text-transform: uppercase; /* Matches homepage */
-    padding: 0.5rem 1rem;
-    transition: color 0.3s ease;
-}
-
-.top-navbar .main-menu a:hover {
-    color: var(--accent-blue); /* Blue hover like homepage */
-}
 
 /* Responsive Design */
 @media (max-width: 767px) {

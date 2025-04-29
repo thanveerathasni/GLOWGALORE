@@ -46,6 +46,34 @@ const getOrders = async (req, res) => {
 };
 
 // Load Order Details
+// const loadOrderDetails = async (req, res) => {
+//   try {
+//     const userId = req.session.user;
+//     const orderId = req.query.orderId;
+
+//     const order = await Order.findOne({ orderId: orderId, userId })
+//       .populate('orderedItems.product');
+    
+//     if (!order) {
+//       return res.status(404).send("Order not found");
+//     }
+//     const deliveryDate = order.deliveredDate ? new Date(order.deliveredDate) : new Date(order.updateOn);
+
+
+//     const user = await User.findById(userId);
+
+//     res.render("order-details", {
+//       order,
+//       user,
+//       deliveryDate,
+//     });
+//   } catch (error) {
+//     console.error("Error in loadOrderDetails:", error);
+//     res.status(500).send("Internal server error");
+//   }
+// };
+
+
 const loadOrderDetails = async (req, res) => {
   try {
     const userId = req.session.user;
@@ -58,17 +86,29 @@ const loadOrderDetails = async (req, res) => {
       return res.status(404).send("Order not found");
     }
 
+    // Validate and compute deliveryDate
+    let deliveryDate = null;
+    if (order.deliveredDate && !isNaN(new Date(order.deliveredDate))) {
+      deliveryDate = new Date(order.deliveredDate);
+    } else if (order.updateOn && !isNaN(new Date(order.updateOn))) {
+      deliveryDate = new Date(order.updateOn);
+    }
+
+   
+
     const user = await User.findById(userId);
 
     res.render("order-details", {
       order,
       user,
+      deliveryDate,
     });
   } catch (error) {
     console.error("Error in loadOrderDetails:", error);
     res.status(500).send("Internal server error");
   }
 };
+
 
 // Cancel Order
 const cancelOrder = async (req, res) => {
@@ -296,7 +336,17 @@ async function processRefund(userId, order) {
     if (!user) return false;
 
     user.wallet += order.finalAmount;
+
+    // Record transaction in user.walletTransactions
+    user.walletTransactions.push({
+      orderId: order.orderId,
+      amount: refundAmount,
+      date: new Date(),
+      reason: reason, // "Cancelled" or "Returned"
+    });
+
     await user.save();
+    console.log(`Refund processed for user ${userId}: Wallet balance=${user.wallet}, Transaction added:`, user.walletTransactions.slice(-1));
     return true;
   } catch (error) {
     console.error("Error in processRefund:", error);
@@ -366,6 +416,63 @@ const loadFailure = async (req, res) => {
   }
 }
 
+// New submitReview function
+const submitReview = async (req, res) => {
+  try {
+    const { orderId, productId, rating, comment } = req.body;
+    const userId = req.session.user;
+    console.log('submitReview called:', { orderId, productId, rating, comment, userId });
+
+    if (!userId) {
+      console.log('No session user');
+      return res.status(401).json({ success: false, message: "Please log in to submit a review" });
+    }
+
+    if (!orderId || !productId || !rating || !comment) {
+      console.log('Missing fields');
+      return res.status(400).json({ success: false, message: "All fields are required" });
+    }
+
+    if (rating < 1 || rating > 5) {
+      console.log('Invalid rating:', rating);
+      return res.status(400).json({ success: false, message: "Rating must be between 1 and 5" });
+    }
+
+    const order = await Order.findOne({ _id: orderId, userId, status: "Delivered" });
+    console.log('Order found:', order);
+    if (!order) {
+      return res.status(404).json({ success: false, message: "Order not found or not delivered" });
+    }
+
+    const productInOrder = order.orderedItems.some(item => item.product.toString() === productId);
+    console.log('Product in order:', productInOrder);
+    if (!productInOrder) {
+      return res.status(400).json({ success: false, message: "Product not found in this order" });
+    }
+
+    const existingReview = await Review.findOne({ userId, productId });
+    console.log('Existing review:', existingReview);
+    if (existingReview) {
+      return res.status(400).json({ success: false, message: "You have already reviewed this product" });
+    }
+
+    const review = new Review({
+      userId,
+      productId,
+      rating,
+      comment,
+      createdAt: new Date(),
+    });
+
+    await review.save();
+    console.log('Review saved:', review);
+
+    res.json({ success: true, message: "Review submitted successfully" });
+  } catch (error) {
+    console.error("Error in submitReview:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
 
 module.exports = {
   getOrders,
@@ -376,7 +483,8 @@ module.exports = {
   cancelReturnRequest,
   Razorpaysubscription,
   createRazorpay,
-  loadFailure
+  loadFailure,
+  submitReview,
 };
 
 

@@ -7,6 +7,7 @@ const categoryController = require("../controllers/admin/categoryController")
 const couponController = require("../controllers/admin/couponController")
 const offerController = require('../controllers/admin/offerController');
 const salesController = require("../controllers/admin/salesController")
+const dashboardController = require('../controllers/admin/dashboardController');
 
 
 const brandController = require("../controllers/admin/brandController")
@@ -52,7 +53,10 @@ router.get("/editCategory",adminAuth,categoryController.editCategory)
 router.post("/editCategory/:id",adminAuth,categoryController.posteditCategory)
 
 // brand management
+const upload = require("../helpers/multer")// const adminAuth = require('../middleware/adminAuth'); // Your auth middleware
 
+// Use upload.single for single file or upload.array for multiple files
+router.post('/addBrand', adminAuth, upload.single('image'), brandController.addBrand);
 router.get("/brands",adminAuth,brandController.getBrandPage)
 // router.post("/addBrand",adminAuth.uploads.array("image"),brandController.addBrand)
 router.get("/blockBrand",adminAuth,brandController.blockBrand)
@@ -108,6 +112,12 @@ router.post('/offers/add', adminAuth, offerController.addOffer);
 
 router.get('/sales', adminAuth, salesController.loadSalesPage);
 router.get('/sales/report', adminAuth, salesController.loadSalesPage);
+
+// dashboard management
+
+router.get('/dashboard', dashboardController.getAdminDashboard);
+router.get('/getLedgerData', dashboardController.getLedgerData);
+
 
 
 module.exports = router 

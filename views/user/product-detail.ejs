@@ -356,15 +356,71 @@
         background: #5aa7ee;
         color: white;
     }
+
+.mt-30 {
+    margin-top: 100px !important;
+}
+.breadcrumb-wrap .container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+    font-size: 14px;
+    font-family: 'Arial', sans-serif;
+    color: #2f4e5b;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Links */
+.breadcrumb a {
+    color: #2f4e5b;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.breadcrumb a:hover {
+    color: #617eff; /* A vibrant color for hover, e.g., coral for Glow Galore */
+}
+
+/* Separator */
+/* .breadcrumb span::before {
+    content: '>';
+    margin-right:2px;
+    color: #3a3939;
+} */
+
+/* Remove separator before the first item */
+.breadcrumb a:first-child + span::before {
+    content: none;
+}
+
+/* Active/Last Item */
+.breadcrumb span:last-child a {
+    color: #52a2c4;
+    pointer-events: none; 
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .breadcrumb {
+        font-size: 12px;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+}
 </style>
 
 <body>
     <div class="page-header breadcrumb-wrap mt-30">
-        <div class="container" style="margin-top: 100px;">
-            <div class="breadcrumb">
-                <a href="/" rel="nofollow">Home</a> >
-                <span><a href="/shop" rel="nofollow">Shop</a></span> >
-                <span><a href="#" rel="nofollow">Product Details</a></span>
+        <div class="container" style="margin-top: 10px;">
+            <div style="text-decoration: none;" class="breadcrumb">
+                <a href="/" >Home</a> >
+                <span><a href="/shop" >Shop</a></span> >
+                <span><a href="#">Product Details</a></span>
             </div>
         </div>
     </div>
@@ -372,13 +428,13 @@
         <div class="product-container">
             <div class="product-gallery">
                 <div class="main-image">
-                    <img id="main-img" src="<%= product.productImage[0] %>" alt="<%= product.productName %>">
+                    <img id="main-img" src="<%= product.productImage[0] || '/images/placeholder.jpg' %>" alt="<%= product.productName %>">
                 </div>
                 <div class="thumbnails">
                     <% product.productImage.forEach((productImage, index) => { %>
                         <div class="thumbnail <%= index === 0 ? 'active' : '' %>">
-                            <img src="<%= productImage %>" alt="Thumbnail <%= index + 1 %>"
-                                onclick="changeImage('<%= productImage %>')">
+                            <img src="<%= productImage || '/images/placeholder.jpg' %>" alt="Thumbnail <%= index + 1 %>"
+                                onclick="changeImage('<%= productImage || '/images/placeholder.jpg' %>')">
                         </div>
                     <% }) %>
                 </div>
@@ -400,7 +456,7 @@
                         <i class="fa fa-star"></i>
                         <i class="fa fa-star-half-o"></i>
                     </span>
-                    <span class="rating-value">(4.5/5, 120 reviews)</span>
+                    <span class="rating-value">(4.5/5, 69 reviews)</span>
                 </div>
                 <p class="original-price">Original Price: <del>₹<%= product.regularPrice %></del></p>
                 <!-- CHANGE: Use calculated salePrice -->
@@ -428,14 +484,14 @@
                         <strong>John Doe</strong>
                         <p>⭐⭐⭐⭐⭐ - Amazing product! Loved the quality.</p>
                     </div>
-                    <div class="review">
+                    <!-- <div class="review">
                         <strong>Jane Smith</strong>
                         <p>⭐⭐⭐⭐ - Great product, but delivery took some time.</p>
                     </div>
                     <div class="review">
                         <strong>Michael Brown</strong>
                         <p>⭐⭐⭐⭐⭐ - Worth every penny! Will buy again.</p>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -448,7 +504,7 @@
                     <% relatedProducts.forEach(relatedProduct => { %>
                         <div class="col-md-3 col-sm-6">
                             <div class="related-product-card">
-                                <img src="<%= relatedProduct.productImage[0] %>" alt="<%= relatedProduct.productName %>">
+                                <img src="<%= relatedProduct.productImage[0] || '/images/placeholder.jpg' %>" alt="<%= relatedProduct.productName %>">
                                 <h4><%= relatedProduct.productName %></h4>
                                 <% if (relatedProduct.maxOffer > 0) { %>
                                     <p class="offer"><%= relatedProduct.maxOffer %>% OFF</p>
@@ -571,6 +627,7 @@
                     }
                 });
         }
+        
         function addToWishlist(productId) {
             if (!productId) {
                 Swal.fire({
@@ -624,7 +681,9 @@
                 }
             });
         }
-    </script>
+   
+   
+   </script>
 </body>
 </html>
 

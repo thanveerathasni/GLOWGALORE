@@ -16,7 +16,7 @@
             --text-secondary: #666666;
             --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-    
+
         body {
             background-color: var(--primary-bg);
             color: var(--text-primary);
@@ -25,37 +25,92 @@
             margin: 0;
             padding: 0;
         }
-    
-        /* Removed Sidebar Styles - Adjusting Main Content */
+
         .main-content {
             background: var(--primary-bg);
             min-height: 100vh;
             padding: 2rem;
-            width: 100%; /* Full width since sidebar is removed */
+            width: 100%;
             display: flex;
-            justify-content: center; /* Center content horizontally */
-            align-items: flex-start; /* Align content at the top */
+            justify-content: center;
+            align-items: flex-start;
+        }
+        
+        /* Basic Reset */
+        body, ul, li {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        /* Main Navbar Styles */
+        .top-navbar {
+            background-color: #2c3e50; /* Dark background for contrast */
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+        }
+
+        .menu-desktop {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .main-menu {
+            display: flex;
+            gap: 25px;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Styling the Links */
+        .main-menu li a {
+            color: #ecf0f1; /* Light text color for contrast */
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease; /* Smooth transition for hover effect */
+            text-transform: uppercase; /* Making the text uppercase for a modern look */
+            padding: 8px 15px;
+        }
+
+        /* Hover Effect */
+        .main-menu li a:hover {
+            background-color: #e74c3c; /* Red background on hover */
+            color: #fff; /* White text when hovering */
+            border-radius: 5px; /* Smooth rounded corners */
+            transform: scale(1.05); /* Slightly enlarge the item on hover */
+        }
+
+        /* Media Query for Mobile */
+        @media (max-width: 768px) {
+            .main-menu {
+                flex-direction: column; /* Stack the menu items vertically on smaller screens */
+                gap: 15px;
+            }
+
+            .main-menu li a {
+                font-size: 18px;
+            }
         }
     
         .profile-container {
             padding: 2rem;
             background: var(--secondary-bg);
             border-radius: 15px;
-            margin: 0 auto; /* Center the container */
+            margin: 0 auto;
             border: 1px solid var(--accent-blue);
             box-shadow: var(--shadow);
-            max-width: 1200px; /* Limit width for readability */
-            width: 100%; /* Responsive width */
+            max-width: 1200px;
+            width: 100%;
         }
-    
-        /* Breadcrumb Styling */
+
         .breadcrumb-wrap {
             margin-top: 30px;
             padding: 1rem 0;
             background: var(--secondary-bg);
             border-bottom: 1px solid var(--accent-blue);
         }
-    
+
         .breadcrumb {
             display: flex;
             align-items: center;
@@ -64,7 +119,7 @@
             font-size: 1rem;
             font-weight: 400;
         }
-    
+
         .breadcrumb a {
             color: var(--accent-blue);
             text-decoration: none;
@@ -72,23 +127,22 @@
             border-radius: 20px;
             transition: all 0.3s ease;
         }
-    
+
         .breadcrumb a:hover {
             background: rgba(77, 142, 211, 0.2);
-            color: #0056b3; /* Darker blue on hover */
+            color: #0056b3;
         }
-    
+
         .breadcrumb span {
             color: var(--text-secondary);
         }
-    
+
         .breadcrumb span:not(:last-child)::after {
             content: '>';
             margin: 0 0.5rem;
             color: var(--accent-blue);
         }
-    
-        /* Order Details Card */
+
         .order-details-card .card {
             background: var(--primary-bg);
             border: 1px solid var(--accent-blue);
@@ -96,24 +150,24 @@
             box-shadow: var(--shadow);
             color: var(--text-primary);
         }
-    
+
         .card-header {
             background: var(--secondary-bg) !important;
             border-bottom: 1px solid var(--accent-blue);
             padding: 1rem 1.5rem;
         }
-    
+
         .card-header h6 {
             color: var(--accent-blue);
             margin: 0;
             font-weight: 600;
         }
-    
+
         .card-body {
             padding: 1.5rem;
             color: var(--text-secondary);
         }
-    
+
         .status-timeline {
             position: relative;
             padding: 1rem 0;
@@ -121,7 +175,7 @@
             display: flex;
             justify-content: space-between;
         }
-    
+
         .status-line {
             position: absolute;
             top: 50%;
@@ -131,7 +185,7 @@
             background: rgba(77, 142, 211, 0.4);
             transform: translateY(-50%);
         }
-    
+
         .status-point {
             position: relative;
             display: flex;
@@ -140,35 +194,35 @@
             gap: 0.5rem;
             flex: 1;
         }
-    
+
         .status-dot {
             width: 12px;
             height: 12px;
             border-radius: 50%;
             z-index: 1;
         }
-    
+
         .status-active {
             background: var(--accent-blue);
             box-shadow: 0 0 8px var(--accent-blue);
         }
-    
+
         .status-inactive {
             background: rgba(77, 142, 211, 0.3);
         }
-    
+
         .status-point small {
             color: var(--text-secondary);
             font-size: 0.9rem;
             text-align: center;
         }
-    
+
         .product-items {
             display: flex;
             flex-direction: column;
             gap: 15px;
         }
-    
+
         .product-item {
             display: flex;
             align-items: center;
@@ -178,7 +232,7 @@
             border-radius: 8px;
             border: 1px solid var(--accent-blue);
         }
-    
+
         .product-image {
             width: 100px;
             height: 100px;
@@ -186,52 +240,52 @@
             border-radius: 8px;
             border: 1px solid var(--accent-blue);
         }
-    
+
         .product-details {
             flex: 1;
         }
-    
+
         .btn {
             transition: all 0.3s ease;
             border-radius: 8px;
             font-weight: 600;
         }
-    
+
         .btn-primary {
             background: var(--accent-blue);
             border: none;
             color: #ffffff;
         }
-    
+
         .btn-primary:hover {
             background: #0056b3;
             transform: translateY(-2px);
             box-shadow: var(--shadow);
         }
-    
+
         .btn-danger {
             background: #ff4136;
             border: none;
         }
-    
+
         .btn-danger:hover {
             background: #d32f2f;
             transform: translateY(-2px);
             box-shadow: var(--shadow);
         }
-    
+
         .btn-warning {
             background: #ff9800;
             border: none;
             color: #ffffff;
         }
-    
+
         .btn-warning:hover {
             background: #f57c00;
             transform: translateY(-2px);
             box-shadow: var(--shadow);
         }
-    
+
         .address-card {
             background: var(--secondary-bg);
             padding: 1.5rem;
@@ -239,39 +293,72 @@
             border: 1px dashed var(--accent-blue);
             margin-top: 1.5rem;
         }
-    
+
         .address-card h5 {
             color: var(--accent-blue);
             margin-bottom: 1rem;
         }
-    
+
         .modal-content {
             background: var(--primary-bg);
             border: 1px solid var(--accent-blue);
             border-radius: 12px;
             color: var(--text-secondary);
         }
-    
+
         .modal-header {
             border-bottom: 1px solid var(--accent-blue);
             background: var(--secondary-bg);
         }
-    
+
         .modal-title {
             color: var(--accent-blue);
         }
-    
+
         .modal-footer {
             border-top: 1px solid var(--accent-blue);
         }
-    
-        /* Responsive Adjustments */
+
+        /* Review Form Styling */
+        .review-form {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--primary-bg);
+            border-radius: 8px;
+            border: 1px solid var(--accent-blue);
+        }
+
+        .review-form .stars {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .review-form .stars i {
+            font-size: 1.2rem;
+            color: #ccc;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .review-form .stars i.selected,
+        .review-form .stars i:hover,
+        .review-form .stars i:hover ~ i {
+            color: #ffaa00;
+        }
+
+        .review-form textarea {
+            width: 100%;
+            min-height: 100px;
+            resize: vertical;
+        }
+
         @media (min-width: 768px) {
             .profile-container {
-                padding: 3rem; /* Slightly more padding on larger screens */
+                padding: 3rem;
             }
         }
-    
+
         @media (max-width: 767px) {
             .profile-container {
                 padding: 1rem;
@@ -289,93 +376,22 @@
                 align-items: flex-start;
             }
             .breadcrumb {
-                flex-wrap: wrap; /* Wrap breadcrumbs on small screens */
+                flex-wrap: wrap;
                 gap: 0.3rem;
             }
         }
-        :root {
-    --primary-bg: #ffffff; /* Matches homepage white background */
-    --secondary-bg: #f8f9fa; /* Light gray like homepage */
-    --accent-blue: #4d8ed3; /* Matches SHOP NOW button */
-    --text-primary: #333333; /* Dark text like cl2 */
-    --text-secondary: #666666; /* Lighter gray for secondary text */
-    --navbar-bg: #4d8ed3; /* Dark navbar like homepage */
-    --shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-}
-
-/* Top Navbar */
-.top-navbar {
-    background: var(--navbar-bg);
-    padding: 1rem;
-    position: relative;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1100; /* Above sidebar */
-    box-shadow: var(--shadow);
-    display: flex;
-    justify-content: center; /* Center align links */
-    align-items: center;
-}
-
-.top-navbar .menu-desktop {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: flex;
-    align-items: center;
-}
-
-.top-navbar .main-menu {
-    display: flex;
-    gap: 2rem; /* Better spacing between links */
-}
-
-.top-navbar .main-menu li {
-    position: relative;
-}
-
-.top-navbar .main-menu a {
-    color: #ffffff;
-    text-decoration: none;
-    font-size: 1.1rem;
-    font-weight: 600;
-    text-transform: uppercase; /* Matches homepage */
-    padding: 0.5rem 1rem;
-    transition: color 0.3s ease;
-}
-
-.top-navbar .main-menu a:hover {
-    color: var(--accent-blue); /* Blue hover like homepage */
-}
-
-/* Responsive Design */
-@media (max-width: 767px) {
-    .top-navbar .main-menu {
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-    }
-}
-        
     </style>
 </head>
+
 <body>
-    <!-- Top Navigation Bar -->
-<nav class="top-navbar">
-    <ul class="menu-desktop">
-        <ul class="main-menu">
-            <li>
-                <a href="/">Home</a>
-            </li>
-            <li>
-                <a href="/shop">Shop</a>
-            </li>
+    <nav class="top-navbar">
+        <ul class="menu-desktop">
+            <ul class="main-menu">
+                <li><a href="/">Home</a></li>
+                <li><a href="/shop">Shop</a></li>
+            </ul>
         </ul>
-    </ul>
-    <br>
-</nav>
-    <!-- Removed Sidebar Toggle and Overlay since sidebar is gone -->
+    </nav>
 
     <div class="container-fluid p-0">
         <div class="row m-0">
@@ -404,7 +420,6 @@
                             </div>
                             
                             <div class="card-body">
-                                <!-- Order Status Timeline -->
                                 <div class="status-timeline">
                                     <div class="status-line"></div>
                                     <% const statuses = ['Pending', 'Confirmed', 'Shipped', 'Delivered']; %>
@@ -422,7 +437,7 @@
                                         <div class="card-header">
                                             <h5 class="mb-0">
                                                 <%= order.status === 'Delivered' ? 'Delivered On' : 'Returned On' %>: 
-                                                <%= new Date(order.status === 'Delivered' ? order.deliveredOn : order.updatedOn).toLocaleDateString() %>
+                                                <%= order.status === 'Delivered' ? deliveryDate : order.updateOn %>
                                             </h5>
                                         </div>
                                     </div>
@@ -449,7 +464,7 @@
                                     </div>
                                 <% } %>
 
-                                <% if (['return_requested', 'returning', 'returned'].includes(order.status)) { %>
+                                <% if (['Return Request', 'returning', 'returned'].includes(order.status.toLowerCase())) { %>
                                     <div class="card mt-4">
                                         <div class="card-header <%= 
                                             order.status === 'returned' ? 'bg-success' :
@@ -461,7 +476,7 @@
                                         <div class="card-body">
                                             <p><strong>Return Reason:</strong> <%= order.returnReason %></p>
                                             <% if (order.status === 'returned') { %>
-                                                <p><strong>Returned On:</strong> <%= new Date(order.updatedOn).toLocaleDateString() %></p>
+                                                <p><strong>Returned On:</strong> <%= new Date(order.updateOn).toLocaleDateString() %></p>
                                             <% } %>
                                             
                                             <% if (order.returnImages && order.returnImages.length > 0) { %>
@@ -498,7 +513,6 @@
                                     </div>
                                 <% } %>
 
-                                <!-- Product Details -->
                                 <div class="row mb-4">
                                     <div class="col-md-8">
                                         <h5 class="mb-3">Product Details</h5>
@@ -521,6 +535,20 @@
                                                                 <%= order.status.toUpperCase() %>
                                                             </span>
                                                         </p>
+                                                        <!-- <% if (order.status === 'Delivered') { %>
+                                                            <div class="review-form" id="review-form-<%= item.product %>">
+                                                                <h6>Leave a Review</h6>
+                                                                <div class="stars" data-product-id="<%= item.product %>">
+                                                                    <i class="fa fa-star" data-rating="1"></i>
+                                                                    <i class="fa fa-star" data-rating="2"></i>
+                                                                    <i class="fa fa-star" data-rating="3"></i>
+                                                                    <i class="fa fa-star" data-rating="4"></i>
+                                                                    <i class="fa fa-star" data-rating="5"></i>
+                                                                </div>
+                                                                <textarea class="form-control" placeholder="Write your review..." rows="3"></textarea>
+                                                                <button class="btn btn-primary mt-2" onclick="submitReview('<%= order._id %>', '<%= item.product %>', this)">Submit Review</button>
+                                                            </div>
+                                                        <% } %> -->
                                                     </div>
                                                 </div>
                                             <% }); %>
@@ -559,8 +587,8 @@
                                                     %>">
                                                         <% if (order.paymentMethod === 'cod') { %>
                                                             CASH ON DELIVERY
-                                                        <% } else if (order.paymentMethod === 'online') { %>
-                                                            ONLINE PAYMENT
+                                                        <% } else if (order.paymentMethod === 'razorpay') { %>
+                                                           Razorpay
                                                         <% } else if (order.paymentMethod === 'wallet') { %>
                                                             WALLET PAYMENT
                                                         <% } else { %>
@@ -580,11 +608,11 @@
                                                 <button class="btn btn-warning" onclick="initiateReturn('<%= order._id %>')">
                                                     Request Return
                                                 </button>
-                                            <% } else if (order.status === 'return_requested' && order.requestStatus === 'pending') { %>
+                                            <% } else if (order.status === 'Return Request' && order.requestStatus === 'Pending') { %>
                                                 <button class="btn btn-danger" onclick="cancelReturn('<%= order._id %>')">
                                                     Cancel Return Request
                                                 </button>
-                                            <% } else if (!['Delivered', 'Cancelled', 'return_requested', 'returning', 'Returned'].includes(order.status)) { %>
+                                            <% } else if (!['Delivered', 'Cancelled', 'Return Request', 'returning', 'Returned'].includes(order.status)) { %>
                                                 <button onclick="cancelOrder('<%= order._id %>')" class="btn btn-danger">
                                                     Cancel Order
                                                 </button>
@@ -593,11 +621,10 @@
                                     </div>
                                 </div>
 
-                                <!-- Shipping Address -->
                                 <div class="address-card">
                                     <h5 class="mb-3">Shipping Address</h5>
                                     <p class="mb-1"><strong><%= order.address.name %></strong></p>
-                                    <p class="mb-1"><%= order.address.streetAddress %></p>
+                                    <p class="mb-1"><%= order.address.addressType %></p>
                                     <p class="mb-1"><%= order.address.city %>, <%= order.address.state %> <%= order.address.pincode %></p>
                                     <p class="mb-1">Phone: <%= order.address.phone %></p>
                                 </div>
@@ -605,7 +632,6 @@
                         </div>
                     </div>
 
-                    <!-- Return Modal -->
                     <div class="modal fade" id="returnModal" tabindex="-1">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -653,8 +679,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Removed sidebar toggle logic since sidebar is gone
-
         async function cancelOrder(orderId) {
             try {
                 const { value: reasonOption } = await Swal.fire({
@@ -694,7 +718,12 @@
                     if (!otherReason) return;
                     finalReason = otherReason;
                 }
-
+                function formatDate(date) {
+    if (!date || isNaN(new Date(date))) {
+        return 'Not available';
+    }
+    return new Date(date).toLocaleDateString();
+}
                 const response = await fetch('/cancel-order', { 
                     method: 'POST',
                     headers: {
@@ -835,6 +864,89 @@
                 });
             }
         }
+
+        // Review submission logic
+        function submitReview(orderId, productId, button) {
+            const form = button.closest('.review-form');
+            const stars = form.querySelectorAll('.stars i');
+            const comment = form.querySelector('textarea').value.trim();
+            let rating = 0;
+
+            stars.forEach(star => {
+                if (star.classList.contains('selected')) {
+                    rating = parseInt(star.dataset.rating);
+                }
+            });
+
+            if (!rating) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please select a rating!',
+                });
+                return;
+            }
+
+            if (!comment) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please write a review!',
+                });
+                return;
+            }
+
+            fetch('/orders/review', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    orderId,
+                    productId,
+                    rating,
+                    comment,
+                }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Review submitted successfully!',
+                            timer: 1500,
+                        }).then(() => {
+                            form.remove(); // Remove the form after submission
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: data.message || 'Failed to submit review',
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Failed to submit review',
+                    });
+                });
+        }
+
+        // Star rating logic
+        document.querySelectorAll('.review-form .stars i').forEach(star => {
+            star.addEventListener('click', () => {
+                const rating = parseInt(star.dataset.rating);
+                const stars = star.parentElement.querySelectorAll('i');
+                stars.forEach(s => {
+                    s.classList.toggle('selected', parseInt(s.dataset.rating) <= rating);
+                });
+            });
+        });
     </script>
 </body>
 </html>

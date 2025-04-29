@@ -8,19 +8,28 @@
         }
         .thumbnail {
             margin-right: 10px;
-        }
-        .input-upload {
             position: relative;
+        }
+        .remove-icon {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            cursor: pointer;
+            color: red;
+            font-weight: bold;
         }
         .error-message {
             color: red;
-            display: none;
+            display: block;
+            margin-top: 4px;
         }
-        /* Ensure form inputs are visible on white background */
         input, select, textarea {
             background-color: #f9f9f9;
             border: 1px solid #d1d5db;
             color: #1f2937;
+        }
+        #cropperContainer {
+            display: none;
         }
     </style>
     <title>Edit Product</title>
@@ -38,26 +47,28 @@
             <div class="bg-white p-6 rounded-lg">
                 <h1 class="text-2xl font-bold mb-6">Edit Product</h1>
 
+                <% if (error) { %>
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+                        <%= error %>
+                    </div>
+                <% } %>
+
                 <form id="productForm" action="/admin/editProducts/<%= product._id %>" method="post" enctype="multipart/form-data">
-                    <!-- Form Grid for Inputs -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                        <!-- Product Name -->
                         <div>
                             <label class="block mb-2">Product Name *</label>
                             <input name="productName" class="w-full p-2 bg-gray-100 rounded border border-gray-300 text-gray-800" value="<%= product.productName %>" type="text" id="product_name" />
                             <div id="productName-error" class="error-message"></div>
                         </div>
 
-                        <!-- Product Description -->
                         <div>
                             <label class="block mb-2">Product Description *</label>
                             <textarea name="description" class="w-full p-2 bg-gray-100 rounded border border-gray-300 text-gray-800 h-32" id="descriptionid"><%= product.description %></textarea>
                             <div id="description-error" class="error-message"></div>
                         </div>
 
-                        <!-- Product Category -->
                         <div>
-                            <label class="block mb-2">Product Category</label>
+                            <label class="block mb-2">Product Category *</label>
                             <select name="category" class="w-full p-2 bg-gray-100 rounded border border-gray-300 text-gray-800">
                                 <% for(let i = 0; i < cat.length; i++) { %>
                                     <option value="<%= cat[i]._id %>" <%= product.category.toString() === cat[i]._id.toString() ? 'selected' : '' %>>
@@ -68,52 +79,59 @@
                             <div id="category-error" class="error-message"></div>
                         </div>
 
-                        <!-- Regular Price -->
+                        <div>
+                            <label class="block mb-2">Brand</label>
+                            <select name="brand" class="w-full p-2 bg-gray-100 rounded border border-gray-300 text-gray-800">
+                                <option value="" <%= !product.brand ? 'selected' : '' %>>No Brand</option>
+                                <% for(let i = 0; i < brand.length; i++) { %>
+                                    <option value="<%= brand[i].brandName %>" <%= product.brand === brand[i].brandName ? 'selected' : '' %>>
+                                        <%= brand[i].brandName %>
+                                    </option>
+                                <% } %>
+                            </select>
+                            <div id="brand-error" class="error-message"></div>
+                        </div>
+
                         <div>
                             <label class="block mb-2">Regular Price *</label>
                             <input name="regularPrice" class="w-full p-2 bg-gray-100 rounded border border-gray-300 text-gray-800" value="<%= product.regularPrice %>" type="text" />
                             <div id="regularPrice-error" class="error-message"></div>
                         </div>
 
-                        <!-- Sale Price -->
                         <div>
-                            <label class="block mb-2">Sale Price</label>
+                            <label class="block mb-2">Sale Price *</label>
                             <input name="salePrice" class="w-full p-2 bg-gray-100 rounded border border-gray-300 text-gray-800" value="<%= product.salePrice %>" type="text" />
                             <div id="salePrice-error" class="error-message"></div>
                         </div>
 
-                        <!-- Stock Quantity -->
                         <div>
                             <label class="block mb-2">Stock Quantity *</label>
                             <input name="quantity" class="w-full p-2 bg-gray-100 rounded border border-gray-300 text-gray-800" value="<%= product.quantity %>" type="text" />
                             <div id="quantity-error" class="error-message"></div>
                         </div>
 
-                        <!-- Skin Type -->
                         <div>
                             <label class="block mb-2">Skin Type</label>
-                            <input name="skintype" class="w-full p-2 bg-gray-100 rounded border border-gray-300 text-gray-800" value="<%= product.skintype || '' %>" type="text" />
-                            <div id="skintype-error" class="error-message"></div>
+                            <input name="skinType" class="w-full p-2 bg-gray-100 rounded border border-gray-300 text-gray-800" value="<%= product.skinType || '' %>" type="text" />
+                            <div id="skinType-error" class="error-message"></div>
                         </div>
 
                         <div>
                             <label class="block mb-2">Skin Concern</label>
-                            <input name="skinConcern" class="w-full p-2 bg-gray-100 rounded border border-gray-300 text-gray-800" value="<%= product.skinConcern || ''%>" type="text"/>
+                            <input name="skinConcern" class="w-full p-2 bg-gray-100 rounded border border-gray-300 text-gray-800" value="<%= product.skinConcern || '' %>" type="text"/>
+                            <div id="skinConcern-error" class="error-message"></div>
                         </div>
                     </div>
 
-                    <!-- Product Images Section -->
                     <div class="bg-white p-6 rounded-lg mb-8">
                         <h2 class="text-xl font-bold mb-4">Product Images *</h2>
-                        <p class="text-gray-600 mb-4">Upload at least 3 product images. Square images are recommended.</p>
+                        <p class="text-gray-600 mb-4">Upload at least 3 and at most 8 product images. Square images are recommended.</p>
 
-                        <!-- Image Preview Container -->
                         <div id="image-preview-container" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                             <% if (product.productImage && product.productImage.length > 0) { %>
                                 <% product.productImage.forEach((image, i) => { %>
                                     <div class="thumbnail">
-                                        <img src="/Uploads/product-images/<%= image %>" alt="Product Image <%= i %>" class="image-preview" 
-                                            onerror="console.log('Failed to load image: /Uploads/product-images/<%= image %>')" />
+                                        <img src="<%= image || '/images/placeholder.jpg' %>" alt="Image <%= i + 1 %>" style="width: 100px; height: 100px; object-fit: cover;">
                                         <span class="remove-icon" onclick="removeExistingImage('<%= image %>', this)">×</span>
                                     </div>
                                 <% }) %>
@@ -122,14 +140,12 @@
                             <% } %>
                         </div>
 
-                        <!-- File Input -->
                         <div class="mb-4">
-                            <input type="file" name="imageFile" id="imageInput" accept="image/png, image/jpeg, image/jpg" 
+                            <input type="file" name="imageFile" id="imageInput" accept="image/png, image/jpeg, image/jpg" multiple
                                 class="w-full p-2 bg-gray-100 rounded border border-gray-300 text-gray-800" />
                             <div id="images-error" class="error-message"></div>
                         </div>
 
-                        <!-- Cropper Container -->
                         <div id="cropperContainer" class="image-cropper-container">
                             <div class="max-w-full mb-4">
                                 <img id="imageToCrop" src="" alt="Image to crop" class="cropped-image" />
@@ -140,7 +156,6 @@
                             </div>
                         </div>
 
-                        <!-- Submit Button -->
                         <div class="flex justify-end">
                             <button id="submitButton" type="submit" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
                                 Update Product
@@ -154,8 +169,11 @@
 
     <script>
 let uploadedImages = [];
+const MIN_IMAGES = 3;
 const MAX_IMAGES = 8;
 let cropper = null;
+let currentFileIndex = 0;
+let filesToProcess = [];
 
 document.addEventListener('DOMContentLoaded', function () {
     setupExistingImageHandlers();
@@ -168,6 +186,8 @@ document.addEventListener('DOMContentLoaded', function () {
             cropper.destroy();
             cropper = null;
         }
+        filesToProcess = [];
+        currentFileIndex = 0;
         document.getElementById('imageInput').value = '';
     });
 
@@ -177,17 +197,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const formData = new FormData(this);
         
-        // Handle any cropped images that are already in the DOM
         const newImages = document.querySelectorAll('#image-preview-container .thumbnail[data-is-new="true"] img');
         
-        // If there are new images added through the cropper
         if (newImages.length > 0) {
-            // Clear any existing imageFile inputs to avoid duplicate uploads
             if (formData.has('imageFile')) {
                 formData.delete('imageFile');
             }
             
-            // Add each new image to formData
             let imagePromises = [];
             newImages.forEach((img, index) => {
                 imagePromises.push(
@@ -200,11 +216,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 );
             });
             
-            // Wait for all image conversions to complete
             await Promise.all(imagePromises);
         }
-        
-        // Log FormData contents for debugging
+
         console.log('Submitting form data:');
         for (let [key, value] of formData.entries()) {
             if (value instanceof File) {
@@ -222,14 +236,7 @@ document.addEventListener('DOMContentLoaded', function () {
             
             console.log('Response status:', response.status);
             
-            const responseText = await response.text();
-            let result;
-            try {
-                result = JSON.parse(responseText);
-            } catch (e) {
-                console.error('JSON parse error:', responseText, e);
-                throw new Error('Invalid server response');
-            }
+            const result = await response.json();
             
             if (response.ok && result.success) {
                 Swal.fire({
@@ -269,10 +276,11 @@ function setupExistingImageHandlers() {
 }
 
 function handleImageUpload(event) {
-    const file = event.target.files[0];
-    if (!file) return;
+    filesToProcess = Array.from(event.target.files);
+    if (filesToProcess.length === 0) return;
 
-    if (uploadedImages.length >= MAX_IMAGES) {
+    const totalImages = uploadedImages.length + filesToProcess.length;
+    if (totalImages > MAX_IMAGES) {
         displayErrorMessage('images-error', `You can only upload a maximum of ${MAX_IMAGES} images`);
         Swal.fire({
             icon: 'error',
@@ -281,10 +289,11 @@ function handleImageUpload(event) {
             confirmButtonColor: '#d33',
         });
         event.target.value = '';
+        filesToProcess = [];
         return;
     }
 
-    if (!file.type.match('image.*')) {
+    if (filesToProcess.some(file => !file.type.match('image.*'))) {
         displayErrorMessage('images-error', 'Please upload only image files');
         Swal.fire({
             icon: 'error',
@@ -293,9 +302,25 @@ function handleImageUpload(event) {
             confirmButtonColor: '#d33',
         });
         event.target.value = '';
+        filesToProcess = [];
         return;
     }
 
+    processNextImage();
+}
+
+function processNextImage() {
+    if (currentFileIndex >= filesToProcess.length) {
+        document.getElementById('cropperContainer').style.display = 'none';
+        if (cropper) {
+            cropper.destroy();
+            cropper = null;
+        }
+        checkImageCount();
+        return;
+    }
+
+    const file = filesToProcess[currentFileIndex];
     const reader = new FileReader();
     reader.onload = function (e) {
         const cropperContainer = document.getElementById('cropperContainer');
@@ -325,21 +350,11 @@ function handleImageUpload(event) {
             });
 
             croppedCanvas.toBlob(blob => {
-                // Create a new file from the blob
                 const croppedFile = new File([blob], file.name, {
                     type: 'image/jpeg',
                     lastModified: new Date().getTime()
                 });
 
-                // Create a new DataTransfer object and add the cropped file
-                const dataTransfer = new DataTransfer();
-                dataTransfer.items.add(croppedFile);
-                
-                // Update the file input with the new file
-                const imageInput = document.getElementById('imageInput');
-                imageInput.files = dataTransfer.files;
-
-                // Create and display thumbnail
                 const thumbnail = document.createElement('div');
                 thumbnail.classList.add('thumbnail');
                 thumbnail.dataset.isNew = 'true';
@@ -347,7 +362,9 @@ function handleImageUpload(event) {
                 const thumbImg = document.createElement('img');
                 thumbImg.src = croppedCanvas.toDataURL('image/jpeg', 0.9);
                 thumbImg.alt = 'New Product Image';
-                thumbImg.classList.add('image-preview');
+                thumbImg.style.width = '100px';
+                thumbImg.style.height = '100px';
+                thumbImg.style.objectFit = 'cover';
 
                 const removeIcon = document.createElement('span');
                 removeIcon.classList.add('remove-icon');
@@ -368,9 +385,8 @@ function handleImageUpload(event) {
 
                 cropper.destroy();
                 cropper = null;
-                document.getElementById('cropperContainer').style.display = 'none';
-                document.getElementById('images-error').textContent = '';
-                checkImageCount();
+                currentFileIndex++;
+                processNextImage();
 
                 Swal.fire({
                     icon: 'success',
@@ -389,22 +405,22 @@ function validateForm() {
     const name = document.getElementsByName('productName')[0].value.trim();
     const description = document.getElementById('descriptionid').value.trim();
     const category = document.getElementsByName('category')[0].value.trim();
+    const brand = document.getElementsByName('brand')[0].value.trim();
     const price = document.getElementsByName('regularPrice')[0].value.trim();
-    const saleprice = document.getElementsByName('salePrice')[0].value.trim();
+    const salePrice = document.getElementsByName('salePrice')[0].value.trim();
     const quantity = document.getElementsByName('quantity')[0].value.trim();
-    const skintype = document.getElementsByName('skintype')[0].value.trim();
+    const skinType = document.getElementsByName('skinType')[0].value.trim();
     const skinConcern = document.getElementsByName('skinConcern')[0].value.trim();
     let isValid = true;
     let errorMessages = [];
 
-    // Product Name: 4-20 characters, alphanumeric with spaces and basic punctuation
     if (!name) {
         displayErrorMessage('productName-error', 'Please enter a product name.');
         errorMessages.push('Please enter a product name.');
         isValid = false;
-    } else if (name.length < 4 || name.length > 20) {
-        displayErrorMessage('productName-error', 'Product name must be 4-20 characters long.');
-        errorMessages.push('Product name must be 4-20 characters long.');
+    } else if (name.length < 4 || name.length > 50) {
+        displayErrorMessage('productName-error', 'Product name must be 4-50 characters long.');
+        errorMessages.push('Product name must be 4-50 characters long.');
         isValid = false;
     } else if (!/^[a-zA-Z0-9\s\-,.&()]+$/.test(name)) {
         displayErrorMessage('productName-error', 'Product name can only contain letters, numbers, spaces, and -,.&().');
@@ -412,7 +428,6 @@ function validateForm() {
         isValid = false;
     }
 
-    // Description: 10-250 characters
     if (!description) {
         displayErrorMessage('description-error', 'Please enter a product description.');
         errorMessages.push('Please enter a product description.');
@@ -423,14 +438,36 @@ function validateForm() {
         isValid = false;
     }
 
-    // Category: Ensure a valid category is selected
     if (!category) {
         displayErrorMessage('category-error', 'Please select a product category.');
         errorMessages.push('Please select a product category.');
         isValid = false;
     }
 
-    // Quantity: Non-negative integer, max 10,000
+    if (!price) {
+        displayErrorMessage('regularPrice-error', 'Please enter a regular price.');
+        errorMessages.push('Please enter a regular price.');
+        isValid = false;
+    } else if (!/^\d+(\.\d{1,2})?$/.test(price) || parseFloat(price) <= 0) {
+        displayErrorMessage('regularPrice-error', 'Regular price must be a positive number (e.g., 10 or 10.99).');
+        errorMessages.push('Regular price must be a positive number (e.g., 10 or 10.99).');
+        isValid = false;
+    }
+
+    if (!salePrice) {
+        displayErrorMessage('salePrice-error', 'Please enter a sale price.');
+        errorMessages.push('Please enter a sale price.');
+        isValid = false;
+    } else if (!/^\d+(\.\d{1,2})?$/.test(salePrice) || parseFloat(salePrice) <= 0) {
+        displayErrorMessage('salePrice-error', 'Sale price must be a positive number (e.g., 8 or 8.99).');
+        errorMessages.push('Sale price must be a positive number (e.g., 8 or 8.99).');
+        isValid = false;
+    } else if (price && parseFloat(salePrice) >= parseFloat(price)) {
+        displayErrorMessage('salePrice-error', 'Sale price must be less than regular price.');
+        errorMessages.push('Sale price must be less than regular price.');
+        isValid = false;
+    }
+
     if (!quantity) {
         displayErrorMessage('quantity-error', 'Please enter a stock quantity.');
         errorMessages.push('Please enter a stock quantity.');
@@ -439,79 +476,36 @@ function validateForm() {
         displayErrorMessage('quantity-error', 'Quantity must be a non-negative integer.');
         errorMessages.push('Quantity must be a non-negative integer.');
         isValid = false;
-    } else if (parseInt(quantity) > 10000) {
-        displayErrorMessage('quantity-error', 'Quantity cannot exceed 10,000.');
-        errorMessages.push('Quantity cannot exceed 10,000.');
+    }
+
+    if (skinType && (skinType.length < 3 || skinType.length > 100)) {
+        displayErrorMessage('skinType-error', 'Skin type must be 3-100 characters long.');
+        errorMessages.push('Skin type must be 3-100 characters long.');
+        isValid = false;
+    } else if (skinType && !/^[a-zA-Z0-9\s]+$/.test(skinType)) {
+        displayErrorMessage('skinType-error', 'Skin type can only contain letters, numbers, and spaces.');
+        errorMessages.push('Skin type can only contain letters, numbers, and spaces.');
         isValid = false;
     }
 
-    // Regular Price: Positive integer, non-zero, no decimals, max 10,000
-    if (!price) {
-        displayErrorMessage('regularPrice-error', 'Please enter a regular price.');
-        errorMessages.push('Please enter a regular price.');
+    if (skinConcern && (skinConcern.length < 3 || skinConcern.length > 100)) {
+        displayErrorMessage('skinConcern-error', 'Skin concern must be 3-100 characters long.');
+        errorMessages.push('Skin concern must be 3-100 characters long.');
         isValid = false;
-    } else if (!/^\d+$/.test(price) || parseInt(price) <= 0) {
-        displayErrorMessage('regularPrice-error', 'Regular price must be a positive integer (e.g., 10).');
-        errorMessages.push('Regular price must be a positive integer (e.g., 10).');
-        isValid = false;
-    } else if (parseInt(price) > 10000) {
-        displayErrorMessage('regularPrice-error', 'Regular price cannot exceed 10,000.');
-        errorMessages.push('Regular price cannot exceed 10,000.');
+    } else if (skinConcern && !/^[a-zA-Z0-9\s]+$/.test(skinConcern)) {
+        displayErrorMessage('skinConcern-error', 'Skin concern can only contain letters, numbers, and spaces.');
+        errorMessages.push('Skin concern can only contain letters, numbers, and spaces.');
         isValid = false;
     }
 
-    // Sale Price: If provided, positive integer, non-zero, no decimals, less than regular price, max 10,000
-    if (saleprice) {
-        if (!/^\d+$/.test(saleprice) || parseInt(saleprice) <= 0) {
-            displayErrorMessage('salePrice-error', 'Sale price must be a positive integer (e.g., 8).');
-            errorMessages.push('Sale price must be a positive integer (e.g., 8).');
-            isValid = false;
-        } else if (parseInt(saleprice) > 10000) {
-            displayErrorMessage('salePrice-error', 'Sale price cannot exceed 10,000.');
-            errorMessages.push('Sale price cannot exceed 10,000.');
-            isValid = false;
-        } else if (price && parseInt(price) <= parseInt(saleprice)) {
-            displayErrorMessage('salePrice-error', 'Sale price must be less than regular price.');
-            errorMessages.push('Sale price must be less than regular price.');
-            isValid = false;
-        }
-    }
-
-    // Skin Type: If provided, 3-50 characters, alphanumeric with spaces
-    if (skintype) {
-        if (skintype.length < 3 || skintype.length > 50) {
-            displayErrorMessage('skintype-error', 'Skin type must be 3-50 characters long.');
-            errorMessages.push('Skin type must be 3-50 characters long.');
-            isValid = false;
-        } else if (!/^[a-zA-Z0-9\s]+$/.test(skintype)) {
-            displayErrorMessage('skintype-error', 'Skin type can only contain letters, numbers, and spaces.');
-            errorMessages.push('Skin type can only contain letters, numbers, and spaces.');
-            isValid = false;
-        }
-    }
-
-    // Skin Concern: If provided, 3-50 characters, alphanumeric with spaces
-    if (skinConcern) {
-        if (skinConcern.length < 3 || skinConcern.length > 50) {
-            displayErrorMessage('skinConcern-error', 'Skin concern must be 3-50 characters long.');
-            errorMessages.push('Skin concern must be 3-50 characters long.');
-            isValid = false;
-        } else if (!/^[a-zA-Z0-9\s]+$/.test(skinConcern)) {
-            displayErrorMessage('skinConcern-error', 'Skin concern can only contain letters, numbers, and spaces.');
-            errorMessages.push('Skin concern can only contain letters, numbers, and spaces.');
-            isValid = false;
-        }
-    }
-
-    // Images: At least 3, max 8
     const imageCount = document.querySelectorAll('#image-preview-container .thumbnail').length;
-    if (imageCount < 3) {
-        displayErrorMessage('images-error', 'Please upload at least 3 images.');
-        errorMessages.push('Please upload at least 3 images.');
+    if (imageCount < MIN_IMAGES) {
+        displayErrorMessage('images-error', `Please upload at least ${MIN_IMAGES} images.`);
+        errorMessages.push(`Please upload at least ${MIN_IMAGES} images.`);
         Swal.fire({
             icon: 'error',
             title: 'Image Required',
-            text: 'Please upload at least 3 product images.',
+            text: `Please upload at least ${MIN_IMAGES} product images.`,
             confirmButtonColor: '#d33',
         });
         isValid = false;
@@ -541,8 +535,8 @@ function validateForm() {
 
 function checkImageCount() {
     const imageCount = document.querySelectorAll('#image-preview-container .thumbnail').length;
-    if (imageCount < 3) {
-        displayErrorMessage('images-error', 'Please select at least 3 images.');
+    if (imageCount < MIN_IMAGES) {
+        displayErrorMessage('images-error', `Please select at least ${MIN_IMAGES} images.`);
         return false;
     } else if (imageCount > MAX_IMAGES) {
         displayErrorMessage('images-error', `You can upload a maximum of ${MAX_IMAGES} images.`);
@@ -560,7 +554,7 @@ function removeExistingImage(imagePath, element) {
     if (isNewImage) {
         uploadedImages = uploadedImages.filter(img => img.dataUrl !== imagePath);
     } else {
-        const imagePathOnly = getImagePathFromSrc(imagePath);
+        const imagePathOnly = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
         let hiddenInput = document.querySelector('input[name="removedImages"]');
         if (hiddenInput) {
             let currentValue = hiddenInput.value;
@@ -586,16 +580,6 @@ function removeExistingImage(imagePath, element) {
     });
 }
 
-function getImagePathFromSrc(src) {
-    if (typeof src !== 'string') return '';
-    if (src.startsWith('/')) return src.split('/').slice(1).join('/');
-    if (src.includes('://')) {
-        const url = new URL(src);
-        return url.pathname.substring(1);
-    }
-    return src;
-}
-
 function displayErrorMessage(elementId, message) {
     const errorElement = document.getElementById(elementId);
     if (errorElement) errorElement.textContent = message;
@@ -605,7 +589,6 @@ function clearErrorMessages() {
     const errorElements = document.getElementsByClassName('error-message');
     Array.from(errorElements).forEach(element => element.textContent = '');
 }
-    
     </script>
 </body>
 </html>

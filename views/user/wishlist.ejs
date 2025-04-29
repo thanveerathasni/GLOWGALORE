@@ -15,6 +15,63 @@
     text-align: center;
     margin-bottom: 2rem;
   }
+      /*  */
+      body, ul, li {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        /* Main Navbar Styles */
+        .top-navbar {
+            background-color: #2c3e50; /* Dark background for contrast */
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+        }
+
+        .menu-desktop {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .main-menu {
+            display: flex;
+            gap: 25px;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Styling the Links */
+        .main-menu li a {
+            color: #ecf0f1; /* Light text color for contrast */
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease; /* Smooth transition for hover effect */
+            text-transform: uppercase; /* Making the text uppercase for a modern look */
+            padding: 8px 15px;
+        }
+
+        /* Hover Effect */
+        .main-menu li a:hover {
+            background-color: #e74c3c; /* Red background on hover */
+            color: #fff; /* White text when hovering */
+            border-radius: 5px; /* Smooth rounded corners */
+            transform: scale(1.05); /* Slightly enlarge the item on hover */
+        }
+
+        /* Media Query for Mobile */
+        @media (max-width: 768px) {
+            .main-menu {
+                flex-direction: column; /* Stack the menu items vertically on smaller screens */
+                gap: 15px;
+            }
+
+            .main-menu li a {
+                font-size: 18px;
+            }
+        }
+        /*  */
 
   .wishlist-item {
     display: flex;
@@ -83,7 +140,7 @@
 
   /* Top Navbar */
 .top-navbar {
-background-color: #5aa7ee;   
+background-color: #2c3e50;   
          padding: 1rem;
             position: fixed;
             top: 0;
@@ -139,6 +196,9 @@ background-color: #5aa7ee;
             <li>
                 <a href="/shop">Shop</a> <!-- Removed HOT label -->
             </li>
+            <li>
+              <a href="/cart">Cart</a> 
+          </li>
         </ul>
     </ul>
 </nav>
@@ -146,7 +206,7 @@ background-color: #5aa7ee;
 <section class="bg0 m-t-23 p-b-140" style="padding-top: 80px;">
   <div class="container">
     <div class="wishlist-container">
-      <h2>Your Wishlist</h2>
+      <h2 style="color:#2c3e50 ;">Your Wishlist</h2>
       <% if (wishlist && wishlist.length > 0) { %>
         <% wishlist.forEach(product => { %>
           <div class="wishlist-item">

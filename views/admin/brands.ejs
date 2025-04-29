@@ -6,7 +6,6 @@
   .pagination {
     display: inline-block;
   }
-
   .pagination a,
   .pagination .current-page {
     display: inline-block;
@@ -16,41 +15,143 @@
     text-decoration: none;
     color: #333;
   }
-
   .pagination a:hover {
     background-color: #f5f5f5;
   }
   .error-message {
     color: red;
+    margin-top: 4px;
+    font-size: 0.875rem;
+  }
+  .content-main {
+    padding: 20px;
+    background-color: #f8f9fa;
+  }
+  .content-header {
+    margin-bottom: 20px;
+  }
+  .card {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .card-body {
+    padding: 20px;
+  }
+  .table-hover tbody tr:hover {
+    background-color: #f1f5f9;
+  }
+  .form-control {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  .form-control:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+  .input-upload img {
+    max-width: 100px;
+    margin-bottom: 10px;
+  }
+  .btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: center;
+    display: inline-block;
+  }
+  .btn-primary {
+    background-color: #2563eb;
+    color: white;
+    border: none;
+  }
+  .btn-primary:hover {
+    background-color: #1d4ed8;
+  }
+  .btn-danger {
+    background-color: #dc2626;
+    color: white;
+    border: none;
+  }
+  .btn-danger:hover {
+    background-color: #b91c1c;
+  }
+  .btn-success {
+    background-color: #16a34a;
+    color: white;
+    border: none;
+  }
+  .btn-success:hover {
+    background-color: #15803d;
+  }
+  .badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .alert-success {
+    background-color: #dcfce7;
+    color: #15803d;
+  }
+  .alert-danger {
+    background-color: #fee2e2;
+    color: #b91c1c;
+  }
+  .ml-105 {
+    margin-left: 105px;
   }
 </style>
 <section class="content-main">
   <div class="content-header">
     <div>
-      <h2 class="content-title card-title">Brands</h2>
+      <h2 class="content-title card-title text-2xl font-bold">Brands</h2>
     </div>
   </div>
   <div class="card">
     <div class="card-body">
       <div class="row">
         <div class="col-md-3">
-          <form method="post" action="/admin/addBrand" enctype="multipart/form-data">
+          <form id="addBrandForm" method="post" action="/admin/addBrand" enctype="multipart/form-data">
+            <% if (error) { %>
+              <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                <%= error %>
+              </div>
+            <% } %>
             <div class="mb-4">
-              <label for="product_name" class="form-label">Brand Name</label>
+              <label for="name" class="form-label block text-sm font-medium text-gray-700">Brand Name *</label>
               <input
                 type="text"
                 name="name"
+                id="name"
                 placeholder="Type here"
                 class="form-control"
+                required
               />
+              <div id="name-error" class="error-message"></div>
             </div>
-            <label for="product_name" class="form-label">Brand Image</label>
-            <div class="input-upload">
-              <img src="" alt=""/>
-              <input class="form-control border" name="image" type="file" />
+            <div class="mb-4">
+              <label for="image" class="form-label block text-sm font-medium text-gray-700">Brand Image *</label>
+              <div class="input-upload">
+                <img src="/images/placeholder.jpg" alt="Preview" class="mb-2" />
+                <input
+                  class="form-control border"
+                  name="image"
+                  id="image"
+                  type="file"
+                  accept="image/*"
+                  required
+                />
+              </div>
+              <div id="image-error" class="error-message"></div>
             </div>
             <div class="d-grid">
-              <button class="btn btn-primary mt-20" type="submit">
+              <button class="btn btn-primary mt-4" type="submit">
                 Add Brand
               </button>
             </div>
@@ -59,19 +160,19 @@
         <div class="col-md-7 ml-105">
           <div class="table-responsive">
             <table class="table table-hover">
-              <thead>
+              <thead style="background-color: #24b4ed; color: white;">
                 <tr>
-                  <th>Brand</th>
-                  <th>Logo</th>
-                  <th>Status</th>
-                  <th>Block/Unblock/Delete</th>
+                  <th class="px-4 py-2">Brand</th>
+                  <th class="px-4 py-2">Logo</th>
+                  <th class="px-4 py-2">Status</th>
+                  <th class="px-4 py-2">Block/Unblock/Delete</th>
                 </tr>
               </thead>
               <tbody>
-                <%data.reverse().forEach((brand,index)=>{%>
+                <% data.reverse().forEach((brand, index) => { %>
                 <tr>
-                  <td class="text-start"><%=brand.brandName%></td>
-                  <td class="text-start">
+                  <td class="text-start px-4 py-2"><%= brand.brandName %></td>
+                  <td class="text-start px-4 py-2">
                     <div
                       class="d-flex align-items-center justify-content-center"
                       style="
@@ -82,48 +183,46 @@
                       "
                     >
                       <img
-                        src="/uploads.re-image/<%=brand.brandName[0]%>"
-                        alt="<%=brand.brandName%>"
+                        src="<%= brand.brandImage || '/images/placeholder.jpg' %>"
+                        alt="<%= brand.brandName %>"
                         class="img-fluid rounded-circle"
                         style="width: 100%; height: auto"
                       />
                     </div>
                   </td>
-                  <td class="text-start">
-                    <%if(brand.isBlocked===true){%>
-                    <span
-                      class="badge rounded-pill alert-danger"
-                      style="width: 60px"
-                      >Blocked</span
-                    >
-                    <%}else{%>
-                    <span
-                      class="badge rounded-pill alert-success"
-                      style="width: 60px"
-                      >Active</span
-                    >
-                    <%}%>
+                  <td class="text-start px-4 py-2">
+                    <% if (brand.isBlocked) { %>
+                      <span
+                        class="badge rounded-pill alert-danger"
+                        style="width: 60px"
+                      >Blocked</span>
+                    <% } else { %>
+                      <span
+                        class="badge rounded-pill alert-success"
+                        style="width: 60px"
+                      >Active</span>
+                    <% } %>
                   </td>
-                  <td class="text-start">
-                    <%if(brand.isBlocked===false){%>
-                    <button class="btn btn-danger" style="width: 90px">
-                      <a href="/admin/blockBrand?id=<%=brand._id%>" class="text-white">Block</a>
-                    </button>
-                        <%}else{%>
-                    <button class="btn btn-success" style="width: 90px">
-                      <a href="/admin/blockBrand?id=<%=brand._id%>" class="text-white">Unblock</a>
-                    </button>
-                        <%}%>
+                  <td class="text-start px-4 py-2">
+                    <% if (brand.isBlocked) { %>
+                      <button class="btn btn-success" style="width: 90px; margin-right: 8px;">
+                        <a href="/admin/unblockBrand?id=<%= brand._id %>" class="text-white">Unblock</a>
+                      </button>
+                    <% } else { %>
+                      <button class="btn btn-danger" style="width: 90px; margin-right: 8px;">
+                        <a href="/admin/blockBrand?id=<%= brand._id %>" class="text-white">Block</a>
+                      </button>
+                    <% } %>
                     <button
                       class="btn btn-danger"
                       style="width: 90px"
                       onclick="return confirmDelete()"
                     >
-                      <a href="/admin/deleteBrand?id=<%=brand._id%>" class="text-white">Delete</a>
+                      <a href="/admin/deleteBrand?id=<%= brand._id %>" class="text-white">Delete</a>
                     </button>
                   </td>
                 </tr>
-                <%})%>
+                <% }) %>
               </tbody>
             </table>
           </div>
@@ -132,13 +231,80 @@
     </div>
   </div>
   <div class="pagination-container">
-</div>
+    <div class="pagination">
+      <% if (currentPage > 1) { %>
+        <a href="/admin/brands?page=<%= currentPage - 1 %>">Previous</a>
+      <% } %>
+      <% for (let i = 1; i <= totalPages; i++) { %>
+        <% if (currentPage === i) { %>
+          <span class="current-page"><%= i %></span>
+        <% } else { %>
+          <a href="/admin/brands?page=<%= i %>"><%= i %></a>
+        <% } %>
+      <% } %>
+      <% if (currentPage < totalPages) { %>
+        <a href="/admin/brands?page=<%= currentPage + 1 %>">Next</a>
+      <% } %>
+    </div>
+  </div>
 </section>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-function confirmDelete(){
-    return confirm("Are you sure you want to delete this brand")
-}
+  function confirmDelete() {
+    return confirm("Are you sure you want to delete this brand?");
+  }
 
+  document.getElementById('addBrandForm').addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    const name = document.getElementById('name').value.trim();
+    const image = document.getElementById('image').files[0];
+
+    // Client-side validation
+    document.getElementById('name-error').textContent = '';
+    document.getElementById('image-error').textContent = '';
+
+    if (!name || name.length < 2 || name.length > 50) {
+      document.getElementById('name-error').textContent = 'Brand name must be 2-50 characters long';
+      return;
+    }
+    if (!/^[a-zA-Z0-9\s\-&]+$/.test(name)) {
+      document.getElementById('name-error').textContent = 'Brand name can only contain letters, numbers, spaces, -, and &';
+      return;
+    }
+    if (!image) {
+      document.getElementById('image-error').textContent = 'Please upload a brand image';
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('image', image);
+
+    try {
+      const response = await fetch('/admin/addBrand', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.redirected) {
+        window.location.href = response.url;
+      } else {
+        const result = await response.json();
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: result.error || 'Failed to add brand',
+        });
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'An unexpected error occurred. Please try again.',
+      });
+    }
+  });
 </script>
 <%- include("../../views/partials/admin/footer") %>
-

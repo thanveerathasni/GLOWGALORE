@@ -74,6 +74,25 @@ const userSchema = new Schema({
         default: 0,
         min: 0
     },
+    walletTransactions: [{ // New field for wallet transaction history
+        orderId: {
+            type: String,
+            required: true
+        },
+        amount: {
+            type: Number,
+            required: true
+        },
+        date: {
+            type: Date,
+            default: Date.now
+        },
+        reason: {
+            type: String,
+            enum: ["Cancelled", "Returned"],
+            // required: true
+        }
+    }],
     orderHistory: [{
         type: Schema.Types.ObjectId,
         ref: "Order"

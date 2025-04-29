@@ -1,6 +1,7 @@
 const Product = require("../../models/productSchema");
 const Category = require("../../models/categorySchema");
 const User = require("../../models/userSchema");
+const Review = require("../../models/reviewSchema");
 
 const productDetails = async (req, res) => {
     try {
@@ -37,12 +38,24 @@ const productDetails = async (req, res) => {
             return { ...p._doc, maxOffer, salePrice };
         });
 
+        // Fetch reviews for the product
+    const reviews = await Review.find({ productId })
+    .populate("userId", "name")
+    .sort({ createdAt: -1 });
+
+  // Calculate average rating
+  const averageRating = reviews.length
+    ? (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length).toFixed(1)
+    : 0;
+
         res.render("product-detail", {
             user: userData,
             product: { ...product._doc, salePrice, maxOffer },
             quantity: product.quantity,
             category: findCategory,
-            relatedProducts: relatedProductsWithOffers
+            relatedProducts: relatedProductsWithOffers,
+            reviews,
+            averageRating,
         });
     } catch (error) {
         console.log(error, "error in fetching product details");

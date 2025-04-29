@@ -96,7 +96,17 @@ const processRefund = async (userId, order) => {
     if (!user) return false;
 
     user.wallet += order.finalAmount;
+
+    // Record transaction in user.walletTransactions
+    user.walletTransactions.push({
+      orderId: order.orderId,
+      amount: refundAmount,
+      date: new Date(),
+      reason: reason, 
+    });
+
     await user.save();
+    console.log(`Refund processed for user ${userId}: Wallet balance=${user.wallet}, Transaction added:`, user.walletTransactions.slice(-1));
     return true;
   } catch (error) {
     console.error("Error in processRefund:", error);

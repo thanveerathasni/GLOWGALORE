@@ -23,7 +23,7 @@ const login = async (req, res) => {
             const passwordMatch = bycrypt.compare(password, admin.password);
             if (passwordMatch) {
                 req.session.admin = true;
-                return res.redirect("/admin")//dashboard
+                return res.redirect("/admin/dashboard")//dashboard
             } else {
                 return res.redirect("/admin/login")
             }

@@ -42,6 +42,63 @@
             justify-content: center; /* Center align links */
             align-items: center;
         }
+            /*  */
+            body, ul, li {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        /* Main Navbar Styles */
+        .top-navbar {
+            background-color: #2c3e50; /* Dark background for contrast */
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+        }
+
+        .menu-desktop {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .main-menu {
+            display: flex;
+            gap: 25px;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Styling the Links */
+        .main-menu li a {
+            color: #ecf0f1; /* Light text color for contrast */
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease; /* Smooth transition for hover effect */
+            text-transform: uppercase; /* Making the text uppercase for a modern look */
+            padding: 8px 15px;
+        }
+
+        /* Hover Effect */
+        .main-menu li a:hover {
+            background-color: #e74c3c; /* Red background on hover */
+            color: #fff; /* White text when hovering */
+            border-radius: 5px; /* Smooth rounded corners */
+            transform: scale(1.05); /* Slightly enlarge the item on hover */
+        }
+
+        /* Media Query for Mobile */
+        @media (max-width: 768px) {
+            .main-menu {
+                flex-direction: column; /* Stack the menu items vertically on smaller screens */
+                gap: 15px;
+            }
+
+            .main-menu li a {
+                font-size: 18px;
+            }
+        }
+        /*  */
 
         .top-navbar .menu-desktop {
             margin: 0;

@@ -86,7 +86,8 @@
             <input type="text" class="form-control border-0 rounded-pill mt-3" placeholder="Search categories"
               name="search" />
             <button class="btn" type="submit">Search</button>
-            <button type="button" class="btn btn-secondary border-0 rounded-pill" onclick="clearSearch()">Clear</button>
+            <button type="button" class="btn btn-secondary border-2 rounded-pill "
+              style="background-color: #11a4de; max-width: 10px;" onclick="clearSearch()">Clear</button>
           </div>
         </form>
       </header>
@@ -117,7 +118,7 @@
             <div class="col-md-8 ml-10">
               <div class="table-responsive">
                 <table class="table table-hover">
-                  <thead>
+                  <thead style="background-color: #24b4ed; color: white;">
                     <tr>
                       <th class="text-center"></th>
                       <th>Name</th>
@@ -270,23 +271,24 @@
 
         // Name validation
         if (name === "") {
-            displayErrorMessage("name-error", "Please enter a category name");
-            isValid = false;
-        } else if (!/^[a-zA-Z]+$/.test(name)) {
-            displayErrorMessage("name-error", "Name can only contain letters");
-            isValid = false;
-        } else if (name.length < 2 || name.length > 50) {
-            displayErrorMessage("name-error", "Name must be between 2 and 50 characters");
-            isValid = false;
+          displayErrorMessage("name-error", "Please enter a category name");
+          isValid = false;
+        } else if (!/^[a-zA-Z\s]+$/.test(name)) {
+          displayErrorMessage("name-error", "Name can only contain letters and spaces");
+          isValid = false;
+
+        } else if (name.length < 2 || name.length > 20) {
+          displayErrorMessage("name-error", "Name must be between 2 and 50 characters");
+          isValid = false;
         }
 
         // Description validation
         if (description === "") {
-            displayErrorMessage("description-error", "Please enter a description");
-            isValid = false;
+          displayErrorMessage("description-error", "Please enter a description");
+          isValid = false;
         } else if (description.length < 10 || description.length > 500) {
-            displayErrorMessage("description-error", "Description must be between 10 and 500 characters");
-            isValid = false;
+          displayErrorMessage("description-error", "Description must be between 10 and 500 characters");
+          isValid = false;
         }
 
         return isValid;
@@ -308,58 +310,58 @@
 
       async function addOffer(categoryId) {
         const { value: amount } = await Swal.fire({
-            title: "Offer in percentage",
-            input: "number",
-            inputLabel: "Percentage",
-            inputPlaceholder: "%",
+          title: "Offer in percentage",
+          input: "number",
+          inputLabel: "Percentage",
+          inputPlaceholder: "%",
         })
         if (amount) {
-            const percentage = parseFloat(amount);
-            if (isNaN(percentage) || percentage < 1 || percentage > 99) {
-                Swal.fire({
-                    icon: "error",
-                    title: "Invalid Percentage",
-                    text: "Offer percentage must be between 1 and 99."
-                });
-                return;
+          const percentage = parseFloat(amount);
+          if (isNaN(percentage) || percentage < 1 || percentage > 99) {
+            Swal.fire({
+              icon: "error",
+              title: "Invalid Percentage",
+              text: "Offer percentage must be between 1 and 99."
+            });
+            return;
+          }
+          try {
+            const response = await fetch("/admin/addCategoryOffer", {
+              method: "POST",
+              headers: {
+                "content-type": "application/json"
+              },
+              body: JSON.stringify({
+                percentage: amount,
+                categoryId: categoryId,
+              }),
+            });
+            const data = await response.json();
+            if (response.ok && data.status === true) {
+              Swal.fire(
+                "Offer added",
+                "The offer has been added",
+                "success",
+              ).then(() => {
+                location.reload()
+              });
+              // Toastr success notification
+              toastr.success('Offer added successfully!');
+            } else {
+              Swal.fire("Failed", data.message || "Adding offer failed ", "error")
+              // Toastr error notification
+              toastr.error('Failed to add offer.');
             }
-            try {
-                const response = await fetch("/admin/addCategoryOffer", {
-                    method: "POST",
-                    headers: {
-                        "content-type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        percentage: amount,
-                        categoryId: categoryId,
-                    }),
-                });
-                const data = await response.json();
-                if (response.ok && data.status === true) {
-                    Swal.fire(
-                        "Offer added",
-                        "The offer has been added",
-                        "success",
-                    ).then(() => {
-                        location.reload()
-                    });
-                    // Toastr success notification
-                    toastr.success('Offer added successfully!');
-                } else {
-                    Swal.fire("Failed", data.message || "Adding offer failed ", "error")
-                    // Toastr error notification
-                    toastr.error('Failed to add offer.');
-                }
-            } catch (error) {
-                Swal.fire(
-                    "Error",
-                    "An error occured while adding the offer",
-                    "error"
-                );
-                // Toastr error notification
-                toastr.error('An error occurred while adding the offer.');
-                console.log("Error adding offer", error);
-            }
+          } catch (error) {
+            Swal.fire(
+              "Error",
+              "An error occured while adding the offer",
+              "error"
+            );
+            // Toastr error notification
+            toastr.error('An error occurred while adding the offer.');
+            console.log("Error adding offer", error);
+          }
         }
       }
 
@@ -409,4 +411,4 @@
       }
     </script>
 
-  <%- include("../../views/partials/admin/footer") %>
+    <%- include("../../views/partials/admin/footer") %>

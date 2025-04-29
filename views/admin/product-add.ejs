@@ -45,7 +45,19 @@
               <label class="block mb-2 text-gray-700">Product Name *</label>
               <input name="productName" class="w-full p-2 bg-white rounded border border-gray-300" type="text"/>
             </div>
-            
+            <div>
+              <label class="block mb-2">Brand</label>
+              <select name="brand" class="w-full p-2 bg-gray-100 rounded border border-gray-300 text-gray-800">
+                  <option value="">No Brand</option>
+                  <% for(let i = 0; i < brand.length; i++) { %>
+                      <option value="<%= brand[i].brandName %>">
+                          <%= brand[i].brandName %>
+                      </option>
+                  <% } %>
+              </select>
+              <div id="brand-error" class="error-message"></div>
+          </div>
+
             <div>
               <label class="block mb-2 text-gray-700">Product Description *</label>
               <textarea name="description" class="w-full p-2 bg-white rounded border border-gray-300 h-32"></textarea>

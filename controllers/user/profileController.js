@@ -1,6 +1,7 @@
 const User = require("../../models/userSchema")
 const Address = require("../../models/addressSchema")
 const Coupon = require("../../models/couponSchema")
+const Wallet = require("../../models/walletSchema")
 
 const nodemailer = require("nodemailer")
 const bcrypt = require("bcrypt")
@@ -494,19 +495,19 @@ const editProfile = async (req, res) => {
 
 const getwallet = async (req, res) => {
     try {
-        const userId = req.session.user
-        const userData = await User.findById(userId)
+        const userId = req.session.user;
+        const userData = await User.findById(userId);
+        const walletData = await Wallet.findOne({ userId }); // Fetch wallet data
+        
         res.render("wallet", {
             user: userData,
-        })
-        
+            wallet: walletData // Pass wallet data to template
+        });
     } catch (error) {
-        res.redirect("/pageNotFound")
-        console.log("error while rendering edit page ", error)
+        res.redirect("/pageNotFound");
+        console.log("error while rendering wallet page ", error);
     }
-}
-
-
+};
 const updateProfileImage = async (req, res) => {
     try {
         const userId = req.session.user;
