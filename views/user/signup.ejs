@@ -18,8 +18,11 @@
 
     body {
         display: flex;
-        height: 100vh;
+        min-height: 100vh;
+        height: fit-content;
         background-color: #fefefe;
+        justify-content: center;
+        padding: 1rem;
     }
 
     .container {
@@ -145,6 +148,32 @@
             height: fit-content;
         }
     }
+
+        /* Mobile styles */
+        @media (max-width: 767.98px) {
+            .form-section {
+                padding: 1.5rem;
+            }
+
+            .form-section h2 {
+                font-size: 1.5rem;
+            }
+
+            .image-section {
+                min-height: 300px;
+            }
+        }
+
+        /* Tablet and up */
+        @media (min-width: 768px) {
+            .form-section {
+                padding: 3rem;
+            }
+
+            .image-section {
+                min-height: 500px;
+            }
+        }
 </style>
 <body>
     <div class="container signup-container">

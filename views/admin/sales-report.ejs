@@ -1,5 +1,4 @@
 <%- include("../../views/partials/admin/header") %>
-
 <style>
   :root {
     --primary-color: #1e90ff;
@@ -13,8 +12,16 @@
     --shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
     --transition: all 0.3s ease;
   }
+
+  /* Form button colors */
   #reportForm .mt-4.flex.justify-end.space-x-3 button {
     background-color: var(--primary-color, #1e90ff) !important;
+    padding: 0.5rem 1rem; /* Consistent padding */
+    font-size: 0.9rem; /* Readable font */
+    min-height: 44px; /* Touch-friendly */
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   #reportForm .bg-[var(--success-color)] {
     background-color: var(--success-color, #00b894) !important;
@@ -22,13 +29,23 @@
   #reportForm .bg-[var(--danger-color)] {
     background-color: var(--danger-color, #d63031) !important;
   }
+
+  /* Pagination styles */
+  .pagination {
+    display: flex;
+    flex-wrap: wrap; /* Prevent overflow */
+    gap: 0.25rem; /* Tighter spacing */
+    justify-content: center;
+  }
   .pagination a {
     color: var(--primary-color);
-    padding: 8px 12px;
+    padding: 0.5rem 0.75rem; /* Smaller padding */
     border: 1px solid var(--light-gray);
-    margin: 0 4px;
     border-radius: 4px;
     transition: var(--transition);
+    font-size: 0.9rem; /* Readable */
+    min-width: 36px; /* Touch-friendly */
+    text-align: center;
   }
   .pagination a:hover {
     background-color: var(--primary-color);
@@ -43,7 +60,174 @@
     color: var(--light-gray);
     cursor: not-allowed;
   }
+
+  /* Form alignment */
+  #reportForm .grid {
+    align-items: start; /* Align labels and inputs */
+  }
+  #reportForm label {
+    font-size: 0.9rem; /* Consistent label size */
+    margin-bottom: 0.5rem;
+  }
+  #reportForm select,
+  #reportForm input {
+    font-size: 0.9rem; /* Consistent input size */
+    padding: 0.5rem; /* Compact padding */
+    max-width: 100%; /* Prevent overflow */
+    box-sizing: border-box;
+  }
+
+  /* Table responsiveness */
+  .overflow-x-auto table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .overflow-x-auto th,
+  .overflow-x-auto td {
+    padding: 0.75rem 0.5rem; /* Reduced padding */
+    font-size: 0.9rem; /* Smaller text */
+    white-space: nowrap; /* Prevent wrapping */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Truncate long text */
+    max-width: 120px; /* Limit column width */
+  }
+  .overflow-x-auto th {
+    font-size: 0.85rem; /* Smaller headers */
+  }
+
+  /* Summary cards */
+  .grid-cols-1.md\\:grid-cols-4 > div {
+    padding: 1rem; /* Compact padding */
+  }
+  .grid-cols-1.md\\:grid-cols-4 h3 {
+    font-size: 1rem; /* Smaller title */
+    margin-bottom: 0.5rem;
+  }
+  .grid-cols-1.md\\:grid-cols-4 p {
+    font-size: 1.25rem; /* Smaller value */
+  }
+
+  /* Chart container */
+  #salesChart {
+    max-width: 100%; /* Prevent overflow */
+    height: auto; /* Responsive height */
+  }
+
+  /* Container padding */
+  .container.mx-auto.px-4.py-8 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    #reportForm .mt-4.flex.justify-end.space-x-3 {
+      flex-direction: column; /* Stack buttons */
+      gap: 0.5rem; /* Spacing */
+      align-items: stretch; /* Full-width buttons */
+    }
+    #reportForm .mt-4.flex.justify-end.space-x-3 button {
+      font-size: 0.85rem; /* Smaller buttons */
+      padding: 0.4rem 0.8rem;
+    }
+    .grid-cols-1.md\\:grid-cols-4 > div {
+      padding: 0.75rem; /* Tighter padding */
+    }
+    .grid-cols-1.md\\:grid-cols-4 h3 {
+      font-size: 0.9rem;
+    }
+    .grid-cols-1.md\\:grid-cols-4 p {
+      font-size: 1.1rem;
+    }
+    .overflow-x-auto th,
+    .overflow-x-auto td {
+      padding: 0.5rem 0.3rem; /* Tighter padding */
+      font-size: 0.85rem;
+      max-width: 100px; /* Smaller columns */
+    }
+    .pagination a {
+      padding: 0.4rem 0.6rem;
+      font-size: 0.85rem;
+      min-width: 32px;
+    }
+    .text-3xl {
+      font-size: 1.5rem; /* Smaller heading */
+    }
+    .text-xl {
+      font-size: 1.25rem;
+    }
+    .text-lg {
+      font-size: 1rem;
+    }
+    .text-sm {
+      font-size: 0.8rem;
+    }
+    .container.mx-auto.px-4.py-8 {
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+  }
+
+  @media (max-width: 576px) {
+    #reportForm .grid {
+      gap: 0.5rem; /* Tighter gap */
+    }
+    #reportForm label {
+      font-size: 0.85rem;
+    }
+    #reportForm select,
+    #reportForm input {
+      font-size: 0.85rem;
+      padding: 0.4rem;
+    }
+    .overflow-x-auto th,
+    .overflow-x-auto td {
+      padding: 0.4rem 0.2rem;
+      font-size: 0.8rem;
+      max-width: 80px; /* Tighter columns */
+    }
+    .grid-cols-1.md\\:grid-cols-4 > div {
+      padding: 0.5rem;
+    }
+    .grid-cols-1.md\\:grid-cols-4 h3 {
+      font-size: 0.85rem;
+    }
+    .grid-cols-1.md\\:grid-cols-4 p {
+      font-size: 1rem;
+    }
+    .pagination {
+      gap: 0.2rem;
+    }
+    .pagination a {
+      padding: 0.3rem 0.5rem;
+      font-size: 0.8rem;
+      min-width: 28px;
+    }
+    .text-3xl {
+      font-size: 1.25rem;
+    }
+    .text-xl {
+      font-size: 1.1rem;
+    }
+    .text-lg {
+      font-size: 0.9rem;
+    }
+    .text-sm {
+      font-size: 0.75rem;
+    }
+    .container.mx-auto.px-4.py-8 {
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+      padding-top: 0.75rem;
+      padding-bottom: 0.75rem;
+    }
+  }
 </style>
+
 
 <head>
   <meta charset="UTF-8">

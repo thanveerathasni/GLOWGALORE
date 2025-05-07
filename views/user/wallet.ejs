@@ -30,7 +30,7 @@
         }
 
         /* Sidebar */
-        .sidebar {
+        /* .sidebar {
             height: 100vh;
             background: linear-gradient(180deg, var(--sidebar-bg), var(--primary-bg));
             padding: 2rem 1rem;
@@ -42,6 +42,24 @@
             z-index: 1000;
             box-shadow: var(--shadow);
             border-right: 1px solid #e0e8ff;
+        } */
+        .sidebar {
+            height: 100vh;
+            background: linear-gradient(180deg, var(--sidebar-bg), var(--primary-bg));
+            padding: 2rem 1rem;
+            position: fixed;
+            top: 80px; /* Adjust sidebar to fit under navbar */
+            left: -280px;
+            width: 280px;
+            transition: left 0.3s ease-in-out;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            border-right: 1px solid #e0e8ff;
+           
+    max-height: 100vh;
+    overflow-y: auto;
+   
+
         }
 
         .sidebar.active {
@@ -133,17 +151,19 @@
             min-height: 100vh;
             transition: margin-left 0.3s ease-in-out;
             margin-left: 0;
+        
         }
 
         .profile-container {
-            padding: 2rem;
-            background: var(--secondary-bg);
-            border-radius: 15px;
-            margin: 2rem;
-            border: 1px solid var(--accent-blue);
-            box-shadow: var(--shadow);
-            width: 1090px;
-        }
+    padding: 2rem;
+    background: var(--secondary-bg);
+    border-radius: 15px;
+    margin: 4rem;
+    border: 1px solid var(--accent-blue);
+    box-shadow: var(--shadow);
+    max-width: 100%;
+    overflow-x: auto;
+}
 
         .wallet-info h3 {
             color: var(--accent-blue);
@@ -161,6 +181,8 @@
             .sidebar {
                 position: fixed;
                 left: 0;
+                overflow-y: auto;
+                height: 100vh;
             }
 
             .sidebar-toggle {
@@ -182,13 +204,13 @@
 
         @media (max-width: 767px) {
             .profile-container {
-                padding: 1rem;
-                margin: 1rem;
-                width: auto;
+                padding: 2rem;
+                margin: 3rem;
+                width: 100%;
             }
 
             .main-content {
-                padding-top: 60px;
+                padding-top: 70px;
             }
         }
 
@@ -229,8 +251,8 @@
         body,
         ul,
         li {
-            margin: -1px;
-            padding: -4px;
+            margin: -2px;
+            padding: -6px;
             list-style: none;
         }
 
@@ -255,7 +277,9 @@
             align-items: center;
 
         }
-
+        .top-navbar .main-menu {
+        flex-direction: column;
+    }
         .menu-desktop {
             display: flex;
             justify-content: center;
@@ -326,7 +350,7 @@
                 <a href="/">Home</a>
             </li>
             <li>
-                <a href="/shop">Shop</a> <!-- Removed HOT label -->
+                <a href="/shop">Shop</a> 
             </li>
         </ul>
     </ul>
@@ -353,41 +377,47 @@
                 <a href="/logout" onclick="confirmLogout(event)"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </nav>
             <main class="col-12 main-content px-md-4 py-4">
-                <div class="profile-container">
-                    <div class="wallet-info">
+                <div class="profile-container" style="width: 78%;">
+                    <div  class="wallet-info">
                         <h3>Your Wallet</h3>
                         <h4>Balance Amount: ₹<%=Math.round(user.wallet)%>
                         </h4>
                     </div>
-                    <div class="transaction-history">
-                        <h3 class="mt-4">Transaction History</h3>
-                        <% if (wallet.transactions && wallet.transactions.length > 0) { %>
-                            <table class="table transaction-table">
-                              <thead>
-                                <tr>
-                                  <th>Date</th>
-                                  <th>Order ID</th>
-                                  <th>Amount</th>
-                                  <th>Reason</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <% wallet.transactions.sort((a, b) => b.date - a.date).forEach(transaction => { %>
-                                  <tr>
-                                    <td><%= transaction.date.toLocaleDateString() %></td>
-                                    <td><%= transaction.orderId %></td>
-                                    <td class="credit">+₹<%= Math.round(transaction.amount) %></td>
-                                    <td><%= transaction.reason %></td>
-                                  </tr>
-                                <% }) %>
-                              </tbody>
-                            </table>
-                          <% } else { %>
-                            <div class="no-transactions">
-                              <p>No transactions found</p>
-                            </div>
-                          <% } %>
+                    
                     </div>
+                    <h4>Transaction History</h4>
+                    <% if (wallet.transactions.length > 0) { %>
+                        <div style= "width: 80%;">
+
+                      <table class="table transaction-table">
+                        <thead>
+                          <tr>
+                            <th>Date</th>
+                        
+                            <th>Order ID</th>
+                            <th>Amount</th>
+                            
+                            <th>Reason</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% wallet.transactions.forEach(transaction => { %>
+                            <tr>
+                              <td><%= new Date(transaction.date).toLocaleDateString() %></td>
+                              <td><%= transaction.orderId || 'N/A' %></td>
+                              <td>₹ <%= Math.abs(transaction.amount).toFixed(2) %></td>
+                              <td><%= transaction.reason || 'N/A' %></td>
+                            </tr>
+                          <% }) %>
+                        </tbody>
+                      </table>
+                      </div>
+                    <% } else { %>
+                      <p>No transactions found.</p>
+                    <% } %>
+                    <a href="/dashboard" class="btn btn-primary mt-3">Back to Dashboard</a>
+                  </div>
+                    
                 </div>
         </div>
         </main>

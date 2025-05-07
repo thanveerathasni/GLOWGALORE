@@ -1,0 +1,262 @@
+<%- include('../partials/user/header') %>
+
+<style>
+    /* Gradient button styles from homepage */
+    .block2-btn {
+        background: linear-gradient(90deg, #6bb8ff, #6739e6);
+        color: #fff;
+        font-weight: 600;
+        padding: 0.8rem 1.5rem;
+        border-radius: 50px;
+        min-height: 44px; /* Touch-friendly */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: background 0.3s ease;
+    }
+    .block2-btn:hover {
+        background: linear-gradient(90deg, #5aa7ee, #5828d5);
+        color: #fff;
+    }
+    .flex-c-m.stext-101 {
+        background: linear-gradient(90deg, #6bb8ff, #6739e6);
+        color: #fff;
+        padding: 0.8rem 1.5rem;
+        border-radius: 50px;
+        min-height: 44px;
+    }
+    .block1:hover {
+        background-color: rgba(234, 236, 247, 0.366);
+    }
+    /* Hero section */
+    .about-hero {
+        /* background: linear-gradient(90deg, rgba(107, 184, 255, 0.9), rgba(103, 57, 230, 0.9)), url('images/about/about-hero.jpg'); */
+        background-size: cover;
+        background-position: center;
+        padding: 8rem 2rem;
+        text-align: center;
+        border-radius: 15px;
+        margin-bottom: -2rem;
+    }
+    .about-hero h1 {
+        color: #0c0c0c;
+        font-size: 2.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+    }
+    .about-hero p {
+        color: #2a2a2a;
+        font-size: 1.2rem;
+        max-width: 800px;
+        margin: 0 auto;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    /* Story section */
+    .about-story {
+        padding: 2rem;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .about-story h2 {
+        color: #333;
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .about-story p {
+        color: #666;
+        font-size: 1rem;
+        line-height: 1.6;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .about-story img {
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+    }
+    /* Values section */
+    .about-values {
+        padding: 2rem;
+        background: #f8f9fa;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+    }
+    .about-values h2 {
+        color: #333;
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .values-list {
+        list-style: none;
+        padding: 0;
+    }
+    .values-list li {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        font-size: 1rem;
+        color: #333;
+    }
+    .values-list li i {
+        color: #6bb8ff;
+        font-size: 1.5rem;
+    }
+    /* CTA section */
+    .cta-section {
+        text-align: center;
+        padding: 2rem;
+    }
+    /* Responsive design */
+    @media (max-width: 767px) {
+        .about-hero {
+            padding: 2rem 1rem;
+        }
+        .about-hero h1 {
+            font-size: 1.8rem;
+        }
+        .about-hero p {
+            font-size: 1rem;
+        }
+        .about-story {
+            padding: 1rem;
+        }
+        .about-story h2 {
+            font-size: 1.5rem;
+        }
+        .about-story p {
+            font-size: 0.9rem;
+        }
+        .about-values {
+            padding: 1rem;
+        }
+        .about-values h2 {
+            font-size: 1.5rem;
+        }
+        .values-list li {
+            font-size: 0.9rem;
+        }
+        .values-list li i {
+            font-size: 1.2rem;
+        }
+        .block2-btn {
+            padding: 0.6rem 1.2rem;
+            font-size: 0.9rem;
+        }
+        .cta-section {
+            padding: 1rem;
+        }
+    }
+    @media (max-width: 576px) {
+        .about-hero {
+            padding: 1.5rem 0.8rem;
+        }
+        .about-hero h1 {
+            font-size: 1.5rem;
+        }
+        .about-hero p {
+            font-size: 0.9rem;
+        }
+        .about-story {
+            padding: 0.8rem;
+        }
+        .about-story h2 {
+            font-size: 1.3rem;
+        }
+        .about-story p {
+            font-size: 0.85rem;
+        }
+        .about-values {
+            padding: 0.8rem;
+        }
+        .about-values h2 {
+            font-size: 1.3rem;
+        }
+        .values-list li {
+            font-size: 0.85rem;
+        }
+        .values-list li i {
+            font-size: 1rem;
+        }
+        .block2-btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+        .cta-section {
+            padding: 0.8rem;
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+<section class="section-slide">
+    <div class="about-hero">
+        <h1 class="ltext-101 cl2 respon1">About Glow Galore</h1>
+        <p class="stext-102 respon2">
+            Your trusted destination for premium skincare and beauty essentials that make you shine.
+        </p>
+    </div>
+</section>
+
+<!-- Our Story -->
+<section class="sec-banner bg0 p-t-80 p-b-50">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 p-b-30">
+                <div class="about-story">
+                    <h2 class="ltext-103 cl5">Our Story</h2>
+                    <p class="stext-102">
+						Founded in 2023, Glow Galore was born from a passion for empowering individuals to embrace their unique beauty. 
+                        Our journey began with a simple mission: to provide high-quality, affordable skincare and beauty products that 
+                        cater to every skin type and tone. From humble beginnings, we’ve grown into a trusted name, delivering radiance 
+                        to customers across the globe.<br> Every product we create is a step toward building confidence, crafted with care to 
+                        enhance your natural glow. We believe beauty is diverse and universal, and our commitment to inclusivity drives 
+                        us to innovate for all. With a focus on sustainable practices, we’re dedicated to protecting the planet while 
+                        helping you shine.<br> Together, we’re not just a brand—we’re a community celebrating the joy of self-expression 
+                        through skincare. Inspired by our customers’ stories, we continue to evolve, creating solutions that reflect your 
+                        unique needs. Our vision is to redefine beauty standards, ensuring everyone feels seen, valued, and radiant.                    </p>
+                </div>
+            </div>
+            <div class="col-md-6 p-b-30">
+                <div class="block1 wrap-pic-w">
+                    <img src="newprod/bannar3.jpeg" alt="Glow Galore Story">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Our Values -->
+<section class="bg0 p-t-23 p-b-80">
+    <div class="container">
+        <div class="about-values">
+            <h2 class="ltext-103 cl5">Our Values</h2>
+            <ul class="values-list">
+                <li> Quality: Premium products crafted with care.</li>
+                <li> Customer Satisfaction: Your happiness is our priority.</li>
+                <li> Sustainability: Eco-friendly packaging and practices.</li>
+                <li> Inclusivity: Beauty solutions for everyone.</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<!-- <div class="cta-section">
+    <a href="/shop" class="block2-btn stext-101 trans-04" aria-label="Discover our products">Discover Our Products</a>
+</div> -->
+
+<%- include('../partials/user/footer') %>

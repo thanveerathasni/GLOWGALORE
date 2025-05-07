@@ -357,61 +357,251 @@
         color: white;
     }
 
-.mt-30 {
-    margin-top: 100px !important;
-}
-.breadcrumb-wrap .container {
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-/* Breadcrumb */
-.breadcrumb {
-    font-size: 14px;
-    font-family: 'Arial', sans-serif;
-    color: #2f4e5b;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-/* Links */
-.breadcrumb a {
-    color: #2f4e5b;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.breadcrumb a:hover {
-    color: #617eff; /* A vibrant color for hover, e.g., coral for Glow Galore */
-}
-
-/* Separator */
-/* .breadcrumb span::before {
-    content: '>';
-    margin-right:2px;
-    color: #3a3939;
-} */
-
-/* Remove separator before the first item */
-.breadcrumb a:first-child + span::before {
-    content: none;
-}
-
-/* Active/Last Item */
-.breadcrumb span:last-child a {
-    color: #52a2c4;
-    pointer-events: none; 
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .breadcrumb {
-        font-size: 12px;
-        flex-wrap: wrap;
-        gap: 5px;
+    .mt-30 {
+        margin-top: 100px !important;
     }
-}
+
+    .breadcrumb-wrap .container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+        font-size: 14px;
+        font-family: 'Arial', sans-serif;
+        color: #2f4e5b;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    /* Links */
+    .breadcrumb a {
+        color: #2f4e5b;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .breadcrumb a:hover {
+        color: #617eff; /* A vibrant color for hover, e.g., coral for Glow Galore */
+    }
+
+    /* Separator */
+    /* .breadcrumb span::before {
+        content: '>';
+        margin-right:2px;
+        color: #3a3939;
+    } */
+
+    /* Remove separator before the first item */
+    .breadcrumb a:first-child + span::before {
+        content: none;
+    }
+
+    /* Active/Last Item */
+    .breadcrumb span:last-child a {
+        color: #52a2c4;
+        pointer-events: none; 
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        /* Stack grid for mobile */
+        .product-container {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        /* Adjust padding for product page */
+        .product-page {
+            padding: 1.5rem;
+            margin-top: 20px;
+            padding-bottom: 30px;
+        }
+
+        /* Reduce product info padding */
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        /* Scale down typography */
+        .product-title {
+            font-size: 1.8rem;
+        }
+
+        .product-info p.product-title {
+            font-size: 1rem;
+        }
+
+        .discounted-price {
+            font-size: 1.5rem;
+        }
+
+        .original-price {
+            font-size: 1rem;
+        }
+
+        .product-information {
+            font-size: 0.9rem;
+            padding: 0.8rem;
+        }
+
+        .stock-status {
+            font-size: 1rem;
+        }
+
+        .offer {
+            font-size: 0.9rem;
+        }
+
+        .rating-value {
+            font-size: 0.85rem;
+        }
+
+        /* Adjust image sizes */
+        .main-image img {
+            max-width: 100%;
+        }
+
+        .thumbnail img {
+            width: 60px;
+            height: 60px;
+        }
+
+        /* Refine buttons */
+        .buttons {
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .add-to-cart {
+            padding: 0.6rem 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .wishlist {
+            padding: 0.6rem 1.2rem;
+            font-size: 0.9rem;
+        }
+
+        /* Adjust reviews */
+        .reviews h3 {
+            font-size: 1.2rem;
+        }
+
+        .review {
+            padding: 0.8rem;
+        }
+
+        /* Related products */
+        .related-products {
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .related-products h3 {
+            font-size: 1.5rem;
+        }
+
+        .related-product-card {
+            padding: 0.8rem;
+        }
+
+        .related-product-card img {
+            height: 120px;
+        }
+
+        .related-product-card h4 {
+            font-size: 1.1rem;
+        }
+
+        .related-product-card .discounted-price {
+            font-size: 1.1rem;
+        }
+
+        .related-product-card .original-price {
+            font-size: 0.85rem;
+        }
+
+        .related-product-card .offer {
+            font-size: 0.85rem;
+        }
+
+        /* Single-column layout for related products */
+        .related-product-card {
+            margin-bottom: 1rem;
+        }
+
+        /* Breadcrumb adjustments */
+        .breadcrumb {
+            font-size: 12px;
+            flex-wrap: wrap;
+            gap: 5px;
+            padding: 0.5rem;
+        }
+
+        .breadcrumb-wrap .container {
+            padding: 0 0.5rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        /* Further refine for smaller screens */
+        .product-page {
+            padding: 1rem;
+            margin: 0.5rem;
+            padding-bottom: 20px;
+        }
+
+        .product-info {
+            padding: 1rem;
+        }
+
+        .product-title {
+            font-size: 1.5rem;
+        }
+
+        .discounted-price {
+            font-size: 1.3rem;
+        }
+
+        .thumbnail img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .add-to-cart {
+            padding: 0.5rem 1.2rem;
+            font-size: 0.85rem;
+        }
+
+        .wishlist {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .related-products {
+            padding: 1rem;
+        }
+
+        .related-product-card img {
+            height: 100px;
+        }
+
+        .related-product-card h4 {
+            font-size: 1rem;
+        }
+
+        .related-product-card .discounted-price {
+            font-size: 1rem;
+        }
+
+        .breadcrumb {
+            font-size: 11px;
+            gap: 4px;
+        }
+    }
 </style>
 
 <body>
@@ -681,9 +871,7 @@
                 }
             });
         }
-   
-   
-   </script>
+    </script>
 </body>
 </html>
 

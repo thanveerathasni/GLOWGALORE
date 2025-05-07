@@ -5,7 +5,6 @@ const ExcelJS = require('exceljs');
 const loadSalesPage = async (req, res) => {
   try {
     const { reportType, startDate, endDate, format, page = 1, limit = 5 } = req.query;
-    console.log('Query Params:', { reportType, startDate, endDate, format, page, limit });
 
     let query = {};
     const now = new Date();
@@ -19,9 +18,9 @@ const loadSalesPage = async (req, res) => {
         case 'weekly':
           //  Calculate week start (Sunday) and end (Saturday)
           const weekStart = new Date(now);
-          weekStart.setDate(now.getDate() - now.getDay()); // Set to Sunday of current week
+          weekStart.setDate(now.getDate() - now.getDay()); 
           const weekEnd = new Date(weekStart);
-          weekEnd.setDate(weekStart.getDate() + 6); // Set to Saturday
+          weekEnd.setDate(weekStart.getDate() + 6); 
           query.createdOn = {
             $gte: new Date(weekStart.setHours(0, 0, 0, 0)),
             $lte: new Date(weekEnd.setHours(23, 59, 59, 999))
@@ -52,13 +51,12 @@ const loadSalesPage = async (req, res) => {
     const itemsPerPage = parseInt(limit);
     const skip = (currentPage - 1) * itemsPerPage;
 
-    // Get total count for pagination
     const totalOrders = await Order.countDocuments(query);
     const totalPages = Math.ceil(totalOrders / itemsPerPage);
 
     const orders = await Order.find(query)
       .populate('orderedItems.product')
-      .sort({ createdOn: -1 }) // Sort by createdOn descending, like getOrders
+      .sort({ createdOn: -1 })
       .skip(skip)
       .limit(itemsPerPage);
 
@@ -242,9 +240,9 @@ const generateExcel = async (res, salesData) => {
       case 'weekly':
         // Calculate week start (Sunday) and end (Saturday)
         const weekStart = new Date(now);
-        weekStart.setDate(now.getDate() - now.getDay()); // Set to Sunday of current week
+        weekStart.setDate(now.getDate() - now.getDay()); 
         const weekEnd = new Date(weekStart);
-        weekEnd.setDate(weekStart.getDate() + 6); // Set to Saturday
+        weekEnd.setDate(weekStart.getDate() + 6); 
         query.createdOn = {
           $gte: new Date(weekStart.setHours(0, 0, 0, 0)),
           $lte: new Date(weekEnd.setHours(23, 59, 59, 999))
@@ -299,84 +297,6 @@ const generateExcel = async (res, salesData) => {
 
 
 
-// const generatePDF = async (res, salesData) => {
-//   const doc = new PDFDocument();
-//   res.setHeader('Content-Type', 'application/pdf');
-//   res.setHeader('Content-Disposition', 'attachment; filename=sales-report.pdf');
-
-//   doc.pipe(res);
-//   doc.fontSize(20).text('Glow Galore Sales Report', { align: 'center' });
-//   doc.moveDown();
-
-//   doc.fontSize(14).text('Summary');
-//   doc.fontSize(12)
-//     .text(`Total Sales: ₹${salesData.totalSales.toLocaleString()}`)
-//     .text(`Total Orders: ${salesData.orderCount}`)
-//     .text(`Total Discounts: ₹${salesData.discounts.toLocaleString()}`)
-//     .text(`Total Coupons: ₹${salesData.coupons.toLocaleString()}`);
-//   doc.moveDown();
-
-//   doc.fontSize(14).text('Detailed Sales');
-//   const headers = ['Date', 'Order ID', 'Amount', 'Discount', 'Coupon'];
-//   let x = 50, y = doc.y + 20;
-//   headers.forEach(header => {
-//     doc.text(header, x, y);
-//     x += 100;
-//   });
-
-//   y += 20;
-//   salesData.sales.forEach(sale => {
-//     x = 50;
-//     doc.text(new Date(sale.date).toLocaleDateString(), x, y);
-//     x += 100;
-//     const shortOrderId = sale.orderId.toString().slice(-12);
-//     doc.text(shortOrderId, x, y);
-//     x += 100;
-//     doc.text(`₹${sale.amount.toLocaleString()}`, x, y);
-//     x += 100;
-//     doc.text(`₹${sale.discount.toLocaleString()}`, x, y);
-//     x += 100;
-//     doc.text(`₹${sale.coupon.toLocaleString()}`, x, y);
-//     y += 20;
-//   });
-
-//   doc.end();
-// };
-
-// const generateExcel = async (res, salesData) => {
-//   const workbook = new ExcelJS.Workbook();
-//   const worksheet = workbook.addWorksheet('Sales Report');
-
-//   worksheet.columns = [
-//     { header: 'Date', key: 'date', width: 15 },
-//     { header: 'Order ID', key: 'orderId', width: 30 },
-//     { header: 'Amount', key: 'amount', width: 15 },
-//     { header: 'Discount', key: 'discount', width: 15 },
-//     { header: 'Coupon', key: 'coupon', width: 15 }
-//   ];
-
-//   worksheet.addRow(['Summary']);
-//   worksheet.addRow(['Total Sales', '', `₹${salesData.totalSales.toLocaleString()}`]);
-//   worksheet.addRow(['Total Orders', '', salesData.orderCount]);
-//   worksheet.addRow(['Total Discounts', '', `₹${salesData.discounts.toLocaleString()}`]);
-//   worksheet.addRow(['Total Coupons', '', `₹${salesData.coupons.toLocaleString()}`]);
-//   worksheet.addRow([]);
-
-//   worksheet.addRow(['Detailed Sales']);
-//   salesData.sales.forEach(sale => {
-//     worksheet.addRow({
-//       date: new Date(sale.date).toLocaleDateString(),
-//       orderId: sale.orderId.toString(),
-//       amount: `₹${sale.amount.toLocaleString()}`,
-//       discount: `₹${sale.discount.toLocaleString()}`,
-//       coupon: `₹${sale.coupon.toLocaleString()}`
-//     });
-//   });
-
-//   res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-//   res.setHeader('Content-Disposition', 'attachment; filename=sales-report.xlsx');
-//   await workbook.xlsx.write(res);
-// };
 
 module.exports = {
   loadSalesPage

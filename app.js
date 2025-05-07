@@ -40,6 +40,17 @@ app.use("/",userRouter);
 app.use("/admin",adminRouter)
 
 
+// 🚫 No Cache Middleware
+const noCache = (req, res, next) => {
+    res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.set('Pragma', 'no-cache'); 
+    res.set('Expires', '0');
+    next();
+  };
+  app.use(noCache); 
+  
+
+
 // server start
 app.listen(process.env.PORT,()=>{
     console.log(" server working",

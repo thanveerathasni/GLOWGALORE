@@ -35,15 +35,16 @@
             background: linear-gradient(180deg, var(--sidebar-bg), var(--primary-bg));
             padding: 2rem 1rem;
             position: fixed;
-            top: 80px;
-            left: -280px;
+            top: 60px; 
+            left: -100%; 
             width: 280px;
+            max-width: 80vw;
             transition: left 0.3s ease-in-out;
             z-index: 1000;
             box-shadow: var(--shadow);
             border-right: 1px solid #e0e8ff;
+            overflow-y: auto;
         }
-    
         .sidebar.active {
             left: 0;
         }
@@ -71,7 +72,7 @@
     
         .sidebar a:hover,
         .sidebar .active {
-            background: rgba(77, 142, 211, 0.2); /* Adjusted to blue hover */
+            background: rgba(77, 142, 211, 0.2);
             color: var(--accent-blue);
             transform: translateX(5px);
         }
@@ -96,11 +97,11 @@
         }
     
         .sidebar.active + .sidebar-toggle {
-            left: 300px; /* Moves button to right of sidebar when open */
+            left: 300px;
         }
     
         .sidebar-toggle:hover {
-            background: #0056b3; /* Darker blue for hover */
+            background: #0056b3; 
             transform: rotate(90deg);
         }
     
@@ -136,7 +137,7 @@
             background: var(--secondary-bg);
             border-radius: 15px;
             margin: 2rem;
-            border: 1px solid var(--accent-blue); /* Adjusted border color */
+            border: 1px solid var(--accent-blue); 
             box-shadow: var(--shadow);
         }
     
@@ -229,10 +230,10 @@
         /* Main Navbar Styles */
         .top-navbar {
             background-color: #2c3e50;
-            /* Dark background for contrast */
+           
             padding: 15px 0;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            /* Soft shadow for depth */
+        
 
 
             padding: 1rem;
@@ -262,27 +263,27 @@
 
         /* Styling the Links */
         .main-menu li a {
-            color: #ecf0f1; /* Light text color for contrast */
+            color: #ecf0f1;
             text-decoration: none;
             font-size: 16px;
             font-weight: 500;
-            transition: all 0.3s ease; /* Smooth transition for hover effect */
-            text-transform: uppercase; /* Making the text uppercase for a modern look */
+            transition: all 0.3s ease; 
+            text-transform: uppercase; 
             padding: 8px 15px;
         }
 
         /* Hover Effect */
         .main-menu li a:hover {
-            background-color: #e74c3c; /* Red background on hover */
-            color: #fff; /* White text when hovering */
-            border-radius: 5px; /* Smooth rounded corners */
-            transform: scale(1.05); /* Slightly enlarge the item on hover */
+            background-color: #e74c3c; 
+            color: #fff; 
+            border-radius: 5px; 
+            transform: scale(1.05); 
         }
 
         /* Media Query for Mobile */
         @media (max-width: 768px) {
             .main-menu {
-                flex-direction: column; /* Stack the menu items vertically on smaller screens */
+                flex-direction: column; 
                 gap: 15px;
             }
 
@@ -292,7 +293,7 @@
         }
         /*  */
         .btn:hover {
-            background: #0056b3; /* Darker blue like homepage button hover */
+            background: #0056b3; 
             color: #ffffff;
         }
 
@@ -323,7 +324,7 @@
                 margin-left: 280px;
             }
             .sidebar.active ~ .main-content {
-                margin-left: 280px; /* Keeps consistent on desktop */
+                margin-left: 280px;
             }
         }
     
@@ -337,13 +338,13 @@
             }
         }
         :root {
-    --primary-bg: #ffffff; /* Matches homepage white background */
-    --secondary-bg: #f8f9fa; /* Light gray like homepage */
-    --accent-blue: #4d8ed3; /* Matches SHOP NOW button */
-    --text-primary: #333333; /* Dark text like cl2 */
-    --text-secondary: #666666; /* Lighter gray for secondary text */
-    --navbar-bg: #4d8ed3; /* Dark navbar like homepage */
-    --shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    --primary-bg: #ffffff; 
+    --secondary-bg: #f8f9fa; 
+    --accent-blue: #4d8ed3; 
+    --text-primary: #333333; 
+    --text-secondary: #666666; 
+    --navbar-bg: #4d8ed3; 
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
 }
 
 
@@ -365,7 +366,7 @@
                 <a href="/">Home</a>
             </li>
             <li>
-                <a href="/shop">Shop</a> <!-- Removed HOT label -->
+                <a href="/shop">Shop</a> 
             </li>
         </ul>
     </ul>
@@ -488,7 +489,7 @@
                     text: 'Are you sure you want to proceed?',
                     icon: 'question',
                     showCancelButton: true,
-                    confirmButtonColor: 'var(--accent-blue)', // Changed to match theme
+                    confirmButtonColor: 'var(--accent-blue)', 
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Yes, proceed'
                 }).then((result) => {

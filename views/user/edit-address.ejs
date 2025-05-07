@@ -27,6 +27,7 @@
             overflow-x: hidden;
             margin: 0;
             padding: 0;
+            text-overflow:0;
         }
     
         /* Sidebar */
@@ -35,13 +36,15 @@
             background: linear-gradient(180deg, var(--sidebar-bg), var(--primary-bg));
             padding: 2rem 1rem;
             position: fixed;
-            top: 80px;
-            left: -280px;
+            top: 60px; 
+            left: -100%; 
             width: 280px;
+            max-width: 80vw;
             transition: left 0.3s ease-in-out;
             z-index: 1000;
             box-shadow: var(--shadow);
             border-right: 1px solid #e0e8ff;
+            overflow-y: auto;
         }
     
         .sidebar.active {

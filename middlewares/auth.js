@@ -1,5 +1,5 @@
 const User = require("../models/userSchema")
-const user = require("../models/userSchema")
+// const user = require("../models/userSchema")
 
 // User authentication middleware
 
@@ -43,6 +43,8 @@ const adminAuth = (req,res,next)=>{
     })
 }
 
+// ajax authentication middleware
+
 const ajaxAuth = (req, res, next) => {
     if (req.session.user) {
       User.findById(req.session.user)
@@ -71,11 +73,29 @@ const ajaxAuth = (req, res, next) => {
       });
     }
   };
+
+// session handling middleware 
   
+  const logged = (req, res, next) => {
+    if (!req.session.user) {
+      res.redirect('/login'); 
+    } else {
+      next(); 
+    }
+  }
+
+  const skipLoginIfLogged = (req, res, next) => {
+    if (req.session.user) {
+      return res.redirect('/'); 
+    }
+    next(); 
+  }
   
 
 module.exports={
     userAuth,
     adminAuth,
     ajaxAuth,
+    logged,
+    skipLoginIfLogged
 }

@@ -311,7 +311,7 @@ const cancelReturnRequest = async (req, res) => {
     order.returnDescription = undefined;
     order.returnImages = [];
     order.requestStatus = undefined;
-    order.adminMessage = undefined; // Note: adminMessage isn't in schema, remove if not needed
+    order.adminMessage = undefined; 
     order.updateOn = new Date();
 
     await order.save();
@@ -329,7 +329,7 @@ const cancelReturnRequest = async (req, res) => {
   }
 };
 
-// Refund processing function (assumed unchanged from original)
+// Refund processing function (
 async function processRefund(userId, order) {
   try {
     const user = await User.findById(userId);
@@ -340,9 +340,11 @@ async function processRefund(userId, order) {
     // Record transaction in user.walletTransactions
     user.walletTransactions.push({
       orderId: order.orderId,
-      amount: refundAmount,
+      amount: Math.round(order.finalAmount), // Amount in paise,
+      // reason:order.cancelReason || "Order cancellation",
+      // amount: refundAmount,
       date: new Date(),
-      reason: reason, // "Cancelled" or "Returned"
+      // reason: reason,
     });
 
     await user.save();
@@ -364,8 +366,9 @@ const createRazorpay = async (req, res) => {
   try {
       const { amount } = req.body;
 
+
       const order = await rzp.orders.create({
-          amount: amount * 100, // Convert amount to paise
+          amount: amount * 100,
           currency: "INR",
           receipt: "receipt#1" + Date.now(),
           payment_capture: 1,
@@ -376,6 +379,7 @@ const createRazorpay = async (req, res) => {
       res.json({ success: true, order });
   } catch (error) {
       res.status(500).json({ success: false, message: error.message });
+      console.log("reazorpay error", error)
   }
 };
 
@@ -389,7 +393,7 @@ const Razorpaysubscription = async (req, res) => {
 
       const subscriptionObject = {
           plan_id: plan_id,
-          total_count: 60, // Number of billing cycles
+          total_count: 60, 
           quantity: 1,
           customer_notify: 1,
           notes: {
@@ -402,6 +406,8 @@ const Razorpaysubscription = async (req, res) => {
       res.json({ success: true, subscription });
   } catch (error) {
       res.status(500).json({ success: false, message: error.message });
+      console.log("reazorpay error", error)
+
   }
 };
 
@@ -413,6 +419,7 @@ const loadFailure = async (req, res) => {
   } catch (error) {
     console.error("Error occur while loadFailure:", error)
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).redirect('/pageNotFound')
+    
   }
 }
 

@@ -61,11 +61,11 @@ const userSchema = new Schema({
         code: { type: String, default: null },
         discountAmount: { type: Number, default: 0 }
     },
-    availableCoupons: [{ // New field to track unused coupons
+    availableCoupons: [{ 
         type: Schema.Types.ObjectId,
         ref: "Coupon"
     }],
-    usedCoupons: [{ // Tracks coupons that have been used
+    usedCoupons: [{ 
         type: Schema.Types.ObjectId,
         ref: "Coupon"
     }],
@@ -74,10 +74,10 @@ const userSchema = new Schema({
         default: 0,
         min: 0
     },
-    walletTransactions: [{ // New field for wallet transaction history
+    walletTransactions: [{
         orderId: {
             type: String,
-            required: true
+            required: false
         },
         amount: {
             type: Number,
@@ -89,8 +89,8 @@ const userSchema = new Schema({
         },
         reason: {
             type: String,
-            enum: ["Cancelled", "Returned"],
-            // required: true
+            enum: ["Cancelled", "Returned","Order Payment", null], 
+            default: null 
         }
     }],
     orderHistory: [{
@@ -104,7 +104,7 @@ const userSchema = new Schema({
     referralCode: {
         type: String
     },
-    redeemedUser: [{ // Tracks users referred by this user
+    redeemedUser: [{ 
         type: Schema.Types.ObjectId,
         ref: "User"
     }],

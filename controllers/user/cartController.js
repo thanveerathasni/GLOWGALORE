@@ -259,7 +259,7 @@ const getCheckoutPage = async (req, res) => {
         const grandTotal = cartItems.reduce((total, item) => total + item.totalPrice, 0);
         const discount = user.appliedCoupon.discountAmount || 0;
         const totalWithDiscount = grandTotal - discount;
-
+        const walletBalance = user.wallet
         const addressDoc = await Address.findOne({ userId: userId });
         const userAddress = addressDoc ? addressDoc.address : [];
         res.render('checkout', {
@@ -269,7 +269,8 @@ const getCheckoutPage = async (req, res) => {
             grandTotal,
             discount,
             appliedCoupon: user.appliedCoupon.code || null,
-            totalWithDiscount
+            totalWithDiscount,
+            walletBalance,
         });
     } catch (error) {
         console.error('Error in getCheckoutPage:', error);
@@ -367,6 +368,7 @@ const applyCoupon = async (req, res) => {
         return res.status(400).json({ status: false, message: `Error applying coupon: ${error.message}` });
     }
 };
+// removing the coupon
 
 const removeCoupon = async (req, res) => {
     try {
@@ -418,7 +420,7 @@ const removeCoupon = async (req, res) => {
         return res.status(400).json({ status: false, message: `Error removing coupon: ${error.message}` });
     }
 };
-
+// placing order 
 const placeOrder = async (req, res) => {
     try {
         const userId = req.session.user;
@@ -467,8 +469,6 @@ const placeOrder = async (req, res) => {
 
       
 
-        // Remove the grandTotal validation since we're now using totalAmountInput
-        // which includes shipping and discounts
         if (Math.abs(parseFloat(totalAmountInput) - finalAmount) > 1) { 
             console.log('Total amount mismatch:', { 
                 frontendTotal: parseFloat(totalAmountInput), 
@@ -516,6 +516,19 @@ const placeOrder = async (req, res) => {
             orders.push(order);
         }
 
+        if (paymentMethod === "wallet") {
+            const walletTransaction = {
+                orderId: userId,
+                amount: finalAmount, 
+                reason: 'Order Payment'
+            };
+        
+            user.walletTransactions.push(walletTransaction)
+            user.wallet -= finalAmount; 
+            
+            
+        }
+
         // Mark coupon as used if applied
         if (user.appliedCoupon.couponId) {
             user.usedCoupons.push(user.appliedCoupon.couponId);
@@ -538,6 +551,8 @@ const placeOrder = async (req, res) => {
         return res.status(500).json({ status: false, message: 'Error placing order' });
     }
 };
+
+// order success 
 
 const getOrderSuccess = async (req, res) => {
     try {

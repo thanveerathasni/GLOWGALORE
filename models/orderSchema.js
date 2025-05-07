@@ -34,13 +34,13 @@ const orderSchema = new Schema({
             },
             Image: {
                 type: String,
-                required: true, // Note: "require" was misspelled as "require" in original
+                required: true, 
             },
-            status: { // Added to support item-level status in cancelOrder
+            status: { 
                 type: String,
                 default: "Pending"
             },
-            cancelReason: { // Added to support item-level cancel reason in cancelOrder
+            cancelReason: { 
                 type: String
             }
         }
@@ -81,9 +81,9 @@ const orderSchema = new Schema({
     createdOn: {
         type: Date,
         default: Date.now,
-        required: true // Note: "reqired" was misspelled as "reqired" in original
+        required: true 
     },
-    updateOn: { // Note: "updateOn" was misspelled as "updateOn" in original (assuming typo)
+    updateOn: { 
         type: Date,
         default: Date.now,
     },
@@ -91,7 +91,7 @@ const orderSchema = new Schema({
         type: Boolean,
         default: false
     },
-    // Added fields to match frontend and backend
+    
     returnReason: {
         type: String
     },
@@ -105,10 +105,10 @@ const orderSchema = new Schema({
         type: String,
         enum: ["Pending", "approved", "rejected"]
     },
-    cancelReason: { // Added to support order-level cancel reason in cancelOrder
+    cancelReason: { 
         type: String
     },
-    invoiceDate: { // Added to support generateInvoice
+    invoiceDate: { 
         type: Date
     }
 });

@@ -16,7 +16,7 @@ const getOrders = async (req, res) => {
     const totalOrders = await Order.countDocuments();
 
     const orders = await Order.find()
-      .populate("userId") // Populate wallet array
+      .populate("userId") // Populate user schema for  wallet array
       .sort({ createdOn: -1 })
       .skip(skip)
       .limit(limit);
@@ -89,7 +89,7 @@ const razorpay = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET || qctXsWfZ8XuE10RIn63F6wKW,
 });
 
-// Enhanced processRefund function for Razorpay
+
 const processRefund = async (userId, order) => {
   try {
     const user = await User.findById(userId);
@@ -224,7 +224,7 @@ const cancelOrder = async (req, res) => {
 
       const order = await Order.findById(orderId).populate('userId')
       const user = await User.findById(order.userId)
-      const product = order?.orderedItems?.[0]?.product; // Safely access first product
+      const product = order?.orderedItems?.[0]?.product; 
       const retquantity = order?.orderedItems?.[0]?.quantity;
 
 

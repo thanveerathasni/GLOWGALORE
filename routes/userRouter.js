@@ -12,6 +12,17 @@ const wishlistController = require('../controllers/user/wishlistController');
 const cartController = require("../controllers/user/cartController");
 const { userAuth } = require("../middlewares/auth");
 const { ajaxAuth } = require("../middlewares/auth");
+const { logged } = require("../middlewares/auth");
+const { skipLoginIfLogged } = require("../middlewares/auth");
+
+const noCache = (req, res, next) => {
+    res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
+    next();
+  };
+  
+
 
 const upload = require('multer')();
 // Sign up and authentication management 
@@ -21,7 +32,7 @@ router.get("/pageNotFound",userController.pageNotFound)
 
 // Route for loading the signup page
 
-router.get("/signup",userController.loadSignup);
+router.get("/signup",noCache,skipLoginIfLogged,userController.loadSignup);
 router.post("/signup",userController.signup)
 
 // Shopping page route (authentication required)
@@ -29,6 +40,7 @@ router.post("/signup",userController.signup)
 router.get("/shop",userController.loadShopping)
 router.post("/resend-otp",userController.resendOtp)
 router.post("/verify-otp",userController.verifyOtp)
+router.get("/about",userController.about)
 
 // Google authentication routes
 
@@ -45,7 +57,7 @@ router.get('/auth/google/callback',passport.authenticate('google',{failureRedire
 
 // Login management
 
-router.get("/login",userController.loadLogin)
+router.get("/login",noCache,skipLoginIfLogged,userController.loadLogin)
 router.post("/login",userController.login)
 
 // Home page route
@@ -54,7 +66,7 @@ router.get("/logout",userController.logout)
 router.get("/shop",userController.loadShopping)
 
 // profile management
-
+router.post("/update-profile-image", userAuth, upload.single('profileImage'), profileController.updateProfileImage);
 router.get("/forgot-password",profileController.getForgetPassword);
 router.post("/forgot-email-valid",profileController.forgotEmailValid)
 router.post("/verify-passForgot-otp",profileController.verifyForgotPassOtp);
@@ -67,14 +79,17 @@ router.post("/change-email",userAuth,profileController.changeEmailValid);
 router.post("/verify-email-otp",userAuth,profileController.verifyEmailOtp)
 router.post("/update-email", userAuth, profileController.updateEmail);
 router.get("/editProfile",userAuth,profileController.editProfile)
+
+
 router.get("/change-password",userAuth,profileController.changePassword);
-router.post("/change-password",userAuth,profileController.changePasswordValid);
+router.post("/change-password", upload.none(),userAuth,profileController.changePasswordValid);
 router.post("/verify-changepassword-otp", userAuth, profileController.verifyChangePassOtp)
 router.get("/getCoupons",userAuth,profileController.getCoupons)
 
-//img
+// updatin profileimage
 router.post("/update-profile-image",userAuth, upload.single('profileImage'), profileController.updateProfileImage);
-// address
+
+// address management
 
 router.get("/addAddress",userAuth,profileController.addAddress);
 router.get("/address",userAuth,profileController.myAddress);
@@ -86,17 +101,12 @@ router.post("/editAddress/:addressId", userAuth, profileController.editAddressBy
 
 router.get("/wallet",userAuth,profileController.getwallet)
 
-
-
-
-
 //product detail
 
 router.get("/productDetails",productController.productDetails)
 
 // Review submission route
 router.post('/orders/review', orderController.submitReview);
-// router.post('/fad', orderController.submitReview);
 
 
 
@@ -122,7 +132,6 @@ router.get('/checkout', userAuth, cartController.getCheckoutPage);
 
 //order management
 router.get('/orders', userAuth,orderController.getOrders);
-
 router.get("/order-details", userAuth, orderController.loadOrderDetails);
 router.post('/cancel-order',orderController.cancelOrder);
 router.get("/download-invoice", userAuth, orderController.generateInvoice);
@@ -130,9 +139,7 @@ router.post("/orders/return", userAuth, upload.array('images', 3), orderControll
 router.post("/orders/cancel-return", userAuth, orderController.cancelReturnRequest);
 router.post('/orders/review', userAuth,orderController.submitReview);
 
-// offer management
-
-
+// offer management createRazorpay
 
 router.post("/razorpay/create-order", orderController.createRazorpay)
 router.post("/create-subscription",orderController.Razorpaysubscription)

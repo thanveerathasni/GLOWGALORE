@@ -33,13 +33,15 @@
             background: linear-gradient(180deg, var(--sidebar-bg), var(--primary-bg));
             padding: 2rem 1rem;
             position: fixed;
-            top: 80px;
-            left: -280px;
+            top: 60px; 
+            left: -100%; 
             width: 280px;
+            max-width: 80vw;
             transition: left 0.3s ease-in-out;
             z-index: 1000;
             box-shadow: var(--shadow);
             border-right: 1px solid #e0e8ff;
+            overflow-y: auto;
         }
     
         .sidebar.active {
@@ -127,6 +129,8 @@
             min-height: 100vh;
             transition: margin-left 0.3s ease-in-out;
             margin-left: 0;
+            gap: 1.5rem; /* Adjusted for better spacing */
+
         }
         .btn {
             background: var(--accent-blue);
@@ -144,7 +148,7 @@
         }
 
         .profile-container {
-            padding: 2rem;
+            padding: 3rem;
             background: var(--secondary-bg);
             border-radius: 15px;
             margin: 2rem;
@@ -154,7 +158,7 @@
     
         .user-info-card {
             background: var(--primary-bg);
-            padding: 2rem;
+            padding: 3rem;
             border-radius: 12px;
             border: 1px dashed var(--accent-blue);
         }
@@ -344,33 +348,140 @@
             color: #ff4136 !important;
         }
     
-        /* Responsive Design */
-        @media (min-width: 768px) {
+        @media (max-width: 767px) {
+            .top-navbar {
+                padding: 0.5rem 0.75rem; /* Reduced padding for mobile */
+            }
+
+            .top-navbar .main-menu {
+                gap: 0.5rem; /* Reduced gap to fit items horizontally */
+                /* Removed flex-direction: column to keep navbar horizontal */
+            }
+
+            .top-navbar .main-menu a {
+                font-size: 0.85rem; /* Smaller font for mobile */
+                padding: 0.3rem 0.6rem; /* Reduced padding for compactness */
+            }
+
             .sidebar {
-                position: fixed;
-                left: 0;
+                width: 220px; /* Smaller sidebar for mobile */
+                top: 60px;
+                padding: 1rem 0.5rem;
             }
+
+            .sidebar.active + .sidebar-toggle {
+                left: 240px;
+            }
+
+            .sidebar a {
+                font-size: 0.85rem; /* Smaller font for sidebar links */
+                padding: 0.6rem 0.8rem;
+                gap: 0.5rem;
+            }
+
             .sidebar-toggle {
-                display: none;
+                width: 32px;
+                height: 32px;
+                top: 0.75rem;
+                left: 0.75rem;
             }
-            .overlay {
-                display: none;
-            }
+
             .main-content {
-                margin-left: 280px;
+                padding-top: 60px; /* Adjusted to clear compact navbar */
             }
-            .sidebar.active ~ .main-content {
-                margin-left: 280px; /* Keeps consistent on desktop */
+
+            .profile-container {
+                padding: 1rem; /* Reduced padding for mobile */
+                margin: 1rem;
+                border-radius: 8px;
+            }
+
+            .user-info-card {
+                padding: 1rem; /* Reduced padding for mobile */
+            }
+
+            .user-info-card h2 {
+                font-size: 1.5rem; /* Scaled down for mobile */
+                margin-bottom: 1rem;
+            }
+
+            .user-info-card p {
+                font-size: 0.9rem; /* Smaller font for mobile */
+            }
+
+            .profile-image-container img {
+                width: 100px; /* Smaller image for mobile */
+                height: 100px;
+            }
+
+            .btn {
+                padding: 0.5rem 1rem; /* Smaller buttons for mobile */
+                font-size: 0.85rem;
+            }
+
+            .swal2-title {
+                font-size: 1.25rem !important; /* Scaled down for mobile */
+            }
+
+            .swal2-content {
+                font-size: 0.9rem !important;
             }
         }
-    
-        @media (max-width: 767px) {
-            .profile-container {
-                padding: 1rem;
-                margin: 1rem;
+
+        @media (max-width: 576px) {
+            .top-navbar {
+                padding: 0.4rem 0.5rem; /* Smallest padding for very small screens */
             }
-            .main-content {
-                padding-top: 60px;
+
+            .top-navbar .main-menu a {
+                font-size: 0.8rem; /* Smallest font for navbar items */
+                padding: 0.2rem 0.4rem; /* Minimal padding to fit horizontally */
+            }
+
+            .sidebar {
+                width: 200px;
+            }
+
+            .sidebar.active + .sidebar-toggle {
+                left: 220px;
+            }
+
+            .profile-container {
+                padding: 0.75rem; /* Further reduced padding */
+                margin: 0.75rem;
+            }
+
+            .user-info-card {
+                padding: 0.75rem; /* Further reduced padding */
+            }
+
+            .user-info-card h2 {
+                font-size: 1.25rem; /* Smallest heading for mobile */
+            }
+
+            .user-info-card p {
+                font-size: 0.85rem; /* Smallest font for mobile */
+            }.py-4 {
+    padding-top: 4.5rem !important;
+    padding-bottom: 1.5rem !important;
+}
+
+            .profile-image-container img {
+                width: 80px; /* Smallest image size */
+                height: 80px;
+            }
+
+            .btn {
+                padding: 0.4rem 0.8rem; /* Smallest button size */
+                font-size: 0.8rem;
+            }
+
+            .swal2-title {
+                font-size: 1.1rem !important; /* Smallest for very small screens */
+            }
+
+            .swal2-content {
+                font-size: 0.85rem !important;
             }
         }
         :root {
@@ -435,10 +546,10 @@
             <main class="col-12 main-content px-md-4 py-4 col-12-b">
                 <div class="profile-container">
                     <!-- User Info -->
-                    <div class="user-info-card mb-4">
+                    <div class="user-info-card mb-6">
                         <h2>Welcome, <%= user.name %>!</h2>
                         <!-- New Profile Image Section -->
-                        <div class="profile-image-container text-center mb-3">
+                        <!-- <div class="profile-image-container text-center mb-3">
                             <img src="/images/1742360774027-banner-01.jpg" 
                             alt="Profile Picture" 
                             class="rounded-circle" 
@@ -449,11 +560,11 @@
                                 </label>
                                 <input type="file" id="profileImageUpload" class="d-none" accept="image/*">
                             </div>
-                        </div>
+                        </div> -->
                    
                         <p> Username: <%= user.name %></p>
                         <p><i class="fas fa-envelope me-2"></i>Email: <%= user.email %></p>
-                        <p></i>Password: ********** </p>
+                        <!-- <p></i>Password: ********** </p> -->
                         
                     </div>
 

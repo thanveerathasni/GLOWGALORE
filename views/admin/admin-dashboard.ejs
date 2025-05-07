@@ -1,255 +1,273 @@
+<%- include("../../views/partials/admin/header") %>
 
-        <%- include("../../views/partials/admin/header") %>
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+        .content-header {
+            margin-bottom: 1.5rem;
+        }
+        .content-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #343a40;
+        }
+        .card {
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        .card-header {
+            background: #ffffff;
+            border-bottom: 1px solid #e9ecef;
+            padding: 1rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #343a40;
+        }
+        .gradient-btn {
+            background-color: rgb(38, 101, 130);
+            border: none;
+            color: #ffffff;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        .gradient-btn:hover {
+            background-color: rgb(14, 68, 139);
+        }
+        .table th {
+            font-weight: 700;
+            color: #343a40;
+        }
+        .table td {
+            color: #495057;
+        }
+        .filter-select {
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            padding: 0.375rem 0.75rem;
+            color: #495057;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid px-4">
+        <!-- Content Header -->
+        <div class="content-header">
+            <h2 class="content-title card-title">Admin Dashboard</h2>
+        </div>
 
-        <head>
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css">
-            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-            <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
-            <style>
-                body {
-                    background-color: #f8f9fa;
-                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-                }
-                .content-header {
-                    margin-bottom: 1.5rem;
-                }
-                .content-title {
-                    font-size: 1.75rem;
-                    font-weight: 700;
-                    color: #343a40;
-                }
-                .card {
-                    border: none;
-                    border-radius: 8px;
-                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-                    margin-bottom: 2rem;
-                }
-                .card-header {
-                    background: #ffffff;
-                    border-bottom: 1px solid #e9ecef;
-                    padding: 1rem;
-                    font-size: 1.25rem;
-                    font-weight: 600;
-                    color: #343a40;
-                }
-                .gradient-btn {
-background-color: rgb(38, 101, 130);
-                    border: none;
-                    color: #ffffff;
-                    padding: 0.5rem 1rem;
-                    border-radius: 50px;
-                    font-weight: 600;
-                    transition: background 0.3s ease;
-                }
-                .gradient-btn:hover {
-background-color: rgb(14, 68, 139);                }
-                .table th {
-                    font-weight: 700;
-                    color: #343a40;
-                }
-                .table td {
-                    color: #495057;
-                }
-                .filter-select {
-                    border: 1px solid #ced4da;
-                    border-radius: 4px;
-                    padding: 0.375rem 0.75rem;
-                    color: #495057;
-                }
-            </style>
-        </head>
-        <body>
-            <div class="container-fluid px-4">
-                <!-- Content Header -->
-                <div class="content-header">
-                    <h2 class="content-title card-title">Admin Dashboard</h2>
+        <!-- Sales Chart -->
+        <div class="card">
+            <div class="card-header">Sales Overview</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="timeFilter" class="mr-2 font-weight-bold">Filter by:</label>
+                    <select id="timeFilter" class="filter-select">
+                        <option value="monthly">Monthly</option>
+                        <option value="quarterly">Quarterly</option>
+                        <option value="yearly">Yearly</option>
+                    </select>
                 </div>
-        
-                <!-- Sales Chart -->
-                <div class="card">
-                    <div class="card-header">Sales Overview</div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label for="timeFilter" class="mr-2 font-weight-bold">Filter by:</label>
-                            <select id="timeFilter" class="filter-select">
-                                <option value="monthly">Monthly</option>
-                                <option value="quarterly">Quarterly</option>
-                                <option value="yearly">Yearly</option>
-                            </select>
-                        </div>
-                        <canvas id="salesChart" height="100"></canvas>
-                    </div>
-                </div>
-        
-                <!-- Top 10 Products -->
-                <div class="card">
-                    <div class="card-header">Top 10 Best Selling Products</div>
-                    <div class="card-body">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Product Name</th>
-                                    <th>Sales (₹)</th>
-                                    <th>Quantity Sold</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% topProducts.forEach(product => { %>
-                                    <tr>
-                                        <td><%= product.name %></td>
-                                        <td>₹<%= product.sales.toLocaleString() %></td>
-                                        <td><%= product.quantity %></td>
-                                    </tr>
-                                <% }) %>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-        
-                <!-- Top 10 Categories -->
-                <div class="card">
-                    <div class="card-header">Top 10 Best Selling Categories</div>
-                    <div class="card-body">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Category</th>
-                                    <th>Sales (₹)</th>
-                                    <th>Quantity Sold</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% topCategories.forEach(category => { %>
-                                    <tr>
-                                        <td><%= category.name %></td>
-                                        <td>₹<%= category.sales.toLocaleString() %></td>
-                                        <td><%= category.quantity %></td>
-                                    </tr>
-                                <% }) %>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-        
-                <!-- Top 10 Brands -->
-                <div class="card">
-                    <div class="card-header">Top 10 Best Selling Brands</div>
-                    <div class="card-body">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Brand</th>
-                                    <th>Sales (₹)</th>
-                                    <th>Quantity Sold</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% topBrands.forEach(brand => { %>
-                                    <tr>
-                                        <td><%= brand.name %></td>
-                                        <td>₹<%= brand.sales.toLocaleString() %></td>
-                                        <td><%= brand.quantity %></td>
-                                    </tr>
-                                <% }) %>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-        
-                <!-- Ledger Book -->
-                <div class="card">
-                    <div class="card-header">Ledger Book</div>
-                    <div class="card-body">
-                        <p class="text-muted mb-3">Download a CSV file containing transaction details.</p>
-                        <button id="downloadLedger" class="gradient-btn">Download Ledger</button>
-                    </div>
-                </div>
+                <canvas id="salesChart" height="100"></canvas>
             </div>
-        
-            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-            <script>
-                // Prepare sales data for Chart.js
-                const salesData = {
-                    monthly: {
-                        labels: <%- JSON.stringify(salesData.monthly.map(item => item._id)) %>,
-                        data: <%- JSON.stringify(salesData.monthly.map(item => item.revenue)) %>
-                    },
-                    quarterly: {
-                        labels: <%- JSON.stringify(salesData.quarterly.map(item => item._id)) %>,
-                        data: <%- JSON.stringify(salesData.quarterly.map(item => item.revenue)) %>
-                    },
-                    yearly: {
-                        labels: <%- JSON.stringify(salesData.yearly.map(item => item._id)) %>,
-                        data: <%- JSON.stringify(salesData.yearly.map(item => item.revenue)) %>
-                    }
-                };
-        
-                // Chart.js setup
-                const ctx = document.getElementById('salesChart').getContext('2d');
-                const salesChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: salesData.monthly.labels,
-                        datasets: [{
-                            label: 'Revenue (₹)',
-                            data: salesData.monthly.data,
-                            backgroundColor: 'rgba(107, 184, 255, 0.5)',
-                            borderColor: '#6bb8ff',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: {
-                                    callback: function(value) {
-                                        return '₹' + value.toLocaleString();
-                                    }
-                                }
+        </div>
+
+        <!-- Top 10 Products -->
+        <div class="card">
+            <div class="card-header">Top 10 Best Selling Products</div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Sales (₹)</th>
+                            <th>Quantity Sold</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% topProducts.forEach(product => { %>
+                            <tr>
+                                <td><%= product.name %></td>
+                                <td>₹<%= product.sales.toLocaleString() %></td>
+                                <td><%= product.quantity %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Top 10 Categories -->
+        <div class="card">
+            <div class="card-header">Top 10 Best Selling Categories</div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Sales (₹)</th>
+                            <th>Quantity Sold</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% topCategories.forEach(category => { %>
+                            <tr>
+                                <td><%= category.name %></td>
+                                <td>₹<%= category.sales.toLocaleString() %></td>
+                                <td><%= category.quantity %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Top 10 Brands -->
+        <div class="card">
+            <div class="card-header">Top 10 Best Selling Brands</div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Brand</th>
+                            <th>Sales (₹)</th>
+                            <th>Quantity Sold</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% topBrands.forEach(brand => { %>
+                            <tr>
+                                <td><%= brand.name %></td>
+                                <td>₹<%= brand.sales.toLocaleString() %></td>
+                                <td><%= brand.quantity %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Ledger Book -->
+        <div class="card">
+            <div class="card-header">Ledger Book</div>
+            <div class="card-body">
+                <p class="text-muted mb-3">Download a CSV file containing transaction details.</p>
+                <button id="downloadLedger" class="gradient-btn">Download Ledger</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        // Fix hamburger menu toggle
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.querySelector('.sidebar');
+            const toggle = document.querySelector('.sidebar-toggle');
+            const overlay = document.querySelector('.overlay');
+
+            if (toggle && sidebar && overlay) {
+                toggle.addEventListener('click', () => {
+                    sidebar.classList.toggle('active');
+                    overlay.classList.toggle('active');
+                });
+
+                overlay.addEventListener('click', () => {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                });
+            }
+        });
+
+        // Prepare sales data for Chart.js
+        const salesData = {
+            monthly: {
+                labels: <%- JSON.stringify(salesData.monthly.map(item => item._id)) %>,
+                data: <%- JSON.stringify(salesData.monthly.map(item => item.revenue)) %>
+            },
+            quarterly: {
+                labels: <%- JSON.stringify(salesData.quarterly.map(item => item._id)) %>,
+                data: <%- JSON.stringify(salesData.quarterly.map(item => item.revenue)) %>
+            },
+            yearly: {
+                labels: <%- JSON.stringify(salesData.yearly.map(item => item._id)) %>,
+                data: <%- JSON.stringify(salesData.yearly.map(item => item.revenue)) %>
+            }
+        };
+
+        // Chart.js setup
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        const salesChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: salesData.monthly.labels,
+                datasets: [{
+                    label: 'Revenue (₹)',
+                    data: salesData.monthly.data,
+                    backgroundColor: 'rgba(107, 184, 255, 0.5)',
+                    borderColor: '#6bb8ff',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '₹' + value.toLocaleString();
                             }
                         }
                     }
-                });
-        
-                // Filter change handler
-                document.getElementById('timeFilter').addEventListener('change', (e) => {
-                    const filter = e.target.value;
-                    salesChart.data.labels = salesData[filter].labels;
-                    salesChart.data.datasets[0].data = salesData[filter].data;
-                    salesChart.update();
-                });
-        
-                // Ledger book download
-                document.getElementById('downloadLedger').addEventListener('click', () => {
-                    $.ajax({
-                        url: '/admin/getLedgerData',
-                        method: 'GET',
-                        success: (response) => {
-                            if (response.status) {
-                                const ledgerData = response.data;
-                                const csvContent = 'data:text/csv;charset=utf-8,' + 
-                                    ['Date,Product,Category,Brand,Amount', 
-                                     ...ledgerData.map(row => `${row.date},${row.product},${row.category},${row.brand},${row.amount}`)]
-                                    .join('\n');
-                                const encodedUri = encodeURI(csvContent);
-                                const link = document.createElement('a');
-                                link.setAttribute('href', encodedUri);
-                                link.setAttribute('download', 'ledger_book.csv');
-                                document.body.appendChild(link);
-                                link.click();
-                                document.body.removeChild(link);
-                                Swal.fire('Success', 'Ledger downloaded successfully', 'success');
-                            } else {
-                                Swal.fire('Error', 'Failed to fetch ledger data', 'error');
-                            }
-                        },
-                        error: () => {
-                            Swal.fire('Error', 'Internal server error', 'error');
-                        }
-                    });
-                });
-            </script>
-        </body>
-   
+                }
+            }
+        });
+
+        // Filter change handler
+        document.getElementById('timeFilter').addEventListener('change', (e) => {
+            const filter = e.target.value;
+            salesChart.data.labels = salesData[filter].labels;
+            salesChart.data.datasets[0].data = salesData[filter].data;
+            salesChart.update();
+        });
+
+        // Ledger book download
+        document.getElementById('downloadLedger').addEventListener('click', () => {
+            $.ajax({
+                url: '/admin/getLedgerData',
+                method: 'GET',
+                success: (response) => {
+                    if (response.status) {
+                        const ledgerData = response.data;
+                        const csvContent = 'data:text/csv;charset=utf-8,' + 
+                            ['Date,Product,Category,Brand,Amount', 
+                             ...ledgerData.map(row => `${row.date},${row.product},${row.category},${row.brand},${row.amount}`)]
+                            .join('\n');
+                        const encodedUri = encodeURI(csvContent);
+                        const link = document.createElement('a');
+                        link.setAttribute('href', encodedUri);
+                        link.setAttribute('download', 'ledger_book.csv');
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        Swal.fire('Success', 'Ledger downloaded successfully', 'success');
+                    } else {
+                        Swal.fire('Error', 'Failed to fetch ledger data', 'error');
+                    }
+                },
+                error: () => {
+                    Swal.fire('Error', 'Internal server error', 'error');
+                }
+            });
+        });
+    </script>
+</body>

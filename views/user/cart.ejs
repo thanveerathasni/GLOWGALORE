@@ -9,14 +9,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 <style>
         :root {
-            --primary-bg: #ffffff; /* Matches homepage white background */
-            --secondary-bg: #f8f9fa; /* Light gray like homepage */
-            --accent-blue: #4d8ed3; /* Matches SHOP NOW button */
-            --text-primary: #333333; /* Dark text like cl2 */
-            --text-secondary: #666666; /* Lighter gray for secondary text */
-            --navbar-bg: #4d8ed3; /* Dark navbar like homepage */
-            --sidebar-bg: #f8f8f8; /* Light sidebar background */
-            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            --primary-bg: #ffffff; 
+            --secondary-bg: #f8f9fa; 
+            --accent-blue: #4d8ed3; 
+            --text-primary: #333333; 
+            --text-secondary: #666666; 
+            --navbar-bg: #4d8ed3; 
+            --sidebar-bg: #f8f8f8; 
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         body {
@@ -36,14 +36,14 @@
             top: 0;
             left: 0;
             width: 100%;
-            z-index: 1100; /* Above sidebar */
+            z-index: 1100; 
             box-shadow: var(--shadow);
             display: flex;
-            justify-content: center; /* Center align links */
+            justify-content: center;
             align-items: center;
         }
-            /*  */
-            body, ul, li {
+
+        body, ul, li {
             margin: 0;
             padding: 0;
             list-style: none;
@@ -51,9 +51,9 @@
 
         /* Main Navbar Styles */
         .top-navbar {
-            background-color: #2c3e50; /* Dark background for contrast */
+            background-color: #2c3e50; 
             padding: 15px 0;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
         }
 
         .menu-desktop {
@@ -70,27 +70,27 @@
 
         /* Styling the Links */
         .main-menu li a {
-            color: #ecf0f1; /* Light text color for contrast */
+            color: #ecf0f1; 
             text-decoration: none;
             font-size: 16px;
             font-weight: 500;
-            transition: all 0.3s ease; /* Smooth transition for hover effect */
-            text-transform: uppercase; /* Making the text uppercase for a modern look */
+            transition: all 0.3s ease; 
+            text-transform: uppercase; 
             padding: 8px 15px;
         }
 
         /* Hover Effect */
         .main-menu li a:hover {
-            background-color: #e74c3c; /* Red background on hover */
-            color: #fff; /* White text when hovering */
-            border-radius: 5px; /* Smooth rounded corners */
-            transform: scale(1.05); /* Slightly enlarge the item on hover */
+            background-color: #e74c3c; 
+            color: #fff; 
+            border-radius: 5px; 
+            transform: scale(1.05);
         }
 
         /* Media Query for Mobile */
         @media (max-width: 768px) {
             .main-menu {
-                flex-direction: column; /* Stack the menu items vertically on smaller screens */
+                flex-direction: column;
                 gap: 15px;
             }
 
@@ -98,7 +98,6 @@
                 font-size: 18px;
             }
         }
-        /*  */
 
         .top-navbar .menu-desktop {
             margin: 0;
@@ -110,7 +109,7 @@
 
         .top-navbar .main-menu {
             display: flex;
-            gap: 2rem; /* Better spacing between links */
+            gap: 2rem; 
         }
 
         .top-navbar .main-menu li {
@@ -122,13 +121,13 @@
             text-decoration: none;
             font-size: 1.1rem;
             font-weight: 600;
-            text-transform: uppercase; /* Matches homepage */
+            text-transform: uppercase; 
             padding: 0.5rem 1rem;
             transition: color 0.3s ease;
         }
 
         .top-navbar .main-menu a:hover {
-            color: var(--accent-blue); /* Blue hover like homepage */
+            color: var(--accent-blue); 
         }
 
         /* Sidebar */
@@ -137,13 +136,15 @@
             background: linear-gradient(180deg, var(--sidebar-bg), var(--primary-bg));
             padding: 2rem 1rem;
             position: fixed;
-            top: 80px; /* Adjust sidebar to fit under navbar */
-            left: -280px;
+            top: 60px; 
+            left: -100%; 
             width: 280px;
+            max-width: 80vw;
             transition: left 0.3s ease-in-out;
             z-index: 1000;
             box-shadow: var(--shadow);
             border-right: 1px solid #e0e8ff;
+            overflow-y: auto;
         }
 
         .sidebar.active {
@@ -155,7 +156,7 @@
             font-size: 1.8rem;
             font-weight: 600;
             text-align: center;
-            text-transform: uppercase; /* Matches homepage headings */
+            text-transform: uppercase; 
         }
 
         .sidebar a {
@@ -170,12 +171,12 @@
             gap: 1rem;
             font-size: 1.1rem;
             font-weight: 400;
-            text-transform: uppercase; /* Matches homepage nav links */
+            text-transform: uppercase; 
         }
 
         .sidebar a:hover,
         .sidebar .active {
-            background: rgba(0, 123, 255, 0.1); /* Light blue hover like homepage */
+            background: rgba(0, 123, 255, 0.1); 
             color: var(--accent-blue);
             transform: translateX(5px);
         }
@@ -200,11 +201,11 @@
         }
 
         .sidebar.active + .sidebar-toggle {
-            left: 300px; /* Moves button to right of sidebar when open */
+            left: 300px;
         }
 
         .sidebar-toggle:hover {
-            background: #0056b3; /* Darker blue like homepage button hover */
+            background: #0056b3;
             transform: rotate(90deg);
         }
 
@@ -233,7 +234,7 @@
             min-height: 100vh;
             transition: margin-left 0.3s ease-in-out;
             margin-left: 0;
-            padding-top: 120px; /* Space for top navbar */
+            padding-top: 120px; 
         }
 
         .profile-container {
@@ -241,7 +242,7 @@
             background: var(--secondary-bg);
             border-radius: 15px;
             margin: 2rem;
-            border: 1px solid #dee2e6; /* Subtle border like homepage */
+            border: 1px solid #dee2e6; 
             box-shadow: var(--shadow);
         }
 
@@ -262,7 +263,7 @@
             font-size: 2rem;
             font-weight: 600;
             margin-bottom: 1.5rem;
-            text-transform: uppercase; /* Matches homepage headings */
+            text-transform: uppercase; 
         }
 
         .user-info-card p {
@@ -282,7 +283,7 @@
         }
 
         .stats-card:hover {
-            transform: scale(1.03); /* Matches homepage hover effects */
+            transform: scale(1.03);
         }
 
         .stats-card h5 {
@@ -290,7 +291,7 @@
             font-size: 2rem;
             margin-bottom: 0.5rem;
             font-weight: 600;
-            text-transform: uppercase; /* Matches homepage */
+            text-transform: uppercase;
         }
 
         .stats-card p {
@@ -342,7 +343,7 @@
         }
 
         .btn:hover {
-            background: #0056b3; /* Darker blue like homepage button hover */
+            background: #0056b3; 
             color: #ffffff;
         }
 
@@ -362,7 +363,7 @@
                 margin-left: 280px;
             }
             .sidebar.active ~ .main-content {
-                margin-left: 280px; /* Keeps consistent on desktop */
+                margin-left: 280px; 
             }
         }
 
@@ -372,12 +373,140 @@
                 margin: 1rem;
             }
             .main-content {
-                padding-top: 80px; /* Adjusted for top navbar */
+                padding-top: 80px; 
             }
             .top-navbar .main-menu {
                 flex-direction: column;
                 align-items: center;
                 gap: 1rem;
+            }
+            /* Stack cart item columns for mobile */
+            .cart-items-container .card .row {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .cart-items-container .card .col-md-2,
+            .cart-items-container .card .col-md-4,
+            .cart-items-container .card .col-md-3 {
+                width: 100%;
+                margin-bottom: 1rem;
+            }
+            .cart-items-container .card img {
+                max-height: 80px;
+            }
+            .cart-items-container .card-body {
+                padding: 0.5rem;
+            }
+            .cart-items-container .card-title {
+                font-size: 1.1rem;
+            }
+            .cart-items-container .card-text {
+                font-size: 0.85rem;
+            }
+            .cart-items-container .input-group {
+                width: 60%;
+                margin: 0 auto;
+            }
+            .cart-items-container .input-group .form-control {
+                font-size: 0.9rem;
+            }
+            .cart-items-container .text-danger {
+                font-size: 0.8rem;
+            }
+            /* Adjust cart summary card */
+            .card-body.p-4 {
+                padding: 1.5rem;
+            }
+            .card[style*="position: sticky"] {
+                position: static;
+                width: 100%;
+            }
+            .card h4 {
+                font-size: 1.3rem;
+            }
+            .card .d-flex span {
+                font-size: 0.9rem;
+            }
+            .card .d-flex h5 {
+                font-size: 1.2rem;
+            }
+            /* Refine sidebar */
+            .sidebar {
+                width: 250px;
+                padding: 1.5rem 0.8rem;
+            }
+            .sidebar a {
+                font-size: 1rem;
+                padding: 0.8rem;
+            }
+            .sidebar.active + .sidebar-toggle {
+                left: 260px;
+            }
+            /* Adjust top navbar */
+            .top-navbar {
+                padding: 0.8rem 0;
+            }
+            .main-menu li a {
+                font-size: 0.95rem;
+                padding: 0.5rem 1rem;
+            }
+            /* Reduce main content padding */
+            .main-content {
+                padding-top: 70px;
+            }
+            .profile-container h3 {
+                font-size: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+            /* Empty cart message */
+            .text-center.py-5 {
+                padding: 2rem 0;
+            }
+            .text-center .lead {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            /* Further refine for smaller screens */
+            .sidebar {
+                width: 220px;
+            }
+            .sidebar a {
+                font-size: 0.9rem;
+                padding: 0.6rem;
+            }
+            .sidebar.active + .sidebar-toggle {
+                left: 230px;
+            }
+            .profile-container {
+                padding: 0.8rem;
+                margin: 0.5rem;
+            }
+            .cart-items-container .card img {
+                max-height: 60px;
+            }
+            .cart-items-container .card-title {
+                font-size: 1rem;
+            }
+            .cart-items-container .input-group {
+                width: 70%;
+            }
+            .cart-items-container .input-group .form-control {
+                font-size: 0.85rem;
+            }
+            .card-body.p-4 {
+                padding: 1rem;
+            }
+            .card h4 {
+                font-size: 1.2rem;
+            }
+            .main-menu li a {
+                font-size: 0.9rem;
+            }
+            .profile-container h3 {
+                font-size: 1.3rem;
             }
         }
 
@@ -423,7 +552,7 @@
         .card-title a:hover {
             color: var(--accent-blue);
         }
-       </style>
+</style>
 </head>
 <body>
     <!-- Top Navigation Bar -->
@@ -667,7 +796,7 @@
             }
 
             if (newGrandTotal === 0) {
-                location.reload(); // Reload to show empty cart message
+                location.reload(); 
             }
         }
 
@@ -683,7 +812,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: `/deleteProduct?id=${productId}`, // Changed from /deleteItem to match controller
+                        url: `/deleteProduct?id=${productId}`, 
                         method: 'GET',
                         success: (response) => {
                             if (response.status) {
@@ -694,7 +823,7 @@
                                 updateCartSummary(response.grandTotal);
                                 
                                 if (!document.querySelector('.cart-items-container .card')) {
-                                    const container = document.querySelector('.cart-items-container c');
+                                    const container = document.querySelector('.cart-items-container');
                                     container.innerHTML = `
                                         <div class="text-center py-5">
                                             <i class="fas fa-shopping-cart fa-3x" style="color: var(--accent-blue); opacity: 0.3;"></i>

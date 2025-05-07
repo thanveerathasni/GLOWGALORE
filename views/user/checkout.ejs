@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <style>
         :root {
             --primary-bg: #ffffff;
@@ -75,13 +75,15 @@
             background: linear-gradient(180deg, var(--sidebar-bg), var(--primary-bg));
             padding: 2rem 1rem;
             position: fixed;
-            top: 80px;
-            left: -280px;
+            top: 60px; 
+            left: -100%; 
             width: 280px;
+            max-width: 80vw;
             transition: left 0.3s ease-in-out;
             z-index: 1000;
             box-shadow: var(--shadow);
             border-right: 1px solid #e0e8ff;
+            overflow-y: auto;
         }
 
         .sidebar.active {
@@ -136,18 +138,17 @@
             background: #0056b3;
             transform: rotate(90deg);
         }
-    /*  */
-    body, ul, li {
+
+        body, ul, li {
             margin: 0;
             padding: 0;
             list-style: none;
         }
 
-        /* Main Navbar Styles */
         .top-navbar {
-            background-color: #2c3e50; /* Dark background for contrast */
+            background-color: #2c3e50;
             padding: 15px 0;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         .menu-desktop {
@@ -162,29 +163,26 @@
             font-family: 'Arial', sans-serif;
         }
 
-        /* Styling the Links */
         .main-menu li a {
-            color: #ecf0f1; /* Light text color for contrast */
+            color: #ecf0f1;
             text-decoration: none;
             font-size: 16px;
             font-weight: 500;
-            transition: all 0.3s ease; /* Smooth transition for hover effect */
-            text-transform: uppercase; /* Making the text uppercase for a modern look */
+            transition: all 0.3s ease;
+            text-transform: uppercase;
             padding: 8px 15px;
         }
 
-        /* Hover Effect */
         .main-menu li a:hover {
-            background-color: #e74c3c; /* Red background on hover */
-            color: #fff; /* White text when hovering */
-            border-radius: 5px; /* Smooth rounded corners */
-            transform: scale(1.05); /* Slightly enlarge the item on hover */
+            background-color: #e74c3c;
+            color: #fff;
+            border-radius: 5px;
+            transform: scale(1.05);
         }
 
-        /* Media Query for Mobile */
         @media (max-width: 768px) {
             .main-menu {
-                flex-direction: column; /* Stack the menu items vertically on smaller screens */
+                flex-direction: column;
                 gap: 15px;
             }
 
@@ -192,7 +190,7 @@
                 font-size: 18px;
             }
         }
-        /*  */
+
         .overlay {
             position: fixed;
             top: 0;
@@ -222,8 +220,8 @@
         .checkout-container {
             padding: 3rem;
             margin-top: 7cap;
-            margin-left: -7cap;
-            margin-right: 18cap;
+            margin-left: 0cap;
+            margin-right: 0cap;
             background: var(--secondary-bg);
             border-radius: 15px;
             border: 1px solid #dee2e6;
@@ -274,7 +272,6 @@
             color: var(--text-secondary) !important;
         }
 
-        /* Summary Card Specific Fixes */
         .summary-card {
             position: sticky;
             top: 120px;
@@ -302,7 +299,69 @@
         .summary-card span:last-child {
             flex-shrink: 0;
         }
+        @media (min-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: 0;
+                width: 250px;
+                top: 70px;
+            }
 
+            .sidebar-toggle {
+                display: none;
+            }
+
+            .overlay {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 250px;
+            }
+
+            .sidebar.active ~ .main-content {
+                margin-left: 250px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .top-navbar .main-menu a {
+                font-size: 0.8rem;
+            }
+
+            .sidebar {
+                width: 200px;
+            }
+
+            .sidebar.active + .sidebar-toggle {
+                left: 220px;
+            }
+
+            .checkout-container {
+                padding: 0.75rem;
+            }
+
+            .card-body {
+                padding: 0.75rem !important;
+            }
+
+            .btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+
+            .form-check-label {
+                font-size: 0.8rem;
+            }
+
+            h4 {
+                font-size: 1rem !important;
+            }
+
+            h3 {
+                font-size: 1.1rem !important;
+            }
+        }
         @media (min-width: 768px) {
             .sidebar {
                 position: fixed;
@@ -375,9 +434,9 @@
             </nav>
 
             <!-- Main Content -->
-            <main class="col-12 main-content px-md-4 py-4">
-                <div class="container">
-                    <div class="checkout-container">
+            <main class="col-12 main-content ">
+                <!-- <div class="container "> -->
+                    <div class="checkout-container col-lg-10 ">
                         <h3 class="mt-3 text-center text-md-start" style="color: var(--accent-blue); margin-bottom: 40px; text-transform: uppercase;">Checkout</h3>
                         
                         <div class="row g-4">
@@ -418,6 +477,8 @@
                                                 <div class="form-check mb-3">
                                                     <input class="form-check-input" type="radio" name="paymentMethod" id="cod" value="cod" checked>
                                                     <label class="form-check-label" for="cod">
+                                                
+
                                                         Cash on Delivery
                                                     </label>
                                                 </div>
@@ -430,9 +491,10 @@
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="radio" name="paymentMethod" id="wallet" value="wallet">
                                                     <label class="form-check-label" for="wallet">
-                                                        Wallet
+                                                      Wallet (Balance: ₹ <%= walletBalance.toFixed(2) %>)
                                                     </label>
-                                                </div>
+                                                  </div>
+                                                 
                                             </div>
                                         </form>
                                     </div>
@@ -497,7 +559,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                <!-- </div> -->
             </main>
         </div>
     </div>
@@ -536,7 +598,6 @@
                         document.getElementById('totalAmount').textContent = `₹ ${(response.breakdown.total + 50).toFixed(2)}`;
                         document.getElementById('couponError').textContent = '';
                         document.getElementById('couponCode').value = response.breakdown.couponCode;
-                        // Show remove button
                         if (!document.getElementById('removeCouponBtn')) {
                             const removeBtn = document.createElement('button');
                             removeBtn.className = 'btn';
@@ -599,7 +660,6 @@
             }
         }
 
-        // Attach remove coupon listener if button exists on page load
         attachRemoveCouponListener();
 
         // Confirm Logout
@@ -655,7 +715,7 @@
                 }
 
                 const options = {
-                    key: '<%= process.env.RAZORPAY_KEY_ID %>',
+                    key: 'rzp_test_TvZQJb8vKDsWxJ',
                     amount: data.order.amount,
                     currency: 'INR',
                     name: 'Glow Galore',
@@ -707,68 +767,119 @@
             });
         }
 
-        // Form submission handling with AJAX
-      // In the form submission handler
-document.getElementById('checkoutForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
+        // Form submission handling
+        document.getElementById('checkoutForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
 
-    // Validate form
-    const selectedAddress = this.querySelector('input[name="selectedAddress"]:checked');
-    const paymentMethod = this.querySelector('input[name="paymentMethod"]:checked');
-    const grandTotal = parseFloat(this.querySelector('input[name="grandTotal"]').value);
-    const totalWithDiscount = parseFloat(document.getElementById('totalAmount').textContent.replace('₹', '').trim());
+            // Validate form
+            const selectedAddress = this.querySelector('input[name="selectedAddress"]:checked');
+            const paymentMethod = this.querySelector('input[name="paymentMethod"]:checked');
+            const grandTotal = parseFloat(this.querySelector('input[name="grandTotal"]').value);
+            const totalWithDiscount = parseFloat(document.getElementById('totalAmount').textContent.replace('₹', '').trim());
 
-    if (!selectedAddress) {
-        Swal.fire('Error', 'Please select a shipping address', 'error');
-        return;
-    }
-    if (!paymentMethod) {
-        Swal.fire('Error', 'Please select a payment method', 'error');
-        return;
-    }
-    if (isNaN(grandTotal)) {
-        Swal.fire('Error', 'Invalid order total', 'error');
-        return;
-    }
+            if (!selectedAddress) {
+                Swal.fire('Error', 'Please select a shipping address', 'error');
+                return;
+            }
+            if (!paymentMethod) {
+                Swal.fire('Error', 'Please select a payment method', 'error');
+                return;
+            }
+            if (isNaN(grandTotal)) {
+                Swal.fire('Error', 'Invalid order total', 'error');
+                return;
+            }
 
-    const orderData = {
-        selectedAddress: selectedAddress.value,
-        paymentMethod: paymentMethod.value,
-        grandTotal: grandTotal,
-        totalAmountInput: totalWithDiscount // This now includes shipping and discounts
-    };
+            const orderData = {
+                selectedAddress: selectedAddress.value,
+                paymentMethod: paymentMethod.value,
+                grandTotal: grandTotal,
+                totalAmountInput: totalWithDiscount
+            };
 
-    console.log('Form data being sent:', orderData);
+            console.log('Form data being sent:', orderData);
 
-    // Rest of your payment handling code...
-
+            // Validate wallet payment
+            if (orderData.paymentMethod === 'wallet') {
+                const walletCheck = await checkWalletBalance(totalWithDiscount);
+                if (!walletCheck.success) {
+                    Swal.fire('Error', walletCheck.message, 'error');
+                    return;
+                }
+            }
 
             // Handle payment method
             if (orderData.paymentMethod === 'razorpay') {
                 handleRazorpayPayment(orderData);
-            } else if (orderData.paymentMethod === 'wallet') {
-                const walletCheck = await checkWalletBalance(totalAmount);
-                if (walletCheck.success) {
-                    finalizeOrder(orderData);
-                } else {
-                    Swal.fire('Error', walletCheck.message, 'error');
-                }
             } else {
                 finalizeOrder(orderData);
             }
         });
 
-       
+        // Restrict COD for high-value orders
         const grandTotal = parseFloat(document.querySelector('input[name="grandTotal"]').value);
         const codOption = document.getElementById('cod');
         const codLabel = document.querySelector('label[for="cod"]');
-
-        // Restrict COD if grandTotal exceeds Rs 1000
         if (grandTotal > 1000) {
-            codOption.disabled = true; // Disable COD radio button
-            codLabel.textContent += " (Unavailable for orders above Rs 1000)"; // Add a note
+            codOption.disabled = true;
+            codLabel.textContent += " (Unavailable for orders above ₹1000)";
         }
-   
+
+       
+// Disable wallet option if balance is insufficient
+const walletOption = document.getElementById("wallet");
+const walletLabel = document.querySelector("label[for='wallet']");
+const totalWithDiscount = parseFloat(document.getElementById("totalAmount").textContent.replace("₹", "").trim());
+const walletBalance = <%= walletBalance %>;
+if (walletBalance < totalWithDiscount) {
+  walletOption.disabled = true;
+  walletLabel.textContent += " (Insufficient balance)";
+}
+
+// Remove wallet balance check via API since it's already in user data
+document.getElementById("checkoutForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const selectedAddress = this.querySelector("input[name='selectedAddress']:checked");
+  const paymentMethod = this.querySelector("input[name='paymentMethod']:checked");
+  const grandTotal = parseFloat(this.querySelector("input[name='grandTotal']").value);
+  const totalWithDiscount = parseFloat(document.getElementById("totalAmount").textContent.replace("₹", "").trim());
+
+  if (!selectedAddress) {
+    Swal.fire("Error", "Please select a shipping address", "error");
+    return;
+  }
+  if (!paymentMethod) {
+    Swal.fire("Error", "Please select a payment method", "error");
+    return;
+  }
+  if (isNaN(grandTotal)) {
+    Swal.fire("Error", "Invalid order total", "error");
+    return;
+  }
+
+  const orderData = {
+    selectedAddress: selectedAddress.value,
+    paymentMethod: paymentMethod.value,
+    grandTotal: grandTotal,
+    totalAmountInput: totalWithDiscount
+  };
+
+  console.log("Form data being sent:", orderData);
+
+  // Validate wallet payment
+  if (orderData.paymentMethod === "wallet" && walletBalance < totalWithDiscount) {
+    Swal.fire("Error", "Insufficient wallet balance", "error");
+    return;
+  }
+
+  // Handle payment method
+  if (orderData.paymentMethod === "razorpay") {
+    handleRazorpayPayment(orderData);
+  } else {
+    finalizeOrder(orderData);
+  }
+});
     </script>
 </body>
 </html>

@@ -15,9 +15,9 @@ const getMyCouponsPage = async (req, res) => {
             expireOn: { $gte: new Date() }
         }).lean();
 
-        // Add usage status (example logic; adjust based on your implementation)
+        // Add usage status
         const user = await User.findById(userId).lean();
-        const usedCoupons = user.usedCoupons || []; // Assuming userSchema has a usedCoupons array
+        const usedCoupons = user.usedCoupons || []; 
         coupons.forEach(coupon => {
             const isUsed = usedCoupons.includes(coupon._id.toString());
             coupon.isUsed = isUsed;

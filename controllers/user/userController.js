@@ -7,7 +7,7 @@ const Category = require("../../models/categorySchema");
 const Product = require("../../models/productSchema");
 const Banner = require("../../models/bannerSchema");
 const Coupon = require("../../models/couponSchema");
-// const { generateReferralCode } = require("../utils"); // CHANGE: Import utility
+// const { generateReferralCode } = require("../utils"); 
 
 const pageNotFound = async (req, res) => {
     try {
@@ -91,7 +91,11 @@ const loadHomepage = async (req, res) => {
 
 const loadSignup = async (req, res) => {
     try {
-        // CHANGE: Pass referralCode from query if present
+
+        if (req.session.user) {
+            return res.redirect('/');
+        }
+        //  Pass referralCode from query if present
         const referralCode = req.query.referralCode || '';
         return res.render('signup', { message: null, referralCode });
     } catch (error) {
@@ -294,6 +298,9 @@ const resendOtp = async (req, res) => {
 
 const loadLogin = async (req, res) => {
     try {
+        if (req.session.user) {
+            return res.redirect('/'); // Already logged in? Go to home.
+        }
         if (!req.session.user) {
             return res.render("login", { message: null });
         } else {
@@ -307,7 +314,7 @@ const loadLogin = async (req, res) => {
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const findUser = await User.findOne({ email: email });
+        const findUser = await User.findOne({ isAdmin: false, email: email });
 
         if (!findUser) {
             return res.render("login", { message: "User not found" });
@@ -331,7 +338,7 @@ const login = async (req, res) => {
 
 const loadShopping = async (req, res) => {
     try {
-        
+
         const userId = req.session.user;
         const userData = userId ? await User.findById(userId) : null;
         const categories = await Category.find({ isListed: true });
@@ -389,12 +396,12 @@ const loadShopping = async (req, res) => {
         }
 
         const limit = 12;
-       
+
         const products = await Product.find(productQuery)
-        .populate('category')
-        .sort(sortOption)
-        .skip(parseInt(skip))
-        .limit(limit);
+            .populate('category')
+            .sort(sortOption)
+            .skip(parseInt(skip))
+            .limit(limit);
 
         // Calculate salePrice and maxOffer
         const productsWithOffers = products.map(product => {
@@ -432,7 +439,7 @@ const loadShopping = async (req, res) => {
             skip: parseInt(skip),
             hasMore,
             totalProducts,
-            
+
         });
     } catch (error) {
         console.error('Error loading shopping page with filters:', error);
@@ -441,7 +448,21 @@ const loadShopping = async (req, res) => {
 };
 
 
+const about = async (req, res) => {
+    try {
+        const user = req.session.user;
+        if(user){
+            const userData = await User.findById(user);
+        res.render("about",{
+            user:userData,
+        })
+        }
 
+    } catch (error) {
+        console.log("find an error in loading about page")
+        res.render("page-404")
+    }
+}
 
 module.exports = {
     loadHomepage,
@@ -454,6 +475,7 @@ module.exports = {
     loadLogin,
     login,
     logout,
+    about,
 };
 
 
