@@ -97,7 +97,7 @@ router.get("/editAddress",userAuth,profileController.editAddress)
 router.get("/deleteAddress",userAuth,profileController.deleteAddress)
 
 router.post("/addAddress",userAuth,profileController.postAddAddress)
-router.post("/editAddress/:addressId", userAuth, profileController.editAddressById);
+router.post("/editAddress/:addressId",upload.none(), userAuth, profileController.editAddressById);
 
 router.get("/wallet",userAuth,profileController.getwallet)
 

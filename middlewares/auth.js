@@ -90,6 +90,15 @@ const ajaxAuth = (req, res, next) => {
     }
     next(); 
   }
+
+
+  const adminloggedin = (req,res,next)=>{
+   if( req.session.admin ){
+    next();
+   }else{
+       res.redirect("admin/login")
+   }
+}
   
 
 module.exports={
@@ -97,5 +106,6 @@ module.exports={
     adminAuth,
     ajaxAuth,
     logged,
-    skipLoginIfLogged
+    skipLoginIfLogged,
+    adminloggedin
 }

@@ -170,7 +170,7 @@ const editCategory = async (req, res) => {
         const id = req.query.id;
         // Find the category by ID
         const category = await Category.findOne({ _id: id });
-        res.render("edit-category", { category: category });
+        res.render("edit-category", { category: category,error:"" });
     } catch (error) {
         res.redirect("/pageError");
     }

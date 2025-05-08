@@ -522,6 +522,7 @@ const editAddressById = async (req, res) => {
             return res.redirect("/pageNotFound"); 
         }
 
+
         // Update the address at the found index
         userAddress.address[addressIndex] = {
             ...userAddress.address[addressIndex], 
@@ -538,7 +539,7 @@ const editAddressById = async (req, res) => {
         // Save the updated address document
         await userAddress.save();
 
-        res.redirect("/address"); // Redirect to the address page after update
+       return res.json({success:true,message:"address update successfully "}); // Redirect to the address page after update
 
     } catch (error) {
         console.log("Error while updating address: ", error);

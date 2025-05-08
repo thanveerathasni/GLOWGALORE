@@ -621,8 +621,7 @@
                         title: 'Address Updated',
                         text: 'Your address has been successfully updated!',
                     }).then(() => {
-                        // Optionally refresh the page or update UI
-                        window.location.reload();
+                        window.location.href = '/address'; 
                     });
                 } else {
                     Swal.fire({

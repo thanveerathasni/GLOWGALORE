@@ -66,9 +66,12 @@ const createCoupon = async (req, res) => {
             return res.redirect(`/admin/coupon?error=${encodeURIComponent('Offer price must be less than minimum price')}`);
         }
 
+            const uppercaseName = couponName.toUpperCase()
+
+
         // Create new coupon
         const coupon = new Coupon({
-            name: couponName,
+            name: uppercaseName,
             createdOn: startDateObj,
             expireOn: endDateObj,
             offerPrice: offerPriceNum,
