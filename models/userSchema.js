@@ -30,7 +30,7 @@ const userSchema = new Schema({
     },
     googleId: {
         type: String,
-        unique: true,
+        unique: false,
     },
     password: {
         type: String,

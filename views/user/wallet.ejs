@@ -258,7 +258,7 @@
 
         /* Main Navbar Styles */
         .top-navbar {
-            background-color: #2c3e50;
+             background-color: #246dbc;
             /* Dark background for contrast */
             padding: 15px 0;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -278,7 +278,7 @@
 
         }
         .top-navbar .main-menu {
-        flex-direction: column;
+        flex-direction: row;
     }
         .menu-desktop {
             display: flex;
@@ -329,6 +329,10 @@
             .main-menu li a {
                 font-size: 18px;
             }
+            .top-navbar .main-menu {
+        flex-direction: row;
+    }
+            
         }
 
         /*  */
@@ -339,6 +343,9 @@
                 align-items: center;
                 gap: 1rem;
             }
+            .top-navbar .main-menu {
+        flex-direction: row;
+    }
         }
     </style>
 </head>

@@ -245,73 +245,149 @@
         --grey-hover: #495057;
     }
 
-    /* Table styles (from coupon.ejs, adapted to grey theme) */
-    .table {
-        background: #fff;
-        border-radius: 8px;
-        overflow: hidden;
+    /* Body and font */
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--grey-bg);
     }
-    .table th,
-    .table td {
-        padding: 10px;
-        text-align: left;
-        vertical-align: middle;
+
+    /* Content header */
+    .content-header {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 20px;
+        padding: 0 15px;
     }
-    .table th {
-        background-color: var(--grey-hover); /* Replace #007bff with grey */
-        color: #fff;
-        font-weight: 600;
+
+    .content-header .content-title {
+        font-size: 24px;
+        color: var(--grey-text);
+        margin-bottom: 15px;
     }
-    .table-striped tbody tr:nth-child(odd) {
+
+    /* Search bar */
+    .card-header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .input-group {
+        width: 100% !important;
+        max-width: 500px;
+        margin: 0 auto !important;
+        display: flex;
+        align-items: center;
+    }
+
+    .input-group .form-control {
+        font-size: 14px;
+        border: 1px solid #ced4da;
+        border-radius: 50px 0 0 50px;
+        padding: 8px 12px;
+        flex-grow: 1;
+    }
+
+    .input-group .btn {
+        font-size: 14px;
+        padding: 8px 16px;
+        border-radius: 0 50px 50px 0;
+        border: 1px solid #ced4da;
+        border-left: none;
         background-color: #f8f9fa;
+        color: var(--grey-text);
     }
+
+    .input-group .btn-secondary {
+        border-radius: 50px;
+        margin-left: 10px;
+        background-color: #6c757d;
+        color: #fff;
+        border: none;
+    }
+
+    .input-group .btn:hover {
+        background-color: var(--grey-hover);
+        color: #fff;
+    }
+
+    /* Table styles */
     .table-responsive {
         overflow-x: auto;
         width: 92%;
         max-width: 100%;
-        margin-left: 40px;
+        margin: 0 auto;
+        padding: 0 10px;
     }
-    .table.table-striped {
+
+    .table {
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        width: 100%;
         min-width: 600px;
         font-size: 16px;
     }
+
+    .table-striped tbody tr:nth-child(odd) {
+        background-color: #f8f9fa;
+    }
+
+    .table th,
+    .table td {
+        padding: 12px;
+        text-align: left;
+        vertical-align: middle;
+        min-width: 120px;
+        word-wrap: break-word;
+    }
+
+    .table th {
+        background-color: var(--grey-hover);
+        color: #fff;
+        font-weight: 600;
+    }
+
     .table .btn {
         width: 80px;
         font-size: 14px;
-    }
-    /* Button styles to match coupon.ejs badge colors */
-    .btn-success {
-        background-color: #28a745; /* Match alert-success */
-        color: #fff;
         padding: 6px 12px;
-        font-size: 0.85rem;
-        border: none;
-    }
-    .btn-success:hover {
-        background-color: #218838; /* Darker green */
-    }
-    .btn-danger {
-        background-color: #dc3545; /* Match alert-danger */
-        color: #fff;
-        padding: 6px 12px;
-        font-size: 0.85rem;
-        border: none;
-    }
-    .btn-danger:hover {
-        background-color: #c82333; /* Match coupon.ejs btn-danger hover */
+        border-radius: 4px;
+        text-align: center;
     }
 
-    /* Custom pagination style */
+    .btn-success {
+        background-color: #28a745;
+        color: #fff;
+        border: none;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: #fff;
+        border: none;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+
+    /* Pagination styles */
     .pagination {
         display: flex;
         justify-content: center;
         margin-top: 20px;
         flex-wrap: wrap;
     }
+
     .pagination .page-item {
         margin: 0 5px;
         border-radius: 50px;
     }
+
     .pagination .page-link {
         border-radius: 50px;
         background-color: #f8f9fa;
@@ -321,16 +397,19 @@
         text-decoration: none;
         transition: background-color 0.3s ease, color 0.3s ease;
     }
+
     .pagination .page-item.active .page-link {
         background-color: var(--grey-hover);
         color: #fff;
         border-color: var(--grey-hover);
     }
+
     .pagination .page-link:hover {
         background-color: var(--grey-hover);
         color: #fff;
         border-color: var(--grey-hover);
     }
+
     .pagination .page-item.disabled .page-link {
         background-color: #e9ecef;
         color: #6c757d;
@@ -338,112 +417,139 @@
         pointer-events: none;
     }
 
-    /* Modified container size */
+    /* Container for pagination */
     .container.mt-3 {
         max-width: 500px;
-        margin: 0 auto;
+        margin: 20px auto;
         box-shadow: 0 2px 10px rgba(52, 51, 51, 0.1);
         border-radius: 8px;
         padding: 6px;
         background-color: #cdcdcd50;
     }
-    .aside-mini .main-wrap {
-        margin-left: 100px;
-        margin-right: 50px;
-        border-radius: 8px;
-    }
 
-    /* Search bar responsiveness */
-    .input-group {
-        width: 100% !important;
-        max-width: 500px;
-        margin: 0 auto !important;
-    }
-    .input-group .form-control {
-        font-size: 14px;
-    }
-    .input-group .btn {
-        font-size: 14px;
-        padding: 8px 16px;
-    }
-
-    /* Content header */
-    .content-header {
-        flex-direction: column;
-        align-items: flex-start;
-        margin-bottom: 20px;
-    }
-    .content-header .content-title {
-        font-size: 24px;
-        color: var(--grey-text);
-        margin-bottom: 15px;
-    }
-
-    /* Responsive adjustments */
+    /* Mobile responsiveness */
     @media (max-width: 767px) {
-        .table {
-            font-size: 0.85rem; /* From coupon.ejs */
+        .content-header .content-title {
+            font-size: 20px;
         }
-        .table th,
-        .table td {
-            padding: 8px; /* From coupon.ejs */
-            min-width: 100px;
-        }
-        .table.table-striped {
-            font-size: 14px;
-        }
-        .table .btn {
-            font-size: 12px;
-            padding: 6px 12px;
-        }
+
         .input-group {
             max-width: 100%;
         }
+
         .input-group .form-control {
             font-size: 13px;
         }
+
         .input-group .btn {
             font-size: 13px;
             padding: 6px 12px;
         }
+
+        .table {
+            font-size: 14px;
+        }
+
+        .table th,
+        .table td {
+            padding: 8px;
+            min-width: 100px;
+        }
+
+        .table .btn {
+            font-size: 12px;
+            padding: 6px 12px;
+            width: 70px;
+        }
+
         .pagination .page-link {
             padding: 8px 16px;
             font-size: 13px;
         }
+
         .pagination .page-item {
             margin: 0 3px;
         }
+
         .container.mt-3 {
             padding: 10px;
         }
-        .content-header .content-title {
-            font-size: 20px;
-        }
     }
+
     @media (max-width: 576px) {
-        .table th,
+        .table-responsive {
+            overflow-x: visible;
+        }
+
+        .table {
+            min-width: 0;
+            display: block;
+        }
+
+        .table thead {
+            display: none;
+        }
+
+        .table tbody {
+            display: block;
+        }
+
+        .table tr {
+            display: block;
+            margin-bottom: 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            background-color: #fff;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
         .table td {
-            min-width: 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            min-width: 0;
+            text-align: right;
+            border: none;
+            font-size: 13px;
         }
+
+        .table td::before {
+            content: attr(data-label);
+            font-weight: 600;
+            color: var(--grey-text);
+            text-align: left;
+            flex: 1;
+        }
+
+        .table td:not(:last-child) {
+            border-bottom: 1px solid #eee;
+        }
+
         .table .btn {
-            width: 70px;
-            font-size: 11px;
+            width: 100%;
+            font-size: 12px;
+            padding: 8px;
+            min-height: 44px;
         }
+
         .input-group .form-control,
         .input-group .btn {
             font-size: 12px;
         }
+
         .pagination .page-link {
             padding: 6px 12px;
             font-size: 12px;
         }
+
+        .content-header .content-title {
+            font-size: 18px;
+        }
     }
-    .clr{
-     background-color: #24b4ed;
-      color: white;
-    }
-</style>
-<%- include("../../views/partials/admin/header") %>
+  </style>
+  <%- include("../../views/partials/admin/header") %>
 
 <!-- SweetAlert CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css" />

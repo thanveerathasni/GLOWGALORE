@@ -204,7 +204,7 @@
 
         /* Main Navbar Styles */
         .top-navbar {
-            background-color: #2c3e50;
+            background-color: #246dbc;
             /* Dark background for contrast */
             padding: 15px 0;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -352,6 +352,9 @@
             .top-navbar {
                 padding: 0.5rem 0.75rem; /* Reduced padding for mobile */
             }
+            .top-navbar .main-menu {
+        flex-direction: row;
+    }
 
             .top-navbar .main-menu {
                 gap: 0.5rem; /* Reduced gap to fit items horizontally */
@@ -432,6 +435,9 @@
             .top-navbar {
                 padding: 0.4rem 0.5rem; /* Smallest padding for very small screens */
             }
+            .top-navbar .main-menu {
+        flex-direction: row;
+    }
 
             .top-navbar .main-menu a {
                 font-size: 0.8rem; /* Smallest font for navbar items */
@@ -502,6 +508,8 @@
         flex-direction: column;
         align-items: center;
         gap: 1rem;
+ 
+        flex-direction: row;
     }
 }
     </style>
