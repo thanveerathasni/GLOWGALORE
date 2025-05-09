@@ -764,7 +764,7 @@
                             <div class="modal-body">
                                 <form id="returnForm">
                                     <div class="mb-3">
-                                        <label class="form-label">Return Reason Category</label>
+                                        <label class="form-label">Return Reason </label>
                                         <select class="form-select" id="returnReason" required>
                                             <option value="">Select a reason</option>
                                             <option value="Wrong size">Wrong size</option>
@@ -782,12 +782,12 @@
                                         <small class="text-muted">Please explain the issue in detail to help us
                                             better understand your return request.</small>
                                     </div>
-                                    <div class="mb-3">
+                                    <!-- <div class="mb-3">
                                         <label class="form-label">Upload Images (Optional)</label>
                                         <input type="file" class="form-control" id="returnImages" multiple
                                                accept="image/*">
                                         <small class="text-muted">You can upload up to 3 images</small>
-                                    </div>
+                                    </div> -->
                                 </form>
                             </div>
                             <div class="modal-footer">
@@ -841,7 +841,7 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
-                        text: 'Please select a reason category and provide a detailed description!',
+                        text: 'Please select a reason  and provide a detailed description!',
                     });
                     return;
                 }

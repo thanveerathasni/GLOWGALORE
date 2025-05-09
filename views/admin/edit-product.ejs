@@ -432,9 +432,9 @@ function validateForm() {
         displayErrorMessage('description-error', 'Please enter a product description.');
         errorMessages.push('Please enter a product description.');
         isValid = false;
-    } else if (description.length < 10 || description.length > 250) {
-        displayErrorMessage('description-error', 'Description must be 10-250 characters long.');
-        errorMessages.push('Description must be 10-250 characters long.');
+    } else if (description.length < 10 || description.length > 550) {
+        displayErrorMessage('description-error', 'Description must be 10-550 characters long.');
+        errorMessages.push('Description must be 550 characters long.');
         isValid = false;
     }
 

@@ -680,8 +680,8 @@
                                 <% if (order.requestStatus === 'rejected') { %>
                                     <div class="alert alert-danger mt-3">
                                         <h6 class="alert-heading">Return Request Rejected</h6>
-                                        <p><strong>Category:</strong> <%= order.rejectionCategory %></p>
-                                        <p><strong>Reason:</strong> <%= order.rejectionReason %></p>
+                                        <!-- <p><strong>Category:</strong> <%= order.rejectionCategory %></p> -->
+                                        <!-- <p><strong>Reason:</strong> <%= order.rejectionReason %></p> -->
                                     </div>
                                 <% } %>
 
@@ -695,7 +695,7 @@
                                             <h5 class="mb-0">Return Status: <%= order.status.replace('_', ' ').toUpperCase() %></h5>
                                         </div>
                                         <div class="card-body">
-                                            <p><strong>Return Reason:</strong> <%= order.returnReason %></p>
+                                            <!-- <p><strong>Return Reason:</strong> <%= order.returnReason %></p> -->
                                             <% if (order.status === 'returned') { %>
                                                 <p><strong>Returned On:</strong> <%= new Date(order.updateOn).toLocaleDateString() %></p>
                                             <% } %>
@@ -723,7 +723,7 @@
                                             <% } else if (order.requestStatus === 'rejected') { %>
                                                 <div class="alert alert-danger mt-3">
                                                     <strong>Return Request Rejected</strong><br>
-                                                    Reason: <%= order.rejectionReason %>
+                                                    <!-- Reason: <%= order.rejectionReason %> -->
                                                 </div>
                                             <% } else { %>
                                                 <div class="alert alert-info mt-3">
@@ -863,7 +863,7 @@
                                 <div class="modal-body">
                                     <form id="returnForm">
                                         <div class="mb-3">
-                                            <label class="form-label">Return Reason Category</label>
+                                            <label class="form-label">Return Reason </label>
                                             <select class="form-select" id="returnReason" required>
                                                 <option value="">Select a reason</option>
                                                 <option value="Wrong size">Wrong size</option>
@@ -878,11 +878,11 @@
                                             <textarea class="form-control" id="returnDescription" rows="3" placeholder="Please provide more details about your return reason..." required></textarea>
                                             <small class="text-muted">Please explain the issue in detail to help us better understand your return request.</small>
                                         </div>
-                                        <div class="mb-3">
+                                        <!-- <div class="mb-3">
                                             <label class="form-label">Upload Images (Optional)</label>
                                             <input type="file" class="form-control" id="returnImages" multiple accept="image/*">
                                             <small class="text-muted">You can upload up to 3 images</small>
-                                        </div>
+                                        </div> -->
                                     </form>
                                 </div>
                                 <div class="modal-footer">
@@ -997,7 +997,7 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
-                        text: 'Please select a reason category and provide a detailed description!',
+                        text: 'Please select a reason and provide a detailed description!',
                     });
                     return;
                 }

@@ -173,7 +173,7 @@
                     <% }); %>
                   </div> -->
 
-                  <% if (order.status === 'return_requested') { %>
+                  <!-- <% if (order.status === 'return_requested') { %>
                     <div class="card mb-4">
                       <div class="card-header bg-warning">
                         <h5 class="mb-0">Return Request</h5>
@@ -215,12 +215,12 @@
                         </div>
                       </div>
                     </div>
-                  <% } %>
+                  <% } %> -->
 
-                  <% if (order.status === 'delivered' || order.status === 'returned') { %>
+                  <% if (order.status === 'Delivered' || order.status === 'Returned') { %>
                     <div class="card">
                       <div class="card-header">
-                        <p class="mb-0"><strong>Delivered On:</strong> <%= new Date(order.deliveredOn).toLocaleDateString() %></p>
+                        <p class="mb-0"><strong>Delivered On:</strong> <%= new Date(order.deliveredDate).toLocaleDateString() %></p>
                       </div>
                     </div>
                   <% } %>
@@ -263,7 +263,7 @@
                     </div>
                     <div class="card-body">
                       <% if (order.status === 'Return Request' && order.requestStatus === 'Pending') { %>
-                        <div class="mb-4">
+                        <!-- <div class="mb-4">
                           <h6>Return Request Actions</h6>
                           <button onclick="handleReturn('approve', '<%= order._id %>')" class="btn btn-success me-2">
                             Approve Return
@@ -271,7 +271,7 @@
                           <button onclick="handleReturn('reject', '<%= order._id %>')" class="btn btn-danger">
                             Reject Return
                           </button>
-                        </div>
+                        </div> -->
                       <% } else if (order.status === 'returning' && order.requestStatus === 'approved') { %>
                         <div class="mb-4">
                           <h6>Update Return Status</h6>
@@ -285,15 +285,15 @@
                           <button onclick="updateStatus('<%= order._id %>')" class="btn btn-primary me-2">
                             Update Status
                           </button>
-                          <button onclick="cancelOrder('<%= order._id %>')" class="btn btn-danger">
+                          <!-- <button onclick="cancelOrder('<%= order._id %>')" class="btn btn-danger">
                             Cancel Order
-                          </button>
+                          </button> -->
                         </div>
                       <% } else if (order.requestStatus === 'rejected') { %>
                         <div class="alert alert-danger">
                           <strong>Return Request Rejected By Admin</strong><br>
-                          <p>Rejection Category: <b><%= order.rejectionCategory %></b></p>
-                          <p>Rejection Message: <%= order.rejectionReason %></p>
+                          <!-- <p>Rejection Category: <b><%= order.rejectionCategory %></b></p>
+                          <p>Rejection Message: <%= order.rejectionReason %></p> -->
                         </div>
                       <% } %>
                     </div>
@@ -365,7 +365,7 @@
                       <p class="mb-0"><strong>Shipped On:</strong> <%= new Date(order.updateOn).toLocaleDateString() %></p>
                     <% } %>
                     <% if (order.status === 'Delivered') { %>
-                      <p class="mb-0"><strong>Delivered On:</strong> <%= new Date(order.deliveredOn).toLocaleDateString() %></p>
+                      <p class="mb-0"><strong>Delivered On:</strong> <%= new Date(order.deliveredDate).toLocaleDateString() %></p>
                     <% } %>
                     <% if (order.status === 'Returned') { %>
                       <p class="mb-0"><strong>Returned On:</strong> <%= new Date(order.updateOn).toLocaleDateString() %></p>
@@ -378,7 +378,7 @@
         </div>
 
         <!-- Rejection Modal -->
-        <div class="modal fade" id="rejectModal" tabindex="-1">
+        <!-- <div class="modal fade" id="rejectModal" tabindex="-1">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
@@ -408,7 +408,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </section>
