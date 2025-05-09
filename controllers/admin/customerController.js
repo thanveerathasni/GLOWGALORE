@@ -1,14 +1,12 @@
 const User = require("../../models/userSchema")
 const { search } = require("../../routes/adminRouter")
 
-// Function to fetch customer info with pagination and search filter
 const customerInfo = async (req, res) => {
     try {
         let search = req.query.search || ''; 
         let page = parseInt(req.query.page) || 1; 
         const limit = 3; 
 
-        // Query to filter users by name or email based on search term
         const query = {
             isAdmin: false,
             $or: [
@@ -17,23 +15,17 @@ const customerInfo = async (req, res) => {
             ]
         };
 
-        // Fetch user data based on the query, sorted by creation date
         const userData = await User.find(query)
             .sort({ createdOn: -1 })
             .limit(limit)
             .skip((page - 1) * limit)
             .exec()
 
-        // Get the total number of matching users
         const count = await User.countDocuments(query);
-        const totalPages = Math.ceil(count / limit); // Calculate total pages for pagination
-
-        // Ensure valid page number
+        const totalPages = Math.ceil(count / limit);
         if (page < 1 || page > totalPages) {
             page = 1;
         }
-
-        // Render customer page with data and pagination info
         res.render("customers", {
             data: userData,
             totalPages,
@@ -47,7 +39,6 @@ const customerInfo = async (req, res) => {
     }
 };
 
-// Function to block a customer
 const customerBlocked = async (req, res) => {
     try {
         let id = req.query.id; 
@@ -58,7 +49,6 @@ const customerBlocked = async (req, res) => {
     }
 }
 
-// Function to unblock a customer
 const customerunBlocked = async (req, res) => {
     try {
         let id = req.query.id; 

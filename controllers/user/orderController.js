@@ -45,34 +45,6 @@ const getOrders = async (req, res) => {
   }
 };
 
-// Load Order Details
-// const loadOrderDetails = async (req, res) => {
-//   try {
-//     const userId = req.session.user;
-//     const orderId = req.query.orderId;
-
-//     const order = await Order.findOne({ orderId: orderId, userId })
-//       .populate('orderedItems.product');
-    
-//     if (!order) {
-//       return res.status(404).send("Order not found");
-//     }
-//     const deliveryDate = order.deliveredDate ? new Date(order.deliveredDate) : new Date(order.updateOn);
-
-
-//     const user = await User.findById(userId);
-
-//     res.render("order-details", {
-//       order,
-//       user,
-//       deliveryDate,
-//     });
-//   } catch (error) {
-//     console.error("Error in loadOrderDetails:", error);
-//     res.status(500).send("Internal server error");
-//   }
-// };
-
 
 const loadOrderDetails = async (req, res) => {
   try {
@@ -86,7 +58,6 @@ const loadOrderDetails = async (req, res) => {
       return res.status(404).send("Order not found");
     }
 
-    // Validate and compute deliveryDate
     let deliveryDate = null;
     if (order.deliveredDate && !isNaN(new Date(order.deliveredDate))) {
       deliveryDate = new Date(order.deliveredDate);
@@ -110,7 +81,6 @@ const loadOrderDetails = async (req, res) => {
 };
 
 
-// Cancel Order
 const cancelOrder = async (req, res) => {
   try {
     const { orderId, reason } = req.body;
@@ -174,7 +144,6 @@ const cancelOrder = async (req, res) => {
   }
 };
 
-// Generate Invoice
 const generateInvoice = async (req, res) => {
   try {
     const userId = req.session.user;
@@ -236,12 +205,11 @@ const generateInvoice = async (req, res) => {
   }
 };
 
-// Request Return
 const requestReturn = async (req, res) => {
   try {
     const { orderId, returnReason, returnDescription } = req.body;
     const userId = req.session.user;
-    const files = req.files;
+    // const files = req.files;
 
     const order = await Order.findOne({ _id: orderId, userId });
     if (!order) {
@@ -261,14 +229,14 @@ const requestReturn = async (req, res) => {
       });
     }
 
-    let imagePaths = [];
-    if (files && files.length > 0) {
-      imagePaths = files.map((file) => `uploads/returns/${file.filename}`);
-    }
+    // let imagePaths = [];
+    // if (files && files.length > 0) {
+    //   imagePaths = files.map((file) => `uploads/returns/${file.filename}`);
+    // }
     order.status = "Return Request";
     order.returnReason = returnReason;
     order.returnDescription = returnDescription;
-    order.returnImages = imagePaths;
+    // order.returnImages = imagePaths;
     order.requestStatus = "Pending";
 
     order.updateOn = new Date();
@@ -288,7 +256,6 @@ const requestReturn = async (req, res) => {
   }
 };
 
-// Cancel Return Request
 const cancelReturnRequest = async (req, res) => {
   try {
     const { orderId } = req.body;
@@ -309,7 +276,7 @@ const cancelReturnRequest = async (req, res) => {
     order.status = "Delivered";
     order.returnReason = undefined;
     order.returnDescription = undefined;
-    order.returnImages = [];
+    // order.returnImages = [];
     order.requestStatus = undefined;
     order.adminMessage = undefined; 
     order.updateOn = new Date();
@@ -329,7 +296,6 @@ const cancelReturnRequest = async (req, res) => {
   }
 };
 
-// Refund processing function (
 async function processRefund(userId, order) {
   try {
     const user = await User.findById(userId);
@@ -337,14 +303,10 @@ async function processRefund(userId, order) {
 
     user.wallet += order.finalAmount;
 
-    // Record transaction in user.walletTransactions
     user.walletTransactions.push({
       orderId: order.orderId,
-      amount: Math.round(order.finalAmount), // Amount in paise,
-      // reason:order.cancelReason || "Order cancellation",
-      // amount: refundAmount,
+      amount: Math.round(order.finalAmount),
       date: new Date(),
-      // reason: reason,
     });
 
     await user.save();
@@ -385,7 +347,7 @@ const createRazorpay = async (req, res) => {
 
 const Razorpaysubscription = async (req, res) => {
   try {
-      const { plan_id } = req.body; // Get Plan ID from frontend
+      const { plan_id } = req.body;
 
       if (!plan_id) {
           return res.status(400).json({ success: false, message: "Plan ID is required" });
@@ -423,7 +385,6 @@ const loadFailure = async (req, res) => {
   }
 }
 
-// New submitReview function
 const submitReview = async (req, res) => {
   try {
     const { orderId, productId, rating, comment } = req.body;

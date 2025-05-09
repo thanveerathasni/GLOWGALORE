@@ -832,7 +832,7 @@
             try {
                 const reasonSelect = document.getElementById('returnReason');
                 const returnDescription = document.getElementById('returnDescription');
-                const imagesInput = document.getElementById('returnImages');
+                // const imagesInput = document.getElementById('returnImages');
 
                 const returnReason = reasonSelect.value;
                 const description = returnDescription.value;
@@ -851,10 +851,10 @@
                 formData.append('returnReason', returnReason);
                 formData.append('returnDescription', description);
 
-                const files = imagesInput.files;
-                for (let i = 0; i < Math.min(files.length, 3); i++) {
-                    formData.append('images', files[i]);
-                }
+                // const files = imagesInput.files;
+                // for (let i = 0; i < Math.min(files.length, 3); i++) {
+                //     formData.append('images', files[i]);
+                // }
 
                 const response = await fetch('/orders/return', {
                     method: 'POST',

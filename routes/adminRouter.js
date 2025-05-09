@@ -15,15 +15,7 @@ const productController = require("../controllers/admin/productController")
 const bannerController = require("../controllers/admin/bannerController");
 const orderController = require("../controllers/admin/orderController");
 
-// const multer = require("multer")
 const uploads = require("../helpers/multer")
-// const uploads= multer({storage:storage})
-// const upload = multer({ dest: 'public/uploads/' });
-
-
-// Attach the uploads middleware to adminAuth
-// adminAuth.uploads = multer({ storage: storage });
-
 
 router.get ("/pageError",adminController.pageError)
 
@@ -53,12 +45,11 @@ router.get("/editCategory",adminAuth,adminloggedin,categoryController.editCatego
 router.post("/editCategory/:id",adminAuth,adminloggedin,categoryController.posteditCategory)
 
 // brand management
-const upload = require("../helpers/multer")// const adminAuth = require('../middleware/adminAuth'); // Your auth middleware
+const upload = require("../helpers/multer")
 
 // Use upload.single for single file or upload.array for multiple files
 router.post('/addBrand', adminAuth,adminloggedin, upload.single('image'), brandController.addBrand);
 router.get("/brands",adminAuth,adminloggedin,brandController.getBrandPage)
-// router.post("/addBrand",adminAuth.uploads.array("image"),brandController.addBrand)
 router.get("/blockBrand",adminAuth,adminloggedin,brandController.blockBrand)
 router.get("/unblockBrand",adminAuth,adminloggedin,brandController.unblockBrand)
 router.get("/deleteBrand",adminAuth,adminloggedin,brandController.deleteBrand)

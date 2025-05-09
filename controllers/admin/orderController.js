@@ -16,7 +16,7 @@ const getOrders = async (req, res) => {
     const totalOrders = await Order.countDocuments();
 
     const orders = await Order.find()
-      .populate("userId") // Populate user schema for  wallet array
+      .populate("userId") 
       .sort({ createdOn: -1 })
       .skip(skip)
       .limit(limit);
@@ -24,7 +24,7 @@ const getOrders = async (req, res) => {
     res.render("admin-orders", {
       orders: orders.map(order => ({
         ...order._doc,
-        user: order.userId, // Pass user data with wallet array
+        user: order.userId, 
       })),
       title: "Order Management",
       currentPage: page,
@@ -98,7 +98,6 @@ const processRefund = async (userId, order) => {
 
     user.wallet += order.finalAmount;
 
-    // Record transaction in user.walletTransactions
     user.walletTransactions.push({
       orderId: order.orderId,
       amount: refundAmount,
@@ -155,59 +154,6 @@ const cancelOrder = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 }
-
-
-
-
-
-  // const cancelOrder = async (req, res) => {
-  //   try {
-  //     const { orderId } = req.body;
-  //     const order = await Order.findById(orderId).populate("userId");
-
-  //     if (!order) {
-  //       return res.status(404).json({ success: false, message: "Order not found" });
-  //     }
-
-  //     if (order.status !== "Cancelled" && order.status !== "Delivered") {
-  //       order.status = "Cancelled";
-  //       order.orderedItems[0].status = "Cancelled";
-
-  //       order.updatedOn = new Date();
-
-  //       await Product.findByIdAndUpdate(order.orderedItems[0].product, {
-  //         $inc: { quantity: order.orderedItems[0].quantity },
-  //       });
-
-  //       if (order.paymentMethod === "razorpay" || order.paymentMethod === "wallet") {
-  //         const refundSuccess = await processRefund(order.userId, order);
-  //         if (!refundSuccess) {
-  //           return res.status(500).json({
-  //             success: false,
-  //             message: "Failed to process refund",
-  //           });
-  //         }
-  //         const user = order.userId;
-  //               user.wallet += Math.round(order.finalAmount)
-  ; // Add refund amount to wallet balance
-  //         await user.save();
-  //       } else if (order.paymentMethod === "cod") {
-  //         const user = order.userId;
-  //               user.wallet += Math.round(order.finalAmount)
-  ; // Add refund amount to wallet balance for COD
-  //         await user.save();
-  //       }
-
-  //       await order.save();
-  //       res.json({ success: true, message: "Order Cancelled and refund processed successfully" });
-  //     } else {
-  //       res.status(400).json({ success: false, message: "Order cannot be Cancelled" });
-  //     }
-  //   } catch (error) {
-  //     console.error("Error cancelling order:", error);
-  //     res.status(500).json({ success: false, message: "Internal server error" });
-  //   }
-  // };
 
   const handleReturnRequest = async (req, res) => {
     try {
@@ -325,11 +271,11 @@ const cancelOrder = async (req, res) => {
             });
           }
           const user = order.userId;
-          user.wallet.push(order.finalAmount); // Push refund amount to wallet array
+          user.wallet.push(order.finalAmount);
           await user.save();
         } else if (order.paymentMethod === "cod") {
           const user = order.userId;
-          user.wallet.push(order.finalAmount); // Push refund amount to wallet array for COD
+          user.wallet.push(order.finalAmount);
           await user.save().catch(err => console.error("Failed to save user:", err));
         }
       }

@@ -413,7 +413,7 @@
                               <td><%= new Date(transaction.date).toLocaleDateString() %></td>
                               <td><%= transaction.orderId || 'N/A' %></td>
                               <td>₹ <%= Math.abs(transaction.amount).toFixed(2) %></td>
-                              <td><%= transaction.reason || 'N/A' %></td>
+                              <td><%= transaction.reason || 'refund' %></td>
                             </tr>
                           <% }) %>
                         </tbody>

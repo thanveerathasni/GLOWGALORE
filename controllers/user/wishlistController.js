@@ -7,7 +7,6 @@ const Wishlist = require('../../models/wishlistSchema');
 const User = require('../../models/userSchema');
 const Product = require('../../models/productSchema');
 
-// Load wishlist page
 const getWishlistPage = async (req, res) => {
   try {
     const userId = req.session.user;
@@ -20,7 +19,6 @@ const getWishlistPage = async (req, res) => {
   }
 };
 
-// Add product to wishlist
 const addToWishlist = async (req, res) => {
   try {
     const { productId } = req.body;
@@ -56,7 +54,6 @@ console.log("req.body",req.body)
   }
 };
 
-// Move a single product from wishlist to cart
 const addToCartFromWishlist = async (req, res) => {
   try {
     const { productId } = req.body;
@@ -86,7 +83,6 @@ const addToCartFromWishlist = async (req, res) => {
       user.cart.push({ productId, quantity: 1 });
     }
 
-    // Remove only the selected product from wishlist
     wishlist.products = wishlist.products.filter(p => p._id.toString() !== productId);
 
     await Promise.all([user.save(), wishlist.save()]);
@@ -97,7 +93,6 @@ const addToCartFromWishlist = async (req, res) => {
   }
 };
 
-// Remove product from wishlist
 const removeFromWishlist = async (req, res) => {
   try {
     const { productId } = req.body;

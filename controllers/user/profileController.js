@@ -11,7 +11,6 @@ const path = require('path');
 const fs = require('fs');
 
 
-// Function to generate a random OTP
 
 function generateOtp() {
     const digits = "1234567890";
@@ -23,7 +22,6 @@ function generateOtp() {
 }
 
 
-// Send OTP verification email
 
 const sendVerificationEmail = async (email, otp) => {
     try {
@@ -60,7 +58,6 @@ const sendVerificationEmail = async (email, otp) => {
     }
 
 }
-// Secure the password by hashing
 
 const securePassword = async (password) => {
     try {
@@ -68,12 +65,10 @@ const securePassword = async (password) => {
         console.log("passwordHash:", passwordHash)
         return passwordHash;
     } catch (error) {
-        // Handle errors silently
-
+        console.error(error)
     }
 }
 
-// Render forgot password page
 
 const getForgetPassword = async (req, res) => {
     try {
@@ -83,7 +78,6 @@ const getForgetPassword = async (req, res) => {
     }
 }
 
-// Validate email for password reset
 
 const forgotEmailValid = async (req, res) => {
     try {
@@ -113,7 +107,6 @@ const forgotEmailValid = async (req, res) => {
 
     }
 }
-// Verify the OTP entered by the user
 
 const verifyForgotPassOtp = async (req, res) => {
     try {
@@ -131,7 +124,6 @@ const verifyForgotPassOtp = async (req, res) => {
 
     }
 }
-// Render reset password page
 
 const getResetPassword = async (req, res) => {
     try {
@@ -140,7 +132,6 @@ const getResetPassword = async (req, res) => {
         res.redirect("/pageNotFound")
     }
 }
-// Resend OTP if needed
 
 const resendOtp = async (req, res) => {
     try {
@@ -159,7 +150,6 @@ const resendOtp = async (req, res) => {
 
     }
 }
-// Post the new password after verification
 
 const postNewPassword = async (req, res) => {
     try {
@@ -280,110 +270,28 @@ const changePassword = async (req, res) => {
     }
 }
 
-// const changePasswordValid = async (req, res) => {
-//     try {
-//         const { email } = req.body;
-//         const userExists = await User.findOne({ email });
-//         if (userExists) {
-//             const otp = generateOtp();
-//             const emailSent = await sendVerificationEmail(email, otp);
-//             if (emailSent) {
-
-//                 req.session.userOtp = otp;
-//                 req.session.userData = req.body;
-//                 req.session.email = email;
-//                 res.render("change-password-otp");
-//                 console.log('OTP: ', otp);
-//             } else {
-//                 res.json({
-//                     success: false,
-//                     message: "failed to send otp, please try again later"
-//                 })
-//             }
-//         } else {
-//             res.render("change-password", {
-//                 message: "user with this email doesnot exist"
-//             })
-//         }
-//     } catch (error) {
-//         console.log("error in change password validation,", error)
-//         res.redirect("/pageNotFound")
-//     }
-// }
-
-
-// POST: Handle password change
-// const changePasswordValid = async (req, res) => {
-//   const { currentPass, newPass1, newPass2 } = req.body;
-
-//   // Check if user is logged in
-//   if (!req.session.user) {
-//     return res.redirect('/login');
-//   }
-
-//   try {
-//     // Find the user
-//     const user = await User.findById(req.session.user);
-//     if (!user) {
-//       return res.render('reset-password', { message: 'User not found.' });
-//     }
-
-   
-//     const passwordMatch = await bcrypt.compare(currentPass, user.password);
-//     if (!passwordMatch) {
-//     return res.render("reset-password", { message: "Current password is incorrect" });
-//     }
-//     console.log("passwordMatch:",passwordMatch)
-
-//     // Validate new passwords
-//     if (newPass1 !== newPass2) {
-//       return res.render('reset-password', { message: 'New passwords do not match.' });
-//     }
-
-//     if (newPass1.length < 6) {
-//       return res.render('reset-password', { message: 'New password must be at least 6 characters long.' });
-//     }
-
-    
-
-//     // Update password
-//     const passwordHash = await securePassword(newPass1);
-
-//     user.password = passwordHash; // Will be hashed by the pre-save hook
-//     await user.save();
-
-   
-
-//        return res.redirect('/')
-
-//   } catch (err) {
-//     console.error('Error changing password:', err);
-//     res.render('change-password', { message: 'An error occurred. Please try again.' });
-//   }
-// };
-
 const changePasswordValid = async (req, res) => {
     const { currentPass, newPass1, newPass2 } = req.body;
   
-    // Check if user is logged in
+
     if (!req.session.user) {
       return res.status(401).json({ success: false, message: 'Unauthorized. Please log in.' });
     }
   
     try {
-      // Find the user
-      const user = await User.findById(req.session.user);
+
+        const user = await User.findById(req.session.user);
       if (!user) {
         return res.status(404).json({ success: false, message: 'User not found.' });
       }
   
-      // Verify current password
+
       const passwordMatch = await bcrypt.compare(currentPass, user.password);
       if (!passwordMatch) {
         return res.status(400).json({ success: false, message: 'Current password is incorrect.' });
       }
   
-      // Validate new passwords
+
       if (newPass1 !== newPass2) {
         return res.status(400).json({ success: false, message: 'New passwords do not match.' });
       }
@@ -392,12 +300,12 @@ const changePasswordValid = async (req, res) => {
         return res.status(400).json({ success: false, message: 'New password must be at least 8 characters long.' });
       }
   
-      // Check if new password is different from current
+
       if (await bcrypt.compare(newPass1, user.password)) {
         return res.status(400).json({ success: false, message: 'New password cannot be the same as the current password.' });
       }
   
-      // Update password
+
       const passwordHash = await securePassword(newPass1);
       user.password = passwordHash;
       await user.save();
@@ -510,20 +418,17 @@ const editAddressById = async (req, res) => {
         const data = req.body;
         const userId = req.session.user; 
 
-        // Find the user's address document
         const userAddress = await Address.findOne({ userId: userId });
         if (!userAddress) {
             return res.redirect("/pageNotFound"); 
         }
 
-        // Find the index of the address with the provided addressId
         const addressIndex = userAddress.address.findIndex((addr) => addr._id.toString() === addressId);
         if (addressIndex === -1) {
             return res.redirect("/pageNotFound"); 
         }
 
 
-        // Update the address at the found index
         userAddress.address[addressIndex] = {
             ...userAddress.address[addressIndex], 
             addressType: data.addressType,
@@ -536,14 +441,13 @@ const editAddressById = async (req, res) => {
             altPhone: data.altPhone
         };
 
-        // Save the updated address document
         await userAddress.save();
 
-       return res.json({success:true,message:"address update successfully "}); // Redirect to the address page after update
+       return res.json({success:true,message:"address update successfully "});
 
     } catch (error) {
         console.log("Error while updating address: ", error);
-        res.redirect("/pageNotFound"); // Handle error
+        res.redirect("/pageNotFound");
     }
 };
 
@@ -628,22 +532,6 @@ const getwallet = async (req, res) => {
       res.redirect("/pageNotFound");
     }
   };
-
-// const getwallet = async (req, res) => {
-//     try {
-//         const userId = req.session.user;
-//         const userData = await User.findById(userId);
-//         const walletData = await Wallet.findOne({ userId }); // Fetch wallet data
-        
-//         res.render("wallet", {
-//             user: userData,
-//             wallet: walletData // Pass wallet data to template
-//         });
-//     } catch (error) {
-//         res.redirect("/pageNotFound");
-//         console.log("error while rendering wallet page ", error);
-//     }
-// };
 const updateProfileImage = async (req, res) => {
     try {
         const userId = req.session.user;
@@ -664,7 +552,6 @@ const updateProfileImage = async (req, res) => {
             });
         }
 
-        // Remove existing profile image if it exists
         if (user.profileImage) {
             try {
                 const oldImagePath = path.join(__dirname, '../../public', user.profileImage);
@@ -676,10 +563,8 @@ const updateProfileImage = async (req, res) => {
             }
         }
 
-        // Generate new image path
         const imagePath = `/uploads/profiles/${req.file.filename}`;
 
-        // Update user profile image
         user.profileImage = imagePath;
         await user.save();
 
@@ -707,13 +592,11 @@ const getCoupons = async (req, res) => {
             return res.redirect('/login');
         }
 
-        // Fetch all active coupons, 
         const coupons = await Coupon.find({
             isList: true,
             expireOn: { $gte: new Date() }
         }).lean();
 
-        // Fetch the user to get usedCoupons for status
         const user = await User.findById(userId).lean();
         const usedCoupons = user.usedCoupons || [];
 
@@ -723,7 +606,6 @@ const getCoupons = async (req, res) => {
             coupon.usageMessage = isUsed ? "Coupon Used" : "Available";
         });
 
-        // Render with all active coupons and user context
         res.render('coupon', { user, coupons });
     } catch (error) {
         console.error("Error in getCoupons:", error);

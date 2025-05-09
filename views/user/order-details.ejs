@@ -1007,10 +1007,10 @@
                 formData.append('returnReason', returnReason);
                 formData.append('returnDescription', description);
 
-                const files = imagesInput.files;
-                for (let i = 0; i < Math.min(files.length, 3); i++) {
-                    formData.append('images', files[i]);
-                }
+                // const files = imagesInput.files;
+                // for (let i = 0; i < Math.min(files.length, 3); i++) {
+                //     formData.append('images', files[i]);
+                // }
 
                 const response = await fetch('/orders/return', {
                     method: 'POST',

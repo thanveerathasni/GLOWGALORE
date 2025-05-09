@@ -1,4 +1,3 @@
-
 const User = require("../../models/userSchema");
 const nodemailer = require("nodemailer");
 const env = require("dotenv").config();
@@ -7,7 +6,6 @@ const Category = require("../../models/categorySchema");
 const Product = require("../../models/productSchema");
 const Banner = require("../../models/bannerSchema");
 const Coupon = require("../../models/couponSchema");
-// const { generateReferralCode } = require("../utils"); 
 
 const pageNotFound = async (req, res) => {
     try {
@@ -60,7 +58,6 @@ const loadHomepage = async (req, res) => {
             category: { $in: categories.map(category => category._id) },
             quantity: { $gt: 0 },
         });
-        //  Calculate salePrice for each product
         productData = productData.map(product => {
             const category = categories.find(cat => cat._id.equals(product.category));
             const maxOffer = Math.max(product.productOffer || 0, category?.categoryOffer || 0);
@@ -95,7 +92,6 @@ const loadSignup = async (req, res) => {
         if (req.session.user) {
             return res.redirect('/');
         }
-        //  Pass referralCode from query if present
         const referralCode = req.query.referralCode || '';
         return res.render('signup', { message: null, referralCode });
     } catch (error) {
@@ -212,7 +208,6 @@ const verifyOtp = async (req, res) => {
                 const referrer = await User.findOne({ referralCode: user.referralCode });
                 if (referrer) {
                     redeemedUser = [referrer._id];
-                    // Generate coupon for referrer
                     const referrerCoupon = new Coupon({
                         name: 'REF' + Math.random().toString(36).substr(2, 8).toUpperCase(),
                         offerPrice: 100,
@@ -225,7 +220,6 @@ const verifyOtp = async (req, res) => {
                     referrer.availableCoupons.push(referrerCoupon._id);
                     await referrer.save();
 
-                    // Generate coupon for referee (new user)
                     const refereeCoupon = new Coupon({
                         name: 'NEW' + Math.random().toString(36).substr(2, 8).toUpperCase(),
                         offerPrice: 50,
@@ -299,7 +293,7 @@ const resendOtp = async (req, res) => {
 const loadLogin = async (req, res) => {
     try {
         if (req.session.user) {
-            return res.redirect('/'); // Already logged in? Go to home.
+            return res.redirect('/');
         }
         if (!req.session.user) {
             return res.render("login", { message: null });
@@ -345,17 +339,14 @@ const loadShopping = async (req, res) => {
         const { sort, search, category, minPrice, maxPrice, skip = 0 } = req.query;
         let productQuery = { isBlocked: false, status: 'Available' };
 
-        // Search filter
         if (search) {
             productQuery.productName = { $regex: search, $options: 'i' };
         }
 
-        // Category filter
         if (category) {
             productQuery.category = category;
         }
 
-        // Price range filter
         if (minPrice || maxPrice) {
             const salePriceQuery = {};
             if (minPrice) {
@@ -364,7 +355,6 @@ const loadShopping = async (req, res) => {
             if (maxPrice) {
                 salePriceQuery.$lte = parseFloat(maxPrice);
             }
-            // Fetch products to calculate salePrice dynamically
             productQuery.$expr = {
                 $and: [
                     minPrice ? { $gte: [{ $multiply: ['$regularPrice', { $subtract: [1, { $divide: [{ $max: ['$productOffer', '$category.categoryOffer'] }, 100] }] }] }, parseFloat(minPrice)] } : {},
@@ -373,7 +363,6 @@ const loadShopping = async (req, res) => {
             };
         }
 
-        // Sorting options
         let sortOption = {};
         switch (sort) {
             case 'lowToHigh':
@@ -403,7 +392,6 @@ const loadShopping = async (req, res) => {
             .skip(parseInt(skip))
             .limit(limit);
 
-        // Calculate salePrice and maxOffer
         const productsWithOffers = products.map(product => {
             const categoryOffer = product.category?.categoryOffer || 0;
             const productOffer = product.productOffer || 0;
@@ -417,7 +405,6 @@ const loadShopping = async (req, res) => {
             };
         });
 
-        // Sort products client-side for price-based sorting
         if (sort === 'lowToHigh' || sort === 'highToLow') {
             productsWithOffers.sort((a, b) => {
                 return sort === 'lowToHigh' ? a.salePrice - b.salePrice : b.salePrice - a.salePrice;

@@ -5,14 +5,12 @@ const User = require("../../models/userSchema")
 const Category = require("../../models/categorySchema")
 
 
-// Load the login page if the user is not already logged in as an admin
 const loadLogin = (req, res) => {
     if (req.session.admin) {
         return res.redirect("/admin/dashboard")
     }
     res.render("admin-login", { message: null })
 }
-// Handle login logic
 
 
 const login = async (req, res) => {
@@ -23,7 +21,7 @@ const login = async (req, res) => {
             const passwordMatch = bycrypt.compare(password, admin.password);
             if (passwordMatch) {
                 req.session.admin = true;
-                return res.redirect("/admin/dashboard")//dashboard
+                return res.redirect("/admin/dashboard")
             } else {
                 return res.redirect("/admin/login")
             }
@@ -38,7 +36,6 @@ const login = async (req, res) => {
     }
 }
 
-// Load the admin dashboard if the user is logged in
 
 const loadDashboard = async (req, res) => {
     try {
@@ -56,7 +53,6 @@ const loadDashboard = async (req, res) => {
 const pageError = (req, res) => {
     res.render("admin-error")
 }
-// Logout the user by destroying the session
 
 const logout = async (req, res) => {
     try {

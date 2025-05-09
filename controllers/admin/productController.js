@@ -9,14 +9,12 @@ const { area120tables } = require("googleapis/build/src/apis/area120tables")
 
 
 
-// add products 
 const addProducts = async (req, res) => {
     try {
       console.log('Request body:', req.body);
       console.log('Uploaded files:', req.files);
   
       const products = req.body;
-      // Original validation, updated to match router limit (4 files)
       if (!req.files || req.files.length < 3) {
         if (req.files) {
           req.files.forEach(file => fs.existsSync(file.path) && fs.unlinkSync(file.path));
@@ -28,7 +26,6 @@ const addProducts = async (req, res) => {
         return res.status(400).json({ error: 'Maximum 4 product images allowed' });
       }
   
-      // Original product existence check
       const productExists = await Product.findOne({
         productName: { $regex: '^' + products.productName.trim() + '$', $options: 'i' },
       });
@@ -37,13 +34,11 @@ const addProducts = async (req, res) => {
         return res.status(400).json({ error: 'Product already exists' });
       }
   
-      // Ensure upload directory exists
       const uploadDir = path.join(__dirname, '../../public/uploads/product-images');
       if (!fs.existsSync(uploadDir)) {
         fs.mkdirSync(uploadDir, { recursive: true });
       }
   
-      // Process images
       const images = [];
       for (let i = 0; i < req.files.length; i++) {
         try {
@@ -66,7 +61,6 @@ const addProducts = async (req, res) => {
           }
         } catch (err) {
           console.error(`Error processing image ${i + 1}:`, err);
-          // Clean up any processed images
           images.forEach(img => {
             const imgPath = path.join(uploadDir, path.basename(img));
             fs.existsSync(imgPath) && fs.unlinkSync(imgPath);
@@ -76,7 +70,6 @@ const addProducts = async (req, res) => {
       }
       console.log('Images array:', images);
   
-      // Original product creation
       const categoryId = await Category.findOne({ name: products.category });
       if (!categoryId) {
         images.forEach(img => {
@@ -85,7 +78,6 @@ const addProducts = async (req, res) => {
         });
         return res.status(400).json({ error: 'Invalid category name' });
       }
-       // Validate brand
     if (products.brand) {
         const brand = await Brand.findOne({ brandName: products.brand, isBlocked: false });
         if (!brand) {
@@ -120,10 +112,8 @@ const addProducts = async (req, res) => {
     }
   };
 
-// Get the page for adding a product
 const getProductAddPage = async (req, res) => {
     try {
-        // Fetch categories and brands for the add product page
         const category = await Category.find({isListed:true})
         const brand = await Brand.find({isBlocked:false})
         res.render("product-add", {
@@ -143,7 +133,6 @@ const getAllProducts = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const limit = 4;
 
-        // Fetching products based on the search query
         const productData = await Product.find({
             $or: [
                 { productName: { $regex: new RegExp(".*" + search + ".*", "i") } },
@@ -155,7 +144,6 @@ const getAllProducts = async (req, res) => {
             .populate('category')
             .exec();
 
-        // Count of total products matching the search
         const count = await Product.find({
             $or: [
                 { productName: { $regex: new RegExp(".*" + search + ".*", "i") } },
@@ -163,11 +151,9 @@ const getAllProducts = async (req, res) => {
             ],
         }).countDocuments();
 
-        // Fetching categories and brands
         const category = await Category.find({ isListed: true });
         const brand = await Brand.find({ isBlocked: false });
 
-        // If categories and brands are fetched successfully
         if (category && brand) {
             res.render("products", {
                 productName: search, 
@@ -187,18 +173,15 @@ const getAllProducts = async (req, res) => {
     }
 };
 
-// Function to add product offer
 const addProductOffer = async (req, res) => {
     try {
         const { productId, percentage } = req.body;
 
-        // Validate percentage
         const parsedPercentage = parseInt(percentage);
         if (isNaN(parsedPercentage) || parsedPercentage < 1 || parsedPercentage > 99) {
             return res.status(400).json({ error: 'Offer percentage must be between 1 and 99' });
         }
 
-        // Find the product and its category
         const findProduct = await Product.findOne({ _id: productId });
         if (!findProduct) {
             return res.status(404).json({ error: 'Product not found' });
@@ -208,13 +191,10 @@ const addProductOffer = async (req, res) => {
             return res.status(404).json({ error: 'Category not found' });
         }
 
-        // Apply offer to the product
         findProduct.productOffer = parsedPercentage;
-        // Calculate maxOffer considering productOffer and categoryOffer
         const maxOffer = Math.max(findProduct.productOffer, findCategory.categoryOffer || 0);
         findProduct.salePrice = findProduct.regularPrice - Math.floor(findProduct.regularPrice * (maxOffer / 100));
 
-        // Save the product
         await findProduct.save();
 
         res.json({ status: true });
@@ -224,12 +204,10 @@ const addProductOffer = async (req, res) => {
     }
 };
 
-// Function to remove product offer
 const removeProductOffer = async (req, res) => {
     try {
         const { productId } = req.body;
 
-        // Find the product and revert its sale price
         const findProduct = await Product.findOne({ _id: productId });
         if (!findProduct) {
             return res.status(404).json({ error: 'Product not found' });
@@ -239,11 +217,9 @@ const removeProductOffer = async (req, res) => {
             return res.status(404).json({ error: 'Category not found' });
         }
         findProduct.productOffer = 0;
-        // Recalculate salePrice based on remaining categoryOffer
         const maxOffer = findCategory.categoryOffer || 0;
         findProduct.salePrice = findProduct.regularPrice - Math.floor(findProduct.regularPrice * (maxOffer / 100));
 
-        // Save changes to product
         await findProduct.save();
         res.json({ status: true });
     } catch (error) {
@@ -252,7 +228,6 @@ const removeProductOffer = async (req, res) => {
     }
 };
 
-// Function to block a product
 const blockProduct = async (req, res) => {
     try {
         let id = req.query.id;
@@ -264,7 +239,6 @@ const blockProduct = async (req, res) => {
     }
 }
 
-// Function to unblock a product
 const unblockProduct = async (req, res) => {
     try {
         const id = req.query.id;
@@ -275,10 +249,6 @@ const unblockProduct = async (req, res) => {
         res.redirect("/pageError");
     }
 }
-
-// Function to get product for editing
-
-
   
 const geteditProduct = async (req, res) => {
     try {
@@ -298,7 +268,6 @@ const geteditProduct = async (req, res) => {
     }
 }
 
-// Function to edit a product
 const editProduct = async (req, res) => {
     try {
         const id = req.params.id;
@@ -310,7 +279,6 @@ const editProduct = async (req, res) => {
 
         const data = req.body;
 
-        // Validate form fields
         if (!data.productName || data.productName.trim().length < 4 || data.productName.trim().length > 20) {
             return res.status(400).json({ error: 'Product name must be 4-20 characters long' });
         }
@@ -359,18 +327,12 @@ const editProduct = async (req, res) => {
             return res.status(400).json({ error: 'Skin concern can only contain letters, numbers, and spaces' });
         }
 
-        // Check if product with the same name already exists (case-insensitive)
         const existingProduct = await Product.findOne({
             _id: { $ne: id },
             productName: { $regex: '^' + data.productName.trim() + '$', $options: 'i' }
         });
-        // if (existingProduct) {
-        //     return res.status(400).json({ error: 'Product already exists' });
-        // }
-
         let updatedImages = [...(product.productImage || [])];
 
-        // Remove images if any are marked for deletion
         if (data.removedImages) {
             const removedList = data.removedImages.split(',');
             updatedImages = updatedImages.filter(img => !removedList.includes(img));
@@ -384,7 +346,6 @@ const editProduct = async (req, res) => {
                 }
             }
         }
-           // Validate brand
            if (data.brand) {
             const brand = await Brand.findOne({ brandName: data.brand, isBlocked: false });
             if (!brand) {
@@ -392,7 +353,6 @@ const editProduct = async (req, res) => {
             }
         }
         
-        // Validate images
         if (req.files && req.files.length > 0) {
             const totalImages = updatedImages.length + req.files.length;
             if (totalImages < 3) {
@@ -408,7 +368,6 @@ const editProduct = async (req, res) => {
             }
         }
 
-        // Handle new file uploads
         if (req.files && req.files.length > 0) {
             const uploadDir = path.join(__dirname, '../../public/uploads/product-images');
             if (!fs.existsSync(uploadDir)) {
@@ -416,7 +375,6 @@ const editProduct = async (req, res) => {
             }
 
             for (const file of req.files) {
-                // Remove existing extension and use .jpeg
                 const baseName = path.basename(file.originalname, path.extname(file.originalname));
                 const resizedFilename = `resized-${Date.now()}-${baseName}.jpeg`;
                 const savePath = path.join(uploadDir, resizedFilename);
@@ -435,7 +393,6 @@ const editProduct = async (req, res) => {
             }
         }
 
-        // Validate final image count
         if (updatedImages.length < 3) {
             return res.status(400).json({ error: 'At least 3 product images are required' });
         }
@@ -443,7 +400,6 @@ const editProduct = async (req, res) => {
             return res.status(400).json({ error: 'Maximum 8 product images allowed' });
         }
 
-        // Update the product with new data
         const updateFields = {
             productName: data.productName.trim(),
             description: data.description.trim(),
@@ -471,14 +427,12 @@ const editProduct = async (req, res) => {
     }
 };
 
-// Function to delete a single image from a product
 const deleteSingleImage = async (req, res) => {
     try {
         const { imageNameToServer, productIdToServer } = req.body;
 
         console.log('Received Data:', imageNameToServer, productIdToServer);
 
-        // Remove image from product document in DB
         const product = await Product.findByIdAndUpdate(
             productIdToServer,
             { $pull: { productImage: imageNameToServer } },
@@ -493,7 +447,6 @@ const deleteSingleImage = async (req, res) => {
         const imagePath = path.join(__dirname, '../../public/uploads/product-images', imageNameToServer);
         console.log('Image Path:', imagePath);
 
-        // Delete the image from file system if exists
         if (fs.existsSync(imagePath)) {
             await fs.promises.unlink(imagePath);
             console.log(`Image ${imageNameToServer} deleted successfully`);

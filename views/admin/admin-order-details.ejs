@@ -220,7 +220,7 @@
                   <% if (order.status === 'Delivered' || order.status === 'Returned') { %>
                     <div class="card">
                       <div class="card-header">
-                        <p class="mb-0"><strong>Delivered On:</strong> <%= new Date(order.deliveredDate).toLocaleDateString() %></p>
+                        <p class="mb-0"><strong>Delivered On:</strong> <%= new Date(order.updateOn).toLocaleDateString() %></p>
                       </div>
                     </div>
                   <% } %>
@@ -365,7 +365,7 @@
                       <p class="mb-0"><strong>Shipped On:</strong> <%= new Date(order.updateOn).toLocaleDateString() %></p>
                     <% } %>
                     <% if (order.status === 'Delivered') { %>
-                      <p class="mb-0"><strong>Delivered On:</strong> <%= new Date(order.deliveredDate).toLocaleDateString() %></p>
+                      <p class="mb-0"><strong>Delivered On:</strong> <%= new Date(order.updateOn).toLocaleDateString() %></p>
                     <% } %>
                     <% if (order.status === 'Returned') { %>
                       <p class="mb-0"><strong>Returned On:</strong> <%= new Date(order.updateOn).toLocaleDateString() %></p>

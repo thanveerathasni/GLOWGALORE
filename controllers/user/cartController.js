@@ -291,7 +291,6 @@ const applyCoupon = async (req, res) => {
             return res.status(400).json({ status: false, message: 'Invalid user ID format' });
         }
 
-        // Find the coupon
         const coupon = await Coupon.findOne({ name: couponCode.toUpperCase(), isList: true });
         if (!coupon) {
             const exists = await Coupon.findOne({ name: couponCode.toUpperCase() });
@@ -301,12 +300,10 @@ const applyCoupon = async (req, res) => {
             return res.status(400).json({ status: false, message: 'Coupon not found' });
         }
 
-        // Check expiration
         if (coupon.expireOn < new Date()) {
             return res.status(400).json({ status: false, message: 'Coupon has expired' });
         }
 
-        // Find the user's cart
         const user = await User.findById(userId).populate({
             path: 'cart.productId',
             populate: { path: 'category', model: 'Category' }
@@ -318,17 +315,14 @@ const applyCoupon = async (req, res) => {
             return res.status(400).json({ status: false, message: 'Cart is empty' });
         }
 
-        // Check if a coupon is already applied
         if (user.appliedCoupon.couponId) {
             return res.status(400).json({ status: false, message: 'A coupon is already applied. Remove it first.' });
         }
 
-        // Check if coupon has already been used by this user
         if (user.usedCoupons.some(c => c.toString() === coupon._id.toString())) {
             return res.status(400).json({ status: false, message: 'This coupon has already been used.' });
         }
 
-        // Calculate grand total
         const cartItems = user.cart
             .filter(item => item.productId &&
                 !item.productId.isBlocked &&
@@ -336,16 +330,13 @@ const applyCoupon = async (req, res) => {
                 item.productId.quantity > 0);
         const grandTotal = calculateGrandTotal(cartItems);
 
-        // Check minimum price requirement
         if (grandTotal < coupon.minimumPrice) {
             return res.status(400).json({ status: false, message: `Cart subtotal must be at least ₹${coupon.minimumPrice} to use this coupon` });
         }
 
-        // Calculate discount
         let discountAmount = coupon.offerPrice;
-        discountAmount = Math.min(discountAmount, grandTotal); // Cap discount at subtotal
+        discountAmount = Math.min(discountAmount, grandTotal); 
 
-        // Update user with applied coupon details
         user.appliedCoupon = {
             couponId: coupon._id,
             code: coupon.name,
@@ -368,7 +359,6 @@ const applyCoupon = async (req, res) => {
         return res.status(400).json({ status: false, message: `Error applying coupon: ${error.message}` });
     }
 };
-// removing the coupon
 
 const removeCoupon = async (req, res) => {
     try {
@@ -382,18 +372,15 @@ const removeCoupon = async (req, res) => {
             return res.status(400).json({ status: false, message: 'Invalid user ID format' });
         }
 
-        // Find the user's cart
         const user = await User.findById(userId).populate('cart.productId');
         if (!user) {
             return res.status(404).json({ status: false, message: 'User not found' });
         }
 
-        // Check if a coupon is applied
         if (!user.appliedCoupon.couponId) {
             return res.status(400).json({ status: false, message: 'No coupon is applied' });
         }
 
-        // Calculate grand total
         const cartItems = user.cart
             .filter(item => item.productId &&
                 !item.productId.isBlocked &&
@@ -401,7 +388,6 @@ const removeCoupon = async (req, res) => {
                 item.productId.quantity > 0);
         const grandTotal = calculateGrandTotal(cartItems);
 
-        // Remove coupon
         user.appliedCoupon = { couponId: null, code: null, discountAmount: 0 };
         await user.save();
 
@@ -420,7 +406,6 @@ const removeCoupon = async (req, res) => {
         return res.status(400).json({ status: false, message: `Error removing coupon: ${error.message}` });
     }
 };
-// placing order 
 const placeOrder = async (req, res) => {
     try {
         const userId = req.session.user;
@@ -529,7 +514,6 @@ const placeOrder = async (req, res) => {
             
         }
 
-        // Mark coupon as used if applied
         if (user.appliedCoupon.couponId) {
             user.usedCoupons.push(user.appliedCoupon.couponId);
         }
@@ -552,7 +536,6 @@ const placeOrder = async (req, res) => {
     }
 };
 
-// order success 
 
 const getOrderSuccess = async (req, res) => {
     try {

@@ -150,9 +150,9 @@ const generatePDF = async (res, salesData) => {
       case 'weekly':
         //  Calculate week start (Sunday) and end (Saturday)
         const weekStart = new Date(now);
-        weekStart.setDate(now.getDate() - now.getDay()); // Set to Sunday of current week
+        weekStart.setDate(now.getDate() - now.getDay()); 
         const weekEnd = new Date(weekStart);
-        weekEnd.setDate(weekStart.getDate() + 6); // Set to Saturday
+        weekEnd.setDate(weekStart.getDate() + 6); 
         query.createdOn = {
           $gte: new Date(weekStart.setHours(0, 0, 0, 0)),
           $lte: new Date(weekEnd.setHours(23, 59, 59, 999))
